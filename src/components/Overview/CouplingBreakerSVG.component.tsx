@@ -75,7 +75,7 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
       {/* breaker's rotating element */}
       <line
         x1={x}
-        y1={y + 1.25*lineLength}
+        y1={y + 1.25 * lineLength}
         x2={x}
         y2={y + 2.25 * lineLength}
         transform={state === 'open' ? `rotate(-45 ${x} ${y + 2.25 * lineLength})` : `rotate(0 ${x} ${y + 2.25 * lineLength})`}

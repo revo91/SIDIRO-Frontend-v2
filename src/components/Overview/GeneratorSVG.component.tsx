@@ -23,7 +23,7 @@ export const GeneratorSVG: React.FC<IGeneratorSVGProps> = ({ x, y, voltageApplie
       <text
         x={x}
         y={y + circleRadius}
-        className={classes.infeedsTextStyle}
+        className={classes.generatorSymbolTextStyle}
       >
         G
       </text>
@@ -31,7 +31,7 @@ export const GeneratorSVG: React.FC<IGeneratorSVGProps> = ({ x, y, voltageApplie
         x1={x}
         y1={y + 2 * circleRadius}
         x2={x}
-        y2={y + 2 * circleRadius + 2*lineLength}
+        y2={y + 2 * circleRadius + 2 * lineLength}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
     </React.Fragment>
