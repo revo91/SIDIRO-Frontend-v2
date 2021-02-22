@@ -1,21 +1,21 @@
 import React from 'react';
-import { lineLength } from '../Overview.component';
+import { lineLength, useStyles } from '../Overview.component';
 import { ParametersTableSVG } from './ParametersTableSVG.component';
-import { useStyles } from '../Overview.component';
 
 interface ICircuitBreakerSVG {
   x: number,
   y: number,
   state: string,
   name: string,
-  tableName: string,
-  activePower: number,
-  current: number,
-  powerFactor: number,
-  voltageApplied?: boolean
+  tableName?: string,
+  activePower?: number,
+  current?: number,
+  powerFactor?: number,
+  voltageApplied?: boolean,
+  noTable?: boolean
 }
 
-export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = ({ x, y, state, name, tableName, activePower, current, powerFactor, voltageApplied }) => {
+export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = ({ x, y, state, name, tableName, activePower, current, powerFactor, voltageApplied, noTable }) => {
   const classes = useStyles();
 
   return (
@@ -71,7 +71,9 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = ({ x, y, state, n
         y2={y + 3 * lineLength}
         className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
-      <ParametersTableSVG x={x - 1.1 * lineLength / 2} y={y + 3 * lineLength} tableName={tableName} parameter1={`${activePower} kW`} parameter2={`${current} A`} parameter3={`${powerFactor} PF`} />
+      {
+        !noTable ? <ParametersTableSVG x={x - 1.1 * lineLength / 2} y={y + 3 * lineLength} tableName={tableName} parameter1={`${activePower} kW`} parameter2={`${current} A`} parameter3={`${powerFactor} PF`}  />: null
+      }
     </React.Fragment>
   )
 }

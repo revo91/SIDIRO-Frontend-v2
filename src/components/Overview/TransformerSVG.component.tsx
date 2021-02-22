@@ -1,9 +1,8 @@
 import React from 'react';
-import { lineLength, circleRadius } from '../Overview.component';
+import { lineLength, circleRadius, useStyles } from '../Overview.component';
 import { ParametersTableSVG } from './ParametersTableSVG.component';
-import { useStyles } from '../Overview.component';
 
-interface ITransformerSVGProps {
+export interface ITransformerSVGProps {
   x: number,
   y: number,
   name: string,

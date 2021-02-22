@@ -6,15 +6,25 @@ interface ICouplingBreakerSVG {
   x: number,
   y: number,
   state: string,
+  name: string,
   voltageApplied?: boolean
 }
 
-export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state, voltageApplied }) => {
+export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state, name, voltageApplied }) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       {/* top to bottom */}
+      {/* circuit breaker name */}
+      <text
+        x={x - 0.2 * lineLength}
+        y={y + 0.65 * lineLength}
+        className={classes.circuitBreakersNameStyle}
+      >
+        {name}&nbsp;
+      </text>
+      {/* top line */}
       <line
         x1={x}
         y1={y}

@@ -1,19 +1,23 @@
 import React from 'react';
-import { lineLength, circleRadius } from '../Overview.component';
-import { useStyles } from '../Overview.component';
+import { lineLength, circleRadius, useStyles } from '../Overview.component';
+import { ParametersTableSVG } from './ParametersTableSVG.component';
+import { ITransformerSVGProps } from './TransformerSVG.component';
 
-interface IGeneratorSVGProps {
-  x: number,
-  y: number,
-  voltageApplied?: boolean
-}
-
-export const GeneratorSVG: React.FC<IGeneratorSVGProps> = ({ x, y, voltageApplied }) => {
+export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied }) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       {/* top to bottom */}
+      {/* transformer name */}
+      <text
+        x={x + 2 * lineLength}
+        y={y}
+        className={classes.infeedsNameStyle}
+      >
+        {name}&nbsp;
+      </text>
+      {/* circle, 'G' symbol & end line */}
       <circle
         cx={x}
         cy={y + circleRadius}
@@ -34,6 +38,7 @@ export const GeneratorSVG: React.FC<IGeneratorSVGProps> = ({ x, y, voltageApplie
         y2={y + 2 * circleRadius + 2 * lineLength}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
+      <ParametersTableSVG x={x + 0.7 * lineLength} y={y + 0.5 * lineLength} tableName={tableName} parameter1={`${activePower} kW`} parameter2={`${reactivePower} kVar`} parameter3={`${powerFactor} PF`} />
     </React.Fragment>
   )
 }

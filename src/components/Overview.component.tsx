@@ -11,6 +11,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { GeneratorSVG } from './Overview/GeneratorSVG.component';
 import { CouplingBreakerSVG } from './Overview/CouplingBreakerSVG.component';
 import { siemensColors } from '../utilities/siemensColors';
+import { SectionSVG } from './Overview/SectionSVG.component';
 
 //common constants for SVGs to import /////////////////
 export const lineLength = 7;
@@ -106,9 +107,9 @@ export const Overview = () => {
         powerFactor: parseFloat((Math.random()).toFixed(2)),
         current: parseFloat((Math.random() * 10).toFixed(2))
       })
-    },2000)
+    }, 2000)
     return () => clearInterval(interval)
-  }, [])
+  }, [sampleParams])
   ////////////////////////////////////////////////
 
   return (
@@ -119,10 +120,49 @@ export const Overview = () => {
         </Grid>
         <Grid item xs={12}>
           <svg viewBox={`0 0 150 70`} width='100%'>
-            <TransformerSVG x={10} y={1} name='TR1' tableName='Trafo TR1' activePower={sampleParams.activePower} reactivePower={sampleParams.reactivePower} powerFactor={sampleParams.powerFactor} voltageApplied />
-            <CircuitBreakerSVG x={40} y={1} state='open' name='cb1' tableName='B1A komp.' activePower={sampleParams.activePower} current={sampleParams.current} powerFactor={sampleParams.powerFactor} voltageApplied />
-            <GeneratorSVG x={70} y={1} voltageApplied />
-            <CouplingBreakerSVG x={100} y={1} state='open' voltageApplied />
+            <TransformerSVG
+              x={10}
+              y={1}
+              name='TR1'
+              tableName='Trafo TR1'
+              activePower={sampleParams.activePower}
+              reactivePower={sampleParams.reactivePower}
+              powerFactor={sampleParams.powerFactor}
+              voltageApplied />
+            <CircuitBreakerSVG
+              x={40}
+              y={1}
+              state='open'
+              name='cb1'
+              tableName='B1A komp.'
+              activePower={sampleParams.activePower}
+              current={sampleParams.current}
+              powerFactor={sampleParams.powerFactor}
+              voltageApplied
+            />
+            <GeneratorSVG
+              x={70}
+              y={1}
+              name='GEN1'
+              tableName='Generator'
+              activePower={sampleParams.activePower}
+              reactivePower={sampleParams.reactivePower}
+              powerFactor={sampleParams.powerFactor}
+              voltageApplied
+            />
+            <CouplingBreakerSVG
+              x={100}
+              y={1}
+              state='open'
+              name='Q1'
+              voltageApplied
+            />
+            <SectionSVG
+              x={40}
+              y={60}
+              length={50}
+              voltageApplied
+            />
           </svg>
         </Grid>
       </Grid>

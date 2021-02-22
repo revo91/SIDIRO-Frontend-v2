@@ -1,11 +1,10 @@
 import React from 'react';
-import { lineLength } from '../Overview.component';
-import { useStyles } from '../Overview.component';
+import { lineLength, useStyles } from '../Overview.component';
 
 export interface IParametersTableSVG {
   x: number,
   y: number,
-  tableName: string,
+  tableName: string | undefined,
   parameter1: string | number,
   parameter2: string | number,
   parameter3: string | number
@@ -13,7 +12,7 @@ export interface IParametersTableSVG {
 
 export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3 }) => {
   const classes = useStyles();
-  
+
   return (
     <React.Fragment>
       {/* parameters table */}
