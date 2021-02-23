@@ -1,17 +1,22 @@
 import React from 'react';
 import { lineLength, useStyles } from '../Overview.component';
+import { setDeviceDataDialogOpen } from '../../actions/DeviceDataDialog.action';
+import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
+import { useDispatch } from 'react-redux';
 
 export interface IParametersTableSVG {
   x: number,
   y: number,
-  tableName: string | undefined,
+  tableName: string,
   parameter1: string | number,
   parameter2: string | number,
-  parameter3: string | number
+  parameter3: string | number,
+  deviceType: string
 }
 
-export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3 }) => {
+export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3, deviceType }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   return (
     <React.Fragment>
@@ -73,6 +78,15 @@ export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableN
       >
         {parameter3}&nbsp;
       </text>
+      {/* clickable overlay */}
+      <rect
+        x={x}
+        y={y}
+        width={1.1 * lineLength}
+        height={1.2 * lineLength}
+        className={classes.clickableOverlay}
+        onClick={()=>dispatch(setDeviceDataDialogOpen(true, tableName, deviceType))}
+      />
     </React.Fragment>
   )
 }

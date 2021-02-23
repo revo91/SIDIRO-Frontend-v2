@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
 import { BarChart } from './BarChart.component';
 import { PieChart } from './PieChart.component';
-import { siemensColors } from '../utilities/siemensColors';
-import { siemensColorsAlpha } from '../utilities/siemensColors';
+import { SiemensColors } from '../utilities/SiemensColors.utility';
+import { SiemensColorsAlpha } from '../utilities/SiemensColors.utility';
 import { LineChart } from './LineChart.component';
 import { UniversalTabs } from './UniversalTabs.component';
 
@@ -37,8 +37,8 @@ export const Reports = () => {
             datasets: [
               {
                 label: "Population (millions)",
-                backgroundColor: [siemensColorsAlpha.tealLightAlpha, siemensColorsAlpha.redDarkAlpha, siemensColorsAlpha.redLightAlpha, siemensColorsAlpha.blueDarkAlpha, siemensColorsAlpha.yellowDarkAlpha],
-                borderColor: [siemensColors.tealLight, siemensColors.redDark, siemensColors.redLight, siemensColors.blueDark, siemensColors.yellowDark],
+                backgroundColor: [SiemensColorsAlpha.tealLightAlpha, SiemensColorsAlpha.redDarkAlpha, SiemensColorsAlpha.redLightAlpha, SiemensColorsAlpha.blueDarkAlpha, SiemensColorsAlpha.yellowDarkAlpha],
+                borderColor: [SiemensColors.tealLight, SiemensColors.redDark, SiemensColors.redLight, SiemensColors.blueDark, SiemensColors.yellowDark],
                 borderWidth: 2,
                 data: sampleData
               }
@@ -53,7 +53,7 @@ export const Reports = () => {
             datasets: [
               {
                 label: "Population (millions)",
-                backgroundColor: [siemensColors.tealLight, siemensColors.redDark, siemensColors.redLight, siemensColors.blueDark, siemensColors.yellowDark],
+                backgroundColor: [SiemensColors.tealLight, SiemensColors.redDark, SiemensColors.redLight, SiemensColors.blueDark, SiemensColors.yellowDark],
                 data: sampleData
               }
             ]
@@ -66,16 +66,16 @@ export const Reports = () => {
             datasets: [
               {
                 label: "dataset1",
-                backgroundColor: siemensColors.tealLight,
-                borderColor: siemensColors.tealLight,
+                backgroundColor: SiemensColors.tealLight,
+                borderColor: SiemensColors.tealLight,
                 fill: false,
                 lineTension: 0,
                 data: sampleTimeSeriesData
               },
               {
                 label: "dataset2",
-                backgroundColor: siemensColors.yellowDark,
-                borderColor: siemensColors.yellowDark,
+                backgroundColor: SiemensColors.yellowDark,
+                borderColor: SiemensColors.yellowDark,
                 fill: false,
                 lineTension: 0,
                 data: [{ t: new Date(2021, 1, 1), y: 5 }, { t: new Date(2021, 1, 5), y: 7 }, { t: new Date(2021, 1, 9), y: 6 }]

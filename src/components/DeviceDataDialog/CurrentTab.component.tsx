@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { LineChart } from '../LineChart.component';
-import { siemensColors } from '../../utilities/siemensColors'; 
+import { SiemensColors } from '../../utilities/SiemensColors.utility'; 
 import { DatePicker, TimePicker } from "@material-ui/pickers";
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +22,7 @@ export const CurrentTab = () => {
   const [dateFrom, changeDateFrom] = React.useState<Date | null>(new Date());
   const classes = useStyles();
   const { t } = useTranslation();
+  
 
   return (
     <React.Fragment>
@@ -33,16 +34,16 @@ export const CurrentTab = () => {
               datasets: [
                 {
                   label: "dataset1",
-                  backgroundColor: siemensColors.tealLight,
-                  borderColor: siemensColors.tealLight,
+                  backgroundColor: SiemensColors.tealLight,
+                  borderColor: SiemensColors.tealLight,
                   fill: false,
                   lineTension: 0,
                   data: sampleTimeSeriesData
                 },
                 {
                   label: "dataset2",
-                  backgroundColor: siemensColors.yellowDark,
-                  borderColor: siemensColors.yellowDark,
+                  backgroundColor: SiemensColors.yellowDark,
+                  borderColor: SiemensColors.yellowDark,
                   fill: false,
                   lineTension: 0,
                   data: [{ t: new Date(2021, 1, 1), y: 5 }, { t: new Date(2021, 1, 5), y: 7 }, { t: new Date(2021, 1, 9), y: 6 }]

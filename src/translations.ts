@@ -38,6 +38,11 @@ export const resources = {
         //tabs
         overviewTab: "Overview",
         currentTab: "Current",
+        powerTab: "Power",
+        THDITab: "THD I",
+        voltageLNTab: "L-N Voltage",
+        voltageLLTab: "L-L Voltage",
+        THDUTab: "THD U",
         //parameters & state
         switchingDeviceStateTitle: "Switching device state",
         breakerClosed: "Closed",
@@ -49,7 +54,18 @@ export const resources = {
         activePower: "Active Power",
         reactivePower: "Reactive Power",
         apparentPower: "Apparent Power",
-        cosTotal: "Cos Total"
+        cosTotal: "Cos Total",
+        voltageLL: "L-L Voltage",
+        voltageLN: "L-N Voltage",
+        voltageL1L2: "L1-L2 Voltage",
+        voltageL2L3: "L2-L3 Voltage",
+        voltageL3L1: "L3-L1 Voltage",
+        voltageL1N: "L1-N Voltage",
+        voltageL2N: "L2-N Voltage",
+        voltageL3N: "L3-N Voltage",
+        generatorReady: "Ready",
+        generatorStopped: "Stop",
+        generatorState: "Generator state"
       }
     }
   },
@@ -92,6 +108,11 @@ export const resources = {
         //tabs
         overviewTab: "Przegląd",
         currentTab: "Prąd",
+        powerTab: "Moc",
+        THDITab: "THD I",
+        voltageLNTab: "Napięcie L-N",
+        voltageLLTab: "Napięcie L-L",
+        THDUTab: "THD U",
         //parameters & state
         switchingDeviceStateTitle: "Stan wyłącznika",
         breakerClosed: "Załączony",
@@ -103,7 +124,18 @@ export const resources = {
         activePower: "Moc czynna",
         reactivePower: "Moc bierna",
         apparentPower: "Moc pozorna",
-        cosTotal: "Cos Total"
+        cosTotal: "Cos Total",
+        voltageLL: "Napięcie L-L",
+        voltageLN: "Napięcie L-N",
+        voltageL1L2: "Napięcie L1-L2",
+        voltageL2L3: "Napięcie L2-L3",
+        voltageL3L1: "Napięcie L3-L1",
+        voltageL1N: "Napięcie L1-N",
+        voltageL2N: "Napięcie L2-N",
+        voltageL3N: "Napięcie L3-N",
+        generatorReady: "Gotowy",
+        generatorStopped: "Stop",
+        generatorState: "Stan generatora"
       }
     }
   }

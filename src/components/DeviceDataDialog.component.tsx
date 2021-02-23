@@ -12,6 +12,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
 import { setDeviceDataDialogOpen } from '../actions/DeviceDataDialog.action';
 import { BreakerDevice } from './DeviceDataDialog/BreakerDevice.component';
+import { GeneratorDevice } from './DeviceDataDialog/GeneratorDevice.component';
+import { TransformerDevice } from './DeviceDataDialog/TransformerDevice.component';
+import { DeviceTypes } from '../utilities/DeviceTypes.utility';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,21 +38,36 @@ const Transition = React.forwardRef(function Transition(
 export const DeviceDataDialog: React.FC = () => {
   const classes = useStyles();
   const open = useSelector((state: RootState) => state.deviceDataDialog.open);
+  const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
+  const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
   const dispatch = useDispatch();
 
+  const showTabsAccordingToDeviceType = () => {
+    switch (deviceType) {
+      case DeviceTypes.circuitBreaker:
+        return <BreakerDevice />
+      case DeviceTypes.generator:
+        return <GeneratorDevice />
+      case DeviceTypes.transformer:
+        return <TransformerDevice />
+      default:
+        return null
+    }
+  }
+
   return (
-    <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen(false))} TransitionComponent={Transition}>
+    <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen(false, deviceName, deviceType))} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={() => dispatch(setDeviceDataDialogOpen(false))} aria-label="close">
+          <IconButton edge="start" color="inherit" onClick={() => dispatch(setDeviceDataDialogOpen(false, deviceName, deviceType))} aria-label="close">
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Device name
-            </Typography>
+            {deviceName}
+          </Typography>
         </Toolbar>
       </AppBar>
-      <BreakerDevice/>
+      {showTabsAccordingToDeviceType()}
     </Dialog>
   );
 }

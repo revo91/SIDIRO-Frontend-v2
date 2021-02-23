@@ -1,13 +1,14 @@
 import React from 'react';
 import { lineLength, useStyles } from '../Overview.component';
 import { ParametersTableSVG } from './ParametersTableSVG.component';
+import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 
 interface ICircuitBreakerSVG {
   x: number,
   y: number,
   state: string,
   name: string,
-  tableName?: string,
+  tableName: string,
   activePower?: number,
   current?: number,
   powerFactor?: number,
@@ -72,7 +73,15 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = ({ x, y, state, n
         className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
       {
-        !noTable ? <ParametersTableSVG x={x - 1.1 * lineLength / 2} y={y + 3 * lineLength} tableName={tableName} parameter1={`${activePower} kW`} parameter2={`${current} A`} parameter3={`${powerFactor} PF`}  />: null
+        !noTable ? <ParametersTableSVG
+          x={x - 1.1 * lineLength / 2}
+          y={y + 3 * lineLength}
+          tableName={tableName}
+          parameter1={`${activePower} kW`}
+          parameter2={`${current} A`}
+          parameter3={`${powerFactor} PF`}
+          deviceType={DeviceTypes.circuitBreaker}
+        /> : null
       }
     </React.Fragment>
   )

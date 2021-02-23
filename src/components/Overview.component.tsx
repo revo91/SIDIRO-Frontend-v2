@@ -10,11 +10,12 @@ import { CircuitBreakerSVG } from './Overview/CircuitBreakerSVG.component';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { GeneratorSVG } from './Overview/GeneratorSVG.component';
 import { CouplingBreakerSVG } from './Overview/CouplingBreakerSVG.component';
-import { siemensColors } from '../utilities/siemensColors';
+import { SiemensColors } from '../utilities/SiemensColors.utility';
+import { DeviceTypes } from '../utilities/DeviceTypes.utility';
 import { SectionSVG } from './Overview/SectionSVG.component';
 
 //common constants for SVGs to import /////////////////
-export const lineLength = 7;
+export const lineLength = 6;
 export const circleRadius = 0.5 * lineLength;
 
 const lineStyle: CSSProperties = {
@@ -27,13 +28,13 @@ const circleStyle: CSSProperties = {
   fill: 'none'
 }
 const paramsTableTitleStyle: CSSProperties = {
-  stroke: siemensColors.blueDark,
-  strokeWidth: 0.1,
-  fill: siemensColors.blueDark,
+  stroke: SiemensColors.blueDark,
+  strokeWidth: lineLength / 64,
+  fill: SiemensColors.blueDark,
 }
 const infeedsNameStyle: CSSProperties = {
   fontSize: `${circleRadius / 15}em`,
-  fill: siemensColors.tealDark,
+  fill: SiemensColors.tealDark,
   textAnchor: 'end',
   dominantBaseline: 'hanging',
   letterSpacing: '-0.05em'
@@ -57,7 +58,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     generatorSymbolTextStyle: {
       fontSize: `${circleRadius / 10}em`,
-      fill: siemensColors.tealDark,
+      fill: SiemensColors.tealDark,
       textAnchor: 'middle',
       dominantBaseline: 'central'
     },
@@ -88,6 +89,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     circuitBreakersNameStyle: {
       ...infeedsNameStyle,
       fontSize: `${circleRadius / 18}em`,
+    },
+    clickableOverlay: {
+    fill: 'rgba(255, 255, 255, 0)',
+      "&:hover, &:focus": {
+        stroke: SiemensColors.yellowLight,
+        strokeWidth: lineLength / 32,
+      }
     }
   }));
 ///////////////////////////////////////////////////
@@ -116,10 +124,10 @@ export const Overview = () => {
     <React.Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <button onClick={() => dispatch(setDeviceDataDialogOpen(true))}>open DeviceDataDialog</button>
+          <button onClick={() => dispatch(setDeviceDataDialogOpen(true, 'testname', DeviceTypes.circuitBreaker))}>open DeviceDataDialog</button>
         </Grid>
         <Grid item xs={12}>
-          <svg viewBox={`0 0 150 70`} width='100%'>
+          <svg viewBox={`0 0 150 74`} width='100%'>
             <TransformerSVG
               x={10}
               y={1}
@@ -128,20 +136,28 @@ export const Overview = () => {
               activePower={sampleParams.activePower}
               reactivePower={sampleParams.reactivePower}
               powerFactor={sampleParams.powerFactor}
-              voltageApplied />
+              voltageApplied
+            />
+            <CouplingBreakerSVG
+              x={10}
+              y={1+3*lineLength}
+              state='open'
+              name='Q1'
+              voltageApplied
+            />
             <CircuitBreakerSVG
-              x={40}
-              y={1}
+              x={10}
+              y={1+6*lineLength}
               state='open'
               name='cb1'
               tableName='B1A komp.'
               activePower={sampleParams.activePower}
               current={sampleParams.current}
               powerFactor={sampleParams.powerFactor}
-              voltageApplied
+              voltageApplied={false}
             />
             <GeneratorSVG
-              x={70}
+              x={120}
               y={1}
               name='GEN1'
               tableName='Generator'
@@ -150,18 +166,19 @@ export const Overview = () => {
               powerFactor={sampleParams.powerFactor}
               voltageApplied
             />
-            <CouplingBreakerSVG
-              x={100}
-              y={1}
-              state='open'
-              name='Q1'
-              voltageApplied
-            />
+
             <SectionSVG
-              x={40}
-              y={60}
+              x={10}
+              y={1+6*lineLength}
               length={50}
-              voltageApplied
+              voltageApplied={false}
+              endCoupling={<CouplingBreakerSVG
+                x={60}
+                y={1+3*lineLength}
+                state='open'
+                name='Q1'
+                voltageApplied={false}
+              />}
             />
           </svg>
         </Grid>

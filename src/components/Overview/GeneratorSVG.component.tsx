@@ -1,6 +1,7 @@
 import React from 'react';
 import { lineLength, circleRadius, useStyles } from '../Overview.component';
 import { ParametersTableSVG } from './ParametersTableSVG.component';
+import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 import { ITransformerSVGProps } from './TransformerSVG.component';
 
 export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied }) => {
@@ -38,7 +39,15 @@ export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, table
         y2={y + 2 * circleRadius + 2 * lineLength}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
-      <ParametersTableSVG x={x + 0.7 * lineLength} y={y + 0.5 * lineLength} tableName={tableName} parameter1={`${activePower} kW`} parameter2={`${reactivePower} kVar`} parameter3={`${powerFactor} PF`} />
+      <ParametersTableSVG
+        x={x + 0.7 * lineLength}
+        y={y + 0.5 * lineLength}
+        tableName={tableName}
+        parameter1={`${activePower} kW`}
+        parameter2={`${reactivePower} kVar`}
+        parameter3={`${powerFactor} PF`}
+        deviceType={DeviceTypes.generator}
+      />
     </React.Fragment>
   )
 }

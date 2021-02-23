@@ -1,4 +1,4 @@
-export enum siemensColors {
+export enum SiemensColors {
   tealLight = 'rgb(65, 170, 170)', // Siemens Accent Teal Light 
   greenLight = 'rgb(170, 180, 20)', // Siemens Accent Green Light
   redLight = 'rgb(175, 35, 95)', // Siemens Accent Red Light
@@ -11,7 +11,7 @@ export enum siemensColors {
   blueDark = 'rgb(0, 95, 135)', // Siemens Accent Blue Dark
 }
 
-export enum siemensColorsAlpha {
+export enum SiemensColorsAlpha {
   tealLightAlpha = 'rgba(65, 170, 170, 0.5)', // Siemens Accent Teal Light Alpha 50%
   greenLightAlpha = 'rgba(170, 180, 20, 0.5)', // Siemens Accent Green Light Alpha 50%
   redLightAlpha = 'rgba(175, 35, 95, 0.5)', // Siemens Accent Red Light Alpha 50%

@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 interface IUniversalTableProps {
-  rows: Array<Array<string | number>>,
+  rows: Array<Array<string>>,
   columns: Array<string>,
   small?: boolean,
   noElevation?: boolean
