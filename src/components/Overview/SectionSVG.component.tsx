@@ -22,7 +22,7 @@ export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied
         y2={y}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
-      {/* breaker component if coupling */}
+      {/* breaker component passed as a prop, if coupling */}
       {endCoupling !== undefined ?
         endCoupling
         : null
@@ -30,6 +30,7 @@ export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied
       {/* line connection to next section */}
       {endCoupling !== undefined ?
         <React.Fragment>
+          {/* horizontal line */}
           <line
             x1={x + length}
             y1={y - 3 * lineLength}
@@ -37,6 +38,7 @@ export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied
             y2={y - 3 * lineLength}
             className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
           />
+          {/* vertical line */}
           <line
             x1={x + length + lineLength}
             y1={y - 3 * lineLength}

@@ -1,107 +1,111 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { setDeviceDataDialogOpen } from '../actions/DeviceDataDialog.action';
-import { useDispatch } from 'react-redux';
-import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
 import { TransformerSVG } from './Overview/TransformerSVG.component';
 import { CircuitBreakerSVG } from './Overview/CircuitBreakerSVG.component';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { GeneratorSVG } from './Overview/GeneratorSVG.component';
 import { CouplingBreakerSVG } from './Overview/CouplingBreakerSVG.component';
-import { SiemensColors } from '../utilities/SiemensColors.utility';
-import { DeviceTypes } from '../utilities/DeviceTypes.utility';
+import { SiemensAccentBlue, SiemensAccentTeal, SiemensAccentYellow } from '../utilities/SiemensColors.utility';
 import { SectionSVG } from './Overview/SectionSVG.component';
 
 //common constants for SVGs to import /////////////////
 export const lineLength = 6;
 export const circleRadius = 0.5 * lineLength;
 
-const lineStyle: CSSProperties = {
-  stroke: '#000000',
-  strokeWidth: lineLength / 25,
-  strokeLinecap: 'round'
-}
-const circleStyle: CSSProperties = {
-  ...lineStyle,
-  fill: 'none'
-}
-const paramsTableTitleStyle: CSSProperties = {
-  stroke: SiemensColors.blueDark,
-  strokeWidth: lineLength / 64,
-  fill: SiemensColors.blueDark,
-}
-const infeedsNameStyle: CSSProperties = {
-  fontSize: `${circleRadius / 15}em`,
-  fill: SiemensColors.tealDark,
-  textAnchor: 'end',
-  dominantBaseline: 'hanging',
-  letterSpacing: '-0.05em'
-}
-
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     lineStyle: {
-      ...lineStyle
+      stroke: theme.palette.type === 'dark' ? theme.palette.text.primary : '#000000',
+      strokeWidth: lineLength / 25,
+      strokeLinecap: 'round'
     },
     circleStyle: {
-      ...circleStyle
+      stroke: theme.palette.type === 'dark' ? theme.palette.text.primary : '#000000',
+      strokeWidth: lineLength / 25,
+      strokeLinecap: 'round',
+      fill: 'none'
     },
     lineStyleVoltageApplied: {
-      ...lineStyle,
+      strokeWidth: lineLength / 25,
+      strokeLinecap: 'round',
       stroke: '#10b115',
     },
     circleStyleVoltageApplied: {
-      ...circleStyle,
+      strokeWidth: lineLength / 25,
+      strokeLinecap: 'round',
+      fill: 'none',
       stroke: '#10b115',
     },
     generatorSymbolTextStyle: {
       fontSize: `${circleRadius / 10}em`,
-      fill: SiemensColors.tealDark,
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentTeal.dark3,
       textAnchor: 'middle',
       dominantBaseline: 'central'
     },
     paramsTableTitleStyle: {
-      ...paramsTableTitleStyle
+      stroke: theme.palette.type === 'dark' ? SiemensAccentYellow.light3 : SiemensAccentBlue.dark4,
+      strokeWidth: lineLength / 64,
+      fill: theme.palette.type === 'dark' ? theme.palette.background.paper : SiemensAccentBlue.dark4,
     },
     paramsTableRowStyle: {
-      ...paramsTableTitleStyle,
-      fill: '#d6f7ff',
+      stroke: theme.palette.type === 'dark' ? SiemensAccentYellow.light3 : SiemensAccentBlue.dark4,
+      strokeWidth: lineLength / 64,
+      fill: theme.palette.type === 'dark' ? theme.palette.background.paper : SiemensAccentBlue.light6,
     },
     paramsTableTitleTextStyle: {
       fontSize: `${circleRadius / 32}em`,
-      fill: '#ffffff',
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : '#ffffff',
       textAnchor: 'middle',
       dominantBaseline: 'central',
       letterSpacing: '-0.02em'
     },
     paramsTableRowTextStyle: {
       fontSize: `${circleRadius / 36}em`,
-      fill: '#000000',
+      fill: theme.palette.text.primary,
       textAnchor: 'end',
       dominantBaseline: 'central',
       letterSpacing: '-0.02em',
     },
     infeedsNameStyle: {
-      ...infeedsNameStyle
+      fontSize: `${circleRadius / 15}em`,
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentTeal.dark3,
+      textAnchor: 'end',
+      dominantBaseline: 'hanging',
+      letterSpacing: '-0.05em'
     },
     circuitBreakersNameStyle: {
-      ...infeedsNameStyle,
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentTeal.dark3,
+      textAnchor: 'end',
+      dominantBaseline: 'hanging',
+      letterSpacing: '-0.05em',
       fontSize: `${circleRadius / 18}em`,
     },
     clickableOverlay: {
-    fill: 'rgba(255, 255, 255, 0)',
+      fill: 'rgba(255, 255, 255, 0)',
       "&:hover, &:focus": {
-        stroke: SiemensColors.yellowLight,
+        stroke: SiemensAccentYellow.light3,
         strokeWidth: lineLength / 32,
       }
-    }
+    },
+    overviewTabSVGTextsCentralAnchor: {
+      fontSize: `${circleRadius / 32}em`,
+      fill: theme.palette.text.primary,
+      textAnchor: 'middle',
+      dominantBaseline: 'central',
+      letterSpacing: '-0.02em'
+    },
+    overviewTabSVGTextsCentralLeftAnchor: {
+      fontSize: `${circleRadius / 32}em`,
+      fill: theme.palette.text.primary,
+      textAnchor: 'start',
+      dominantBaseline: 'hanging',
+      letterSpacing: '-0.02em'
+    },
   }));
 ///////////////////////////////////////////////////
 
 export const Overview = () => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   //for testing purposes///////////////////////////
   const [sampleParams, setSampleParams] = React.useState<{ activePower: number, reactivePower: number, powerFactor: number, current: number }>({ activePower: 100, reactivePower: 50, powerFactor: 0.88, current: 10 })
@@ -124,9 +128,6 @@ export const Overview = () => {
     <React.Fragment>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <button onClick={() => dispatch(setDeviceDataDialogOpen(true, 'testname', DeviceTypes.circuitBreaker))}>open DeviceDataDialog</button>
-        </Grid>
-        <Grid item xs={12}>
           <svg viewBox={`0 0 150 74`} width='100%'>
             <TransformerSVG
               x={10}
@@ -140,14 +141,14 @@ export const Overview = () => {
             />
             <CouplingBreakerSVG
               x={10}
-              y={1+3*lineLength}
+              y={1 + 3 * lineLength}
               state='open'
               name='Q1'
               voltageApplied
             />
             <CircuitBreakerSVG
               x={10}
-              y={1+6*lineLength}
+              y={1 + 6 * lineLength}
               state='open'
               name='cb1'
               tableName='B1A komp.'
@@ -166,15 +167,14 @@ export const Overview = () => {
               powerFactor={sampleParams.powerFactor}
               voltageApplied
             />
-
             <SectionSVG
               x={10}
-              y={1+6*lineLength}
+              y={1 + 6 * lineLength}
               length={50}
               voltageApplied={false}
               endCoupling={<CouplingBreakerSVG
                 x={60}
-                y={1+3*lineLength}
+                y={1 + 3 * lineLength}
                 state='open'
                 name='Q1'
                 voltageApplied={false}

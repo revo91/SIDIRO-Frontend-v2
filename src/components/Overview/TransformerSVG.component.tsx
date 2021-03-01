@@ -6,28 +6,34 @@ import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 export interface ITransformerSVGProps {
   x: number,
   y: number,
-  name: string,
-  tableName: string,
-  activePower: number,
-  reactivePower: number,
-  powerFactor: number,
-  voltageApplied?: boolean
+  name?: string,
+  tableName?: string,
+  activePower?: number,
+  reactivePower?: number,
+  powerFactor?: number,
+  voltageApplied?: boolean,
+  noTable?: boolean,
+  //for DeviceDataDialog.component's OverviewTab visualization
+  overview?: boolean,
 }
 
-export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied }) => {
+export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied, noTable, overview }) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       {/* top to bottom */}
-      {/* transformer name */}
-      <text
-        x={x}
-        y={y}
-        className={classes.infeedsNameStyle}
-      >
-        {name}&nbsp;
-      </text>
+      {/* transformer name if not overview mode */}
+      {!overview ?
+        <text
+          x={x}
+          y={y}
+          className={classes.infeedsNameStyle}
+        >
+          {name}&nbsp;
+        </text>
+        : null
+      }
       {/* main symbol - 2 lines & 2 circles */}
       <line
         x1={x}
@@ -55,15 +61,29 @@ export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tab
         y2={y + 1.5 * lineLength + 3 * circleRadius}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
-      <ParametersTableSVG
-        x={x + 0.7 * lineLength}
-        y={y + 0.5 * lineLength}
-        tableName={tableName}
-        parameter1={`${activePower} kW`}
-        parameter2={`${reactivePower} kVar`}
-        parameter3={`${powerFactor} PF`}
-        deviceType={DeviceTypes.transformer}
-      />
+      {!noTable && tableName ?
+        <ParametersTableSVG
+          x={x + 0.7 * lineLength}
+          y={y + 0.5 * lineLength}
+          tableName={tableName}
+          parameter1={`${activePower} kW`}
+          parameter2={`${reactivePower} kVar`}
+          parameter3={`${powerFactor} PF`}
+          deviceType={DeviceTypes.transformer}
+        />
+        : null
+      }
+      {/* DeviceDataDialog's OverviewTab visualization */}
+      {overview ?
+        <text
+          x={x}
+          y={y}
+          className={classes.overviewTabSVGTextsCentralLeftAnchor}
+        >
+          &nbsp;&nbsp;{name}
+        </text>
+        : null
+      }
     </React.Fragment>
   )
 }

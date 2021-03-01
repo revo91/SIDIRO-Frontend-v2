@@ -7,7 +7,8 @@ export const resources = {
         eventsRouteName: "Events",
         powermonitorRouteName: "Load monitoring",
         reportsRouteName: "Reports",
-        languageSelectionName: "Language"
+        languageSelectionName: "Language",
+        toggleDarkMode: "Night mode"
       },
       languageDialog: {
         label: "Choose application language",
@@ -65,7 +66,8 @@ export const resources = {
         voltageL3N: "L3-N Voltage",
         generatorReady: "Ready",
         generatorStopped: "Stop",
-        generatorState: "Generator state"
+        generatorState: "Generator state",
+        showChartTooltip: "Show chart"
       }
     }
   },
@@ -77,7 +79,8 @@ export const resources = {
         eventsRouteName: "Zdarzenia",
         powermonitorRouteName: "Strażnik mocy",
         reportsRouteName: "Raporty",
-        languageSelectionName: "Język"
+        languageSelectionName: "Język",
+        toggleDarkMode: "Tryb nocny"
       },
       languageDialog: {
         label: "Wybierz język aplikacji",
@@ -135,7 +138,8 @@ export const resources = {
         voltageL3N: "Napięcie L3-N",
         generatorReady: "Gotowy",
         generatorStopped: "Stop",
-        generatorState: "Stan generatora"
+        generatorState: "Stan generatora",
+        showChartTooltip: "Pokaż wykres",
       }
     }
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -24,7 +24,9 @@ import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import { useDispatch } from 'react-redux';
 import { setLanguageDialogOpen } from '../actions/LanguageDialog.action';
-import siemensLogo from '../assets/sie-logo-petrol-rgb.svg';
+import siemensLogoPetrol from '../assets/sie-logo-petrol-rgb.svg';
+import siemensLogoWhite from '../assets/sie-logo-white-rgb.svg';
+import Brightness2Icon from '@material-ui/icons/Brightness2';
 
 const drawerWidth = 240;
 
@@ -101,13 +103,18 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }));
 
-export const MiniDrawer = () => {
+interface IDrawer {
+  onThemeChange(): void
+}
+
+export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
   const [bottomNaviValue, setBottomNaviValue] = useState<string | null>(null);
   const location = useLocation();
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const theme = useTheme();
 
   useEffect(() => {
     setBottomNaviValue(location.pathname)
@@ -120,6 +127,10 @@ export const MiniDrawer = () => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+
+  const handleThemeChange = () => {
+    onThemeChange()
+  }
 
   return (
     <div className={classes.root}>
@@ -142,7 +153,7 @@ export const MiniDrawer = () => {
             <IconButton onClick={drawerOpen ? handleDrawerClose : handleDrawerOpen} className={classes.expandDrawerArrow}>
               {!drawerOpen ? <ChevronRightIcon /> : <ChevronLeftIcon />}
             </IconButton>
-            <img src={siemensLogo} alt='siemens logo' className={classes.siemensLogo} />
+            <img src={theme.palette.type === 'dark' ? siemensLogoWhite : siemensLogoPetrol} alt='siemens logo' className={classes.siemensLogo} />
           </div>
           <Divider />
           <List>
@@ -182,6 +193,12 @@ export const MiniDrawer = () => {
                 <LanguageIcon />
               </ListItemIcon>
               <ListItemText primary={t('drawer.languageSelectionName')} />
+            </ListItem>
+            <ListItem button onClick={() => handleThemeChange()}>
+              <ListItemIcon>
+                <Brightness2Icon />
+              </ListItemIcon>
+              <ListItemText primary={t('drawer.toggleDarkMode')} />
             </ListItem>
           </List>
         </Drawer>

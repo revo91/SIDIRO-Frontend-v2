@@ -15,10 +15,10 @@ interface LineChartProps {
       }>
     }>
   },
-  chartTitle: string,
+  chartTitle?: string
 }
 
-export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle }) => {
+export const LineChart: React.FC<LineChartProps> = ({ data,chartTitle }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
 
@@ -50,6 +50,10 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle }) => {
               
             }]
           },
+          title: {
+            display: chartTitle ? true : false,
+            text: chartTitle ? chartTitle : ''
+          },
           tooltips: {
             intersect: false,
           },
@@ -59,7 +63,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle }) => {
         },
       }))
     }
-  }, [data, chartInstance])
+  }, [data, chartInstance, chartTitle])
 
   useEffect(() => {
     //update in case of datasets change

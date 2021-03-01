@@ -61,7 +61,6 @@ export const Reports = () => {
       </Grid>
       <Grid item xs={12}>
         <LineChart
-          chartTitle="something"
           data={{
             datasets: [
               {
@@ -112,8 +111,8 @@ export const Reports = () => {
             label: 'Infeeds parameters',
             content: <p>Infeeds parameters tab content</p>
           }
-        ]} 
-        />
+        ]}
+      />
 
     </React.Fragment>
   )

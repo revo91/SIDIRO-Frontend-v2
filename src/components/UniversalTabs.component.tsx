@@ -68,7 +68,7 @@ export const UniversalTabs: React.FC<IUniversalTabsProps> = ({ name, tabs }) => 
     <div className={classes.root}>
       <AppBar position="static" color="default">
         <Tabs
-          value={tabsInstance[name] || 0}
+          value={tabsInstance[name] || 0} //currently selected tab
           onChange={(event, value) => dispatch(setUniversalTabsNameIndex(name, value))}
           variant="scrollable"
           scrollButtons="auto"

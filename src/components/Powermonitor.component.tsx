@@ -1,5 +1,4 @@
 import React from 'react';
-import { LineChart } from './LineChart.component';
 import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';

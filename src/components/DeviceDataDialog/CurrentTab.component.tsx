@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     timePickersContainer: {
-      backgroundColor: '#dbdbdb',
       marginTop: theme.spacing(2),
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
@@ -29,7 +28,6 @@ export const CurrentTab = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <LineChart
-            chartTitle="something"
             data={{
               datasets: [
                 {

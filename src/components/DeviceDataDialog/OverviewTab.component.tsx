@@ -4,9 +4,18 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { UniversalTable } from '../UniversalTable.component';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
+import { CircuitBreakerSVG } from '../Overview/CircuitBreakerSVG.component';
+import { GeneratorSVG } from '../Overview/GeneratorSVG.component';
+import { TransformerSVG } from '../Overview/TransformerSVG.component';
+import { CouplingBreakerSVG } from '../Overview/CouplingBreakerSVG.component';
+import { BreakerStates } from '../../utilities/BreakerStates.utility';
+import IconButton from '@material-ui/core/IconButton';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
       WebkitColumnBreakInside: 'avoid',
       padding: '5px'
     },
+    overviewTabSVGMaxHeight: {
+      maxHeight: '800px'
+    }
   }),
 );
 
@@ -39,11 +51,18 @@ export const OverviewTab = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
+  const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
+  const dispatch = useDispatch();
 
   const currentTable = (
     <div className={classes.masonryLayoutPanel}>
       <UniversalTable
-        columns={[t('deviceDataDialog.current'), '']}
+        columns={[t('deviceDataDialog.current'),
+        <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
+          <IconButton aria-label="delete" size="small" onClick={() => dispatch(setUniversalTabsNameIndex('TransformerDeviceDetails', 3))}>
+            <TimelineIcon />
+          </IconButton>
+        </Tooltip>]}
         rows={[[`${t('deviceDataDialog.current')} L1`, '100 A'], [`${t('deviceDataDialog.current')} L2`, '50 A'], [`${t('deviceDataDialog.current')} L3`, '30 A']]}
         small />
     </div>
@@ -51,7 +70,12 @@ export const OverviewTab = () => {
   const powerTable = (
     <div className={classes.masonryLayoutPanel}>
       <UniversalTable
-        columns={[t('deviceDataDialog.power'), '']}
+        columns={[t('deviceDataDialog.power'),
+        <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
+          <IconButton aria-label="delete" size="small">
+            <TimelineIcon />
+          </IconButton>
+        </Tooltip>]}
         rows={[[`${t('deviceDataDialog.activePower')}`, '100 kW'], [`${t('deviceDataDialog.reactivePower')}`, '50 kvar'], [`${t('deviceDataDialog.apparentPower')}`, '30 kVA'], [`${t('deviceDataDialog.cosTotal')}`, '0.99 PF']]}
         small />
     </div>
@@ -59,7 +83,12 @@ export const OverviewTab = () => {
   const thdiTable = (
     <div className={classes.masonryLayoutPanel}>
       <UniversalTable
-        columns={['THD I', '']}
+        columns={['THD I',
+          <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
+            <IconButton aria-label="delete" size="small">
+              <TimelineIcon />
+            </IconButton>
+          </Tooltip>]}
         rows={[['THD I L1', '10 %'], ['THD I L2', '10 %'], ['THD I L3', '10 %']]}
         small />
     </div>
@@ -67,7 +96,12 @@ export const OverviewTab = () => {
   const thduTable = (
     <div className={classes.masonryLayoutPanel}>
       <UniversalTable
-        columns={['THD U', '']}
+        columns={['THD U',
+          <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
+            <IconButton aria-label="delete" size="small">
+              <TimelineIcon />
+            </IconButton>
+          </Tooltip>]}
         rows={[['THD U L1', '10 %'], ['THD U L2', '10 %'], ['THD U L3', '10 %']]}
         small />
     </div>
@@ -75,7 +109,12 @@ export const OverviewTab = () => {
   const voltageLLTable = (
     <div className={classes.masonryLayoutPanel}>
       <UniversalTable
-        columns={[t('deviceDataDialog.voltageLL'), '']}
+        columns={[t('deviceDataDialog.voltageLL'),
+        <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
+          <IconButton aria-label="delete" size="small">
+            <TimelineIcon />
+          </IconButton>
+        </Tooltip>]}
         rows={[[t('deviceDataDialog.voltageL1L2'), '401 V'], [t('deviceDataDialog.voltageL2L3'), '399 V'], [t('deviceDataDialog.voltageL3L1'), '402 V']]}
         small />
     </div>
@@ -83,7 +122,12 @@ export const OverviewTab = () => {
   const voltageLNTable = (
     <div className={classes.masonryLayoutPanel}>
       <UniversalTable
-        columns={[t('deviceDataDialog.voltageLN'), '']}
+        columns={[t('deviceDataDialog.voltageLN'),
+        <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
+          <IconButton aria-label="delete" size="small">
+            <TimelineIcon />
+          </IconButton>
+        </Tooltip>]}
         rows={[[t('deviceDataDialog.voltageL1N'), '229 V'], [t('deviceDataDialog.voltageL2N'), '224 V'], [t('deviceDataDialog.voltageL3N'), '226 V']]}
         small />
     </div>
@@ -120,12 +164,75 @@ export const OverviewTab = () => {
       </Alert>
     </Grid>
   )
+  const svgVisualization = () => {
+    switch (deviceType) {
+      case DeviceTypes.circuitBreaker:
+        return (
+          <svg width='100%' viewBox={`0 -2 16 24`} className={classes.overviewTabSVGMaxHeight}>
+            <CircuitBreakerSVG
+              x={8}
+              y={0}
+              state={BreakerStates.open}
+              overview
+              sectionName='Sekcja TR1'
+              outgoingFeederName={deviceName}
+              name='CB1'
+              topSection
+            />
+          </svg>
+        )
+      case DeviceTypes.transformer:
+        return (
+          <svg width='100%' viewBox={`0 -2 16 40`} className={classes.overviewTabSVGMaxHeight}>
+            <TransformerSVG
+              x={8}
+              y={0}
+              name='TR1'
+              noTable
+              overview
+            />
+            <CouplingBreakerSVG
+              x={8}
+              y={18}
+              state={BreakerStates.open}
+              name='CB1'
+              overview
+              sectionName='section1'
+              bottomSection
+            />
+          </svg>
+        )
+      case DeviceTypes.generator:
+        return (
+          <svg width='100%' viewBox={`0 -2 16 40`} className={classes.overviewTabSVGMaxHeight}>
+            <GeneratorSVG
+              x={8}
+              y={0}
+              name='GEN1'
+              noTable
+              overview
+            />
+            <CouplingBreakerSVG
+              x={8}
+              y={18}
+              state={BreakerStates.open}
+              name='CB1'
+              overview
+              sectionName='section1'
+              bottomSection
+            />
+          </svg>
+        )
+      default:
+        return null
+    }
+  }
 
   return (
-    <Grid container justify='center' spacing={2}>
+    <Grid container justify='center' alignItems='flex-start' spacing={2}>
       <Grid container spacing={1} item xs={12} sm={12} md={4}>
         <Grid container item xs={12}>
-          <p>Diagram</p>
+          {svgVisualization()}
         </Grid>
       </Grid>
       <Grid container spacing={1} item xs={12} sm={12} md={8}>

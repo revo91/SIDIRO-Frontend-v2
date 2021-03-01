@@ -1,7 +1,6 @@
 import React from 'react';
 import { lineLength, useStyles } from '../Overview.component';
 import { setDeviceDataDialogOpen } from '../../actions/DeviceDataDialog.action';
-import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 import { useDispatch } from 'react-redux';
 
 export interface IParametersTableSVG {

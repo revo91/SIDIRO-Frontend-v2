@@ -4,20 +4,23 @@ import { ParametersTableSVG } from './ParametersTableSVG.component';
 import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 import { ITransformerSVGProps } from './TransformerSVG.component';
 
-export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied }) => {
+export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied, noTable, overview }) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       {/* top to bottom */}
-      {/* transformer name */}
-      <text
-        x={x + 2 * lineLength}
-        y={y}
-        className={classes.infeedsNameStyle}
-      >
-        {name}&nbsp;
+      {/* generator name if not overview mode */}
+      {!overview ?
+        <text
+          x={x + 2 * lineLength}
+          y={y}
+          className={classes.infeedsNameStyle}
+        >
+          {name}&nbsp;
       </text>
+        : null
+      }
       {/* circle, 'G' symbol & end line */}
       <circle
         cx={x}
@@ -39,15 +42,29 @@ export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, table
         y2={y + 2 * circleRadius + 2 * lineLength}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
-      <ParametersTableSVG
-        x={x + 0.7 * lineLength}
-        y={y + 0.5 * lineLength}
-        tableName={tableName}
-        parameter1={`${activePower} kW`}
-        parameter2={`${reactivePower} kVar`}
-        parameter3={`${powerFactor} PF`}
-        deviceType={DeviceTypes.generator}
-      />
+      {!noTable && tableName ?
+        <ParametersTableSVG
+          x={x + 0.7 * lineLength}
+          y={y + 0.5 * lineLength}
+          tableName={tableName}
+          parameter1={`${activePower} kW`}
+          parameter2={`${reactivePower} kVar`}
+          parameter3={`${powerFactor} PF`}
+          deviceType={DeviceTypes.generator}
+        />
+        : null
+      }
+      {/* DeviceDataDialog's OverviewTab visualization */}
+      {overview ?
+        <text
+          x={x + circleRadius}
+          y={y}
+          className={classes.overviewTabSVGTextsCentralLeftAnchor}
+        >
+          &nbsp;&nbsp;{name}
+        </text>
+        : null
+      }
     </React.Fragment>
   )
 }

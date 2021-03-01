@@ -7,29 +7,56 @@ interface ICircuitBreakerSVG {
   x: number,
   y: number,
   state: string,
-  name: string,
-  tableName: string,
+  name?: string,
+  tableName?: string,
   activePower?: number,
   current?: number,
   powerFactor?: number,
   voltageApplied?: boolean,
-  noTable?: boolean
+  noTable?: boolean,
+  //for DeviceDataDialog.component's OverviewTab visualization
+  overview?: boolean,
+  sectionName?: string,
+  outgoingFeederName?: string,
+  bottomSection?: boolean,
+  topSection?: boolean
 }
 
-export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = ({ x, y, state, name, tableName, activePower, current, powerFactor, voltageApplied, noTable }) => {
+export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
+  {
+    x,
+    y,
+    state,
+    name,
+    tableName,
+    activePower,
+    current,
+    powerFactor,
+    voltageApplied,
+    noTable,
+    overview,
+    sectionName,
+    outgoingFeederName,
+    bottomSection,
+    topSection
+  }
+) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
       {/* top to bottom */}
       {/* circuit breaker name */}
-      <text
-        x={x}
-        y={y}
-        className={classes.circuitBreakersNameStyle}
-      >
-        {name}&nbsp;
-      </text>
+      {!overview ?
+        <text
+          x={x}
+          y={y}
+          className={classes.circuitBreakersNameStyle}
+        >
+          {name}&nbsp;
+        </text>
+        : null
+      }
       {/* top line */}
       <line
         x1={x}
@@ -72,8 +99,9 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = ({ x, y, state, n
         y2={y + 3 * lineLength}
         className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
+      {/* params table */}
       {
-        !noTable ? <ParametersTableSVG
+        !noTable && tableName ? <ParametersTableSVG
           x={x - 1.1 * lineLength / 2}
           y={y + 3 * lineLength}
           tableName={tableName}
@@ -83,6 +111,68 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = ({ x, y, state, n
           deviceType={DeviceTypes.circuitBreaker}
         /> : null
       }
+      {/* DeviceDataDialog's OverviewTab visualization */}
+      {overview && sectionName && outgoingFeederName ?
+        <React.Fragment>
+          {topSection ?
+            <React.Fragment>
+              {/* topSection name */}
+              <text
+                x={x}
+                y={y - 1}
+                className={classes.overviewTabSVGTextsCentralAnchor}
+              >
+                {sectionName}
+              </text>
+              {/* topSection horizontal line */}
+              <line
+                x1={x - lineLength}
+                y1={y}
+                x2={x + lineLength}
+                y2={y}
+                className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+              />
+              {/* outgoing feeder name */}
+              <text
+                x={x}
+                y={y + 3.2 * lineLength}
+                className={classes.overviewTabSVGTextsCentralAnchor}
+              >
+                {outgoingFeederName}
+              </text>
+            </React.Fragment>
+            : null
+          }
+          {bottomSection ?
+            <React.Fragment>
+              {/* bottomSection name */}
+              <text
+                x={x}
+                y={y + 3.2 * lineLength}
+                className={classes.overviewTabSVGTextsCentralAnchor}
+              >
+                {sectionName}
+              </text>
+              {/* bottomSection horizontal line */}
+              <line
+                x1={x - lineLength}
+                y1={y + 3 * lineLength}
+                x2={x + lineLength}
+                y2={y + 3 * lineLength}
+                className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+              />
+            </React.Fragment>
+            : null}
+          {/* central circuit breaker name */}
+          <text
+            x={x}
+            y={y + 1.5 * lineLength}
+            className={classes.overviewTabSVGTextsCentralLeftAnchor}
+          >
+            &nbsp;&nbsp;{name}
+          </text>
+        </React.Fragment>
+        : null}
     </React.Fragment>
   )
 }
