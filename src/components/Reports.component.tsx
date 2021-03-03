@@ -40,7 +40,8 @@ export const Reports = () => {
                 backgroundColor: [SiemensColorsAlpha.tealLightAlpha, SiemensColorsAlpha.redDarkAlpha, SiemensColorsAlpha.redLightAlpha, SiemensColorsAlpha.blueDarkAlpha, SiemensColorsAlpha.yellowDarkAlpha],
                 borderColor: [SiemensColors.tealLight, SiemensColors.redDark, SiemensColors.redLight, SiemensColors.blueDark, SiemensColors.yellowDark],
                 borderWidth: 2,
-                data: sampleData
+                data: sampleData,
+                
               }
             ]
           }} />

@@ -8,7 +8,8 @@ export const resources = {
         powermonitorRouteName: "Load monitoring",
         reportsRouteName: "Reports",
         languageSelectionName: "Language",
-        toggleDarkMode: "Night mode"
+        toggleDarkMode: "Night mode",
+        toggleLightMode: "Day mode"
       },
       languageDialog: {
         label: "Choose application language",
@@ -80,7 +81,8 @@ export const resources = {
         powermonitorRouteName: "Strażnik mocy",
         reportsRouteName: "Raporty",
         languageSelectionName: "Język",
-        toggleDarkMode: "Tryb nocny"
+        toggleDarkMode: "Tryb nocny",
+        toggleLightMode: "Tryb dzienny"
       },
       languageDialog: {
         label: "Wybierz język aplikacji",

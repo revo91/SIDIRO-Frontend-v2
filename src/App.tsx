@@ -31,8 +31,8 @@ const themeLight = createMuiTheme({
       contrastText: '#fff',
     },
     secondary: {
-      light: SiemensAccentRed.light2,
-      main: SiemensAccentRed.dark6,
+      light: SiemensAccentRed.light4,
+      main: SiemensAccentRed.light2,
       dark: SiemensAccentRed.dark3,
       contrastText: '#fff',
     },

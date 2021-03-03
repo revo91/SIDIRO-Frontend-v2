@@ -27,6 +27,7 @@ import { setLanguageDialogOpen } from '../actions/LanguageDialog.action';
 import siemensLogoPetrol from '../assets/sie-logo-petrol-rgb.svg';
 import siemensLogoWhite from '../assets/sie-logo-white-rgb.svg';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
+import Brightness7Icon from '@material-ui/icons/Brightness7';
 
 const drawerWidth = 240;
 
@@ -196,9 +197,9 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
             </ListItem>
             <ListItem button onClick={() => handleThemeChange()}>
               <ListItemIcon>
-                <Brightness2Icon />
+                {theme.palette.type === 'dark' ? <Brightness7Icon/> : <Brightness2Icon />}
               </ListItemIcon>
-              <ListItemText primary={t('drawer.toggleDarkMode')} />
+              <ListItemText primary={theme.palette.type === 'dark' ? t('drawer.toggleLightMode') : t('drawer.toggleDarkMode')} />
             </ListItem>
           </List>
         </Drawer>
