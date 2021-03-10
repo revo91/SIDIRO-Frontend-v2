@@ -9,6 +9,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
+import { useTranslation } from 'react-i18next';
 
 interface IData {
   rows: Array<Array<string | number | Date>>
@@ -36,10 +37,10 @@ interface IEnhancedTableProps {
 const sortRowsBy = (data: IData, sortBy: string, order: TOrder, orderDataType: TOrderDataType) => {
   const sortByColumnIndex = data.columns.findIndex(col => col === sortBy)
   if (orderDataType === 'number' || orderDataType === 'Date') {
-    data.rows.sort((a: any, b: any) => order === 'asc' ? a[sortByColumnIndex] - b[sortByColumnIndex] : b[sortByColumnIndex] - a[sortByColumnIndex])
+    data.rows.sort((a: Array<any>, b: Array<any>) => order === 'asc' ? a[sortByColumnIndex] - b[sortByColumnIndex] : b[sortByColumnIndex] - a[sortByColumnIndex])
   }
   else if (orderDataType === 'string') {
-    data.rows.sort((a: any, b: any) => order === 'asc' ? a[sortByColumnIndex].localeCompare(b[sortByColumnIndex]) : b[sortByColumnIndex].localeCompare(a[sortByColumnIndex]))
+    data.rows.sort((a: Array<any>, b: Array<any>) => order === 'asc' ? a[sortByColumnIndex].localeCompare(b[sortByColumnIndex]) : b[sortByColumnIndex].localeCompare(a[sortByColumnIndex]))
   }
   return data.rows
 };
@@ -111,13 +112,20 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense }
   const [orderDataType, setOrderDataType] = React.useState<TOrderDataType>('Date')
   const [orderBy, setOrderBy] = React.useState<string>(columns[0]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const { t } = useTranslation();
 
-  //type guards
+  /**
+  * [Type guard]
+  * @return boolean
+  */
   const isDate = (element: unknown): element is Date => {
     return (element as Date).toTimeString !== undefined;
   }
-
+  /**
+   * [Type guard]
+   * @return boolean
+   */
   const isNumber = (element: unknown): element is number => {
     return (element as number).toExponential !== undefined;
   }
@@ -187,7 +195,7 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense }
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={rows.length} />
                 </TableRow>
               )}
             </TableBody>
@@ -201,6 +209,8 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense }
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
+          labelRowsPerPage={t('tableWithSort.labelRowsPerPage')}
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} ${t('tableWithSort.labelDisplayedRows')} ${count}`}
         />
       </Paper>
     </div>

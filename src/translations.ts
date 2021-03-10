@@ -69,6 +69,10 @@ export const resources = {
         generatorStopped: "Stop",
         generatorState: "Generator state",
         showChartTooltip: "Show chart"
+      },
+      tableWithSort: {
+        labelRowsPerPage: "Rows per page",
+        labelDisplayedRows: "of"
       }
     }
   },
@@ -142,6 +146,10 @@ export const resources = {
         generatorStopped: "Stop",
         generatorState: "Stan generatora",
         showChartTooltip: "Pokaż wykres",
+      },
+      tableWithSort: {
+        labelRowsPerPage: "Wierszy na stronę",
+        labelDisplayedRows: "z"
       }
     }
   }
