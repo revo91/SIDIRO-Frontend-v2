@@ -1,17 +1,11 @@
 import React from 'react';
-import { circuitBreaker3VAWidthPixels} from '../Elevation.component';
+import { ICompartmentDevice } from './CompartmentSVG.component';
+import { circuitBreaker3VAVerticalWidthPixels, circuitBreaker3VAVerticalHeightPixels } from '../Elevation.component';
 
-interface ICircuitBreaker3VASVG {
-  x: number,
-  y: number
-}
-
-export const CircuitBreaker3VASVG: React.FC<ICircuitBreaker3VASVG> = ({ x, y }) => {
-  const modifier = () => {
-    
-  }
+export const CircuitBreaker3VAVerticalSVG: React.FC<ICompartmentDevice> = ({ x, y, scale }) => {
   return (
     <React.Fragment>
+      <g transform={`scale(${scale})`} style={{ transformOrigin: `${x + circuitBreaker3VAVerticalWidthPixels / 2}px ${y + circuitBreaker3VAVerticalHeightPixels / 2}px` }}>
         <path d="M1024.18,594.27H961.5v-42.9h62.68Zm-62.12-.56h61.56V551.93H962.06Z" transform={`translate(${x - 880.87} ${y - 404.88})`} fill="#005f87" />
         <rect x={`${x + 1.06}`} y={`${y + 1.06}`} width="147.89" height="254.97" fill="#a6c7d5" />
         <path d="M1030.87,662h-150V404.88h150ZM883,659.84h145.77V407H883Z" transform={`translate(${x - 880.87} ${y - 404.88})`} fill="#005f87" />
@@ -29,8 +23,6 @@ export const CircuitBreaker3VASVG: React.FC<ICircuitBreaker3VASVG> = ({ x, y }) 
         <rect x={`${x + 92.52}`} y={`${y + 129.62}`} width="4.47" height="4.47" fill="#a6c7d5" />
         <path d="M978.14,539.25h-5v-5h5Zm-4.47-.57h3.9v-3.9h-3.9Z" transform={`translate(${x - 880.87} ${y - 404.88})`} fill="#005f87" />
         <path d="M1005.31,608.6a6.13,6.13,0,1,1,5.37-8.8A6.18,6.18,0,0,1,1005.31,608.6Zm-.15-11.69c-7.26.28-7.37,10.69-.12,11.13C1012.47,607.9,1012.58,597.2,1005.16,596.91Z" transform={`translate(${x - 880.87} ${y - 404.88})`} fill="#005f87" />
-        <polygon points="148.95 133.06 101.48 133.06 101.48 66.35 148.95 66.35 148.95 66.91 102.05 66.91 102.05 132.5 148.95 132.5 148.95 133.06" fill="#005f87" transform={`translate(${x - 880.87} ${y - 404.88})`} />
-        <polygon points="48.52 133.06 1.05 133.06 1.05 132.5 47.95 132.5 47.95 66.91 1.05 66.91 1.05 66.35 48.52 66.35 48.52 133.06" fill="#005f87" transform={`translate(${x - 880.87} ${y - 404.88})`} />
         <path d="M994.6,588.08H982.77V576.24H994.6Zm-11.27-.56H994V576.81h-10.7Z" transform={`translate(${x - 880.87} ${y - 404.88})`} fill="#005f87" />
         <rect x={`${x + 1.05}`} y={`${y + 32.4}`} width="147.91" height="0.56" fill="#005f87" />
         <rect x={`${x + 1.05}`} y={`${y + 47.89}`} width="147.91" height="0.56" fill="#005f87" />
@@ -46,6 +38,7 @@ export const CircuitBreaker3VASVG: React.FC<ICircuitBreaker3VASVG> = ({ x, y }) 
         <path d="M974.39,505.64h-37V495.17h37Zm-36.48-.56h35.92v-9.35H937.91Z" transform={`translate(${x - 880.87} ${y - 404.88})`} fill="#005f87" />
         <rect x={`${x + 56.58}`} y={`${y + 92.94}`} width="36.59" height="0.56" fill="#005f87" />
         <rect x={`${x + 56.58}`} y={`${y + 97.56}`} width="36.59" height="0.56" fill="#005f87" />
+      </g>
     </React.Fragment>
   )
 }

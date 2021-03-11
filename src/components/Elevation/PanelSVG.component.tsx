@@ -4,9 +4,10 @@ import { compartmentHeight, reservedTopSpace, panelHeight, panelWidth, useStyles
 interface IPanelSVG {
   x: number,
   y: number,
+  name?: string
 }
 
-export const PanelSVG: React.FC<IPanelSVG> = ({ x, y, children }) => {
+export const PanelSVG: React.FC<IPanelSVG> = ({ x, y, name, children }) => {
   const classes = useStyles();
 
   return (
@@ -77,10 +78,18 @@ export const PanelSVG: React.FC<IPanelSVG> = ({ x, y, children }) => {
       {/* /////////////////////////
       Children (compartments inside)
       ///////////////////////// */}
-      {React.Children.map(children, (child, index) => {
+      {React.Children.map(children, (child) => {
         if (!React.isValidElement(child)) return
         return child
       })}
+      {/* panel name */}
+      <text
+        x={x + 0.5 * panelWidth}
+        y={y + panelHeight + 2*reservedTopSpace}
+        className={classes.panelName}
+      >
+        {name}
+      </text>
     </React.Fragment>
   )
 }
