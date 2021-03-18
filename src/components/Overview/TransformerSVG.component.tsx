@@ -6,18 +6,19 @@ import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 export interface ITransformerSVGProps {
   x: number,
   y: number,
-  name?: string,
+  name: string,
   tableName?: string,
   activePower?: number,
-  reactivePower?: number,
+  current?: number,
   powerFactor?: number,
   voltageApplied?: boolean,
   noTable?: boolean,
   //for DeviceDataDialog.component's OverviewTab visualization
   overview?: boolean,
+  breakerName: string
 }
 
-export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied, noTable, overview }) => {
+export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, current, powerFactor, voltageApplied, noTable, overview, breakerName }) => {
   const classes = useStyles();
 
   return (
@@ -67,9 +68,10 @@ export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tab
           y={y + 0.5 * lineLength}
           tableName={tableName}
           parameter1={`${activePower} kW`}
-          parameter2={`${reactivePower} kVar`}
+          parameter2={`${current} A`}
           parameter3={`${powerFactor} PF`}
           deviceType={DeviceTypes.transformer}
+          breakerName={breakerName}
         />
         : null
       }

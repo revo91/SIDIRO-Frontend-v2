@@ -8,13 +8,14 @@ interface ICouplingBreakerSVG {
   state: string,
   name: string,
   voltageApplied?: boolean,
+  drawOut?: boolean,
   //for DeviceDataDialog.component's OverviewTab visualization
   overview?: boolean,
   sectionName?: string,
-  bottomSection?: boolean,
+  bottomSection?: boolean
 }
 
-export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state, name, voltageApplied, overview, sectionName, bottomSection }) => {
+export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state, name, voltageApplied, drawOut, overview, sectionName, bottomSection }) => {
   const classes = useStyles();
 
   return (
@@ -39,39 +40,45 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
         y2={y + 1.25 * lineLength}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
-      {/* top dashes - 4 * 90deg connected lines */}
-      <line
-        x1={x}
-        y1={y + 0.25 * lineLength}
-        x2={x}
-        y2={y + 0.5 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(45 ${x} ${y + 0.25 * lineLength})`}
-      />
-      <line
-        x1={x}
-        y1={y + 0.25 * lineLength}
-        x2={x}
-        y2={y + 0.5 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(315 ${x} ${y + 0.25 * lineLength})`}
-      />
-      <line
-        x1={x}
-        y1={y + 0.15 * lineLength}
-        x2={x}
-        y2={y + 0.4 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(135 ${x} ${y + 0.4 * lineLength})`}
-      />
-      <line
-        x1={x}
-        y1={y + 0.15 * lineLength}
-        x2={x}
-        y2={y + 0.4 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(225 ${x} ${y + 0.4 * lineLength})`}
-      />
+      {drawOut ?
+        /* top dashes if drawOut - 4 * 90deg connected lines */
+        <React.Fragment>
+          <line
+            x1={x}
+            y1={y + 0.25 * lineLength}
+            x2={x}
+            y2={y + 0.5 * lineLength}
+            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(45 ${x} ${y + 0.25 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 0.25 * lineLength}
+            x2={x}
+            y2={y + 0.5 * lineLength}
+            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(315 ${x} ${y + 0.25 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 0.15 * lineLength}
+            x2={x}
+            y2={y + 0.4 * lineLength}
+            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(135 ${x} ${y + 0.4 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 0.15 * lineLength}
+            x2={x}
+            y2={y + 0.4 * lineLength}
+            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(225 ${x} ${y + 0.4 * lineLength})`}
+          />
+        </React.Fragment>
+        : null
+      }
+
       {/* 'X' symbol - 2 * 90deg crossed lines*/}
       <line
         x1={x}
@@ -105,39 +112,44 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
         y2={y + 3 * lineLength}
         className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
-      {/* bottom dashes - 4 * 90deg connected lines */}
-      <line
-        x1={x}
-        y1={y + 2.6 * lineLength}
-        x2={x}
-        y2={y + 2.85 * lineLength}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(135 ${x} ${y + 2.6 * lineLength})`}
-      />
-      <line
-        x1={x}
-        y1={y + 2.6 * lineLength}
-        x2={x}
-        y2={y + 2.85 * lineLength}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(225 ${x} ${y + 2.6 * lineLength})`}
-      />
-      <line
-        x1={x}
-        y1={y + 2.5 * lineLength}
-        x2={x}
-        y2={y + 2.75 * lineLength}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(45 ${x} ${y + 2.75 * lineLength})`}
-      />
-      <line
-        x1={x}
-        y1={y + 2.5 * lineLength}
-        x2={x}
-        y2={y + 2.75 * lineLength}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
-        transform={`rotate(315 ${x} ${y + 2.75 * lineLength})`}
-      />
+      {drawOut ?
+        /* bottom dashes - 4 * 90deg connected lines */
+        <React.Fragment>
+          <line
+            x1={x}
+            y1={y + 2.6 * lineLength}
+            x2={x}
+            y2={y + 2.85 * lineLength}
+            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(135 ${x} ${y + 2.6 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 2.6 * lineLength}
+            x2={x}
+            y2={y + 2.85 * lineLength}
+            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(225 ${x} ${y + 2.6 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 2.5 * lineLength}
+            x2={x}
+            y2={y + 2.75 * lineLength}
+            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(45 ${x} ${y + 2.75 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 2.5 * lineLength}
+            x2={x}
+            y2={y + 2.75 * lineLength}
+            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(315 ${x} ${y + 2.75 * lineLength})`}
+          />
+        </React.Fragment>
+        : null
+      }
       {/* DeviceDataDialog's OverviewTab visualization */}
       {overview && sectionName && bottomSection ?
         <React.Fragment>

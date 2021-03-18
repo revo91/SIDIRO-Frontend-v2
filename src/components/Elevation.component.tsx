@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { PanelSVG } from './Elevation/PanelSVG.component';
-import { SiemensAccentTeal, SiemensAccentYellow, SiemensAccentBlue, SiemensAccentRed } from '../utilities/SiemensColors.utility';
+import { SiemensAccentTeal, SiemensAccentYellow, SiemensAccentBlue } from '../utilities/SiemensColors.utility';
 import { CompartmentSVG } from './Elevation/CompartmentSVG.component';
 import { CircuitBreaker3VAVerticalSVG } from './Elevation/CircuitBreaker3VAVerticalSVG.component';
 import { CircuitBreaker3WLSVG } from './Elevation/CircuitBreaker3WLSVG.component';
@@ -10,7 +10,10 @@ import { CircuitBreaker3VAHorizontalSVG } from './Elevation/CircuitBreaker3VAHor
 import { SwitchDisconnector3NP1VerticalSVG } from './Elevation/SwitchDisconnector3NP1VerticalSVG.component';
 import { SwitchDisconnector3NJ6SVG } from './Elevation/SwitchDisconnector3NJ6SVG.component';
 import { SwitchDisconnector3NJ4SVG } from './Elevation/SwitchDisconnector3NJ4SVG.component';
-import { elevation } from '../mock/elevation.mock';
+// import { elevation } from '../mock/elevation.mock';
+import { UniversalTabs } from './UniversalTabs.component';
+import { useSelector } from 'react-redux';
+import { RootState } from '../reducers/Root.reducer';
 
 //common constants for SVGs to import /////////////////
 export const panelWidth = 600;
@@ -70,18 +73,38 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAnchor: 'middle',
       dominantBaseline: 'central',
       letterSpacing: '-0.02em',
-      font: `bold ${panelWidth / 100}em sans-serif `
+      font: `bold ${panelWidth / 100}em sans-serif`
     },
+    compartmentNameHorizontal: {
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentBlue.dark1,
+      textAnchor: 'end',
+      dominantBaseline: 'hanging',
+      font: `bold ${panelWidth / 200}em sans-serif`
+    },
+    compartmentNameVertical: {
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentBlue.dark1,
+      textAnchor: 'end',
+      font: `bold ${panelWidth / 200}em sans-serif`
+    },
+    svgContainer: {
+      overflowX: 'auto',
+      whiteSpace: 'nowrap'
+    },
+    svgElement: {
+      height: 'calc(100vh - 150px)'
+    }
   }));
 ///////////////////////////////////////////////////
 
 
 export const Elevation = () => {
+  const elevation = useSelector((state: RootState) => state.elevation);
+  const classes = useStyles()
 
   const renderCompartmentContent = (type: string, compartmentX: number, compartmentY: number, columns: number) => {
     switch (type) {
       case 'infeed3VA':
-        return <CircuitBreaker3VAVerticalSVG scale={1.2} x={compartmentX + panelWidth / 2 - 150 / 2} y={compartmentY + (4 * compartmentHeight + reservedTopSpace) / 2 - compartmentHeight / 2} />
+        return <CircuitBreaker3VAVerticalSVG scale={scaleService(columns)} x={compartmentX - circuitBreaker3VAVerticalWidthPixels / 2} y={compartmentY - compartmentHeight / 2} />
       case 'infeed3WL':
         return <CircuitBreaker3WLSVG scale={1.5} x={compartmentX - circuitBreaker3WLWidthPixels / 2} y={compartmentY - compartmentHeight / 2} />
       case 'outgoingFeeder3VAHorizontal':
@@ -99,12 +122,56 @@ export const Elevation = () => {
     }
   }
 
+  const renderTabsWithSwitchboards = (): Array<{ label: string, content: React.ReactNode }> => {
+    let tabs: Array<{ label: string, content: React.ReactNode }> = [];
+    elevation.switchboards.map(switchboard => {
+      const content = (
+        <div className={classes.svgContainer}>
+        <svg viewBox={`-5 -5 ${switchboard.panels.length * 620} 2350`} className={classes.svgElement}>
+          {switchboard.panels.map((panel, panelIndex) => {
+            let span: number = 0
+            return (
+              <PanelSVG key={panelIndex} x={panelIndex * panelWidth} y={0} name={panel.name} empty={panel.name === 'empty'}>
+                {panel.compartments.map((compartment, compartmentIndex) => {
+                  span += panel.compartments[compartmentIndex - 1] ? panel.compartments[compartmentIndex - 1].rowSpan : 0;
+                  const columns = compartment.columns.length;
+                  return compartment.columns.map((column, columnIndex) => {
+                    return (
+                      <CompartmentSVG
+                        key={`${compartmentIndex}-${columnIndex}`}
+                        x={(panelIndex * panelWidth) + columnIndex * panelWidth / columns}
+                        y={span * compartmentHeight} span={compartment.rowSpan}
+                        columns={columns}
+                        name={column.name}
+                      >
+                        {renderCompartmentContent(column.type,
+                          (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,
+                          span * compartmentHeight + (compartment.rowSpan * compartmentHeight + reservedTopSpace) / 2,
+                          columns)}
+                      </CompartmentSVG>
+                    )
+                  })
+                })}
+              </PanelSVG>
+            )
+          })}
+        </svg>
+        </div>
+      )
+      return tabs.push({ label: switchboard.name, content: content })
+    })
+    return tabs
+  }
+
   const scaleService = (columnNumber: number) => {
     if (columnNumber >= 7) {
       return 0.3
     }
     else if (columnNumber >= 4) {
       return 0.5
+    }
+    else if (columnNumber >= 2) {
+      return 0.8
     }
     else {
       return 1
@@ -114,42 +181,12 @@ export const Elevation = () => {
   return (
     <React.Fragment>
       <Grid container spacing={1}>
+        
         <Grid item xs={12}>
-          <svg viewBox={`-5 -5 5000 2400`} width='100%'>
-            {elevation.panels.map((panel, panelIndex) => {
-              let span: number = 0
-              return (
-                <PanelSVG key={panelIndex} x={panelIndex * panelWidth} y={0} name={panel.name}>
-                  {panel.compartments.map((compartment, compartmentIndex) => {
-                    span += panel.compartments[compartmentIndex - 1] ? panel.compartments[compartmentIndex - 1].rowSpan : 0;
-                    const columns = compartment.columns.length;
-                    return compartment.columns.map((column, columnIndex) => {
-                      return (
-                        <CompartmentSVG
-                          key={`${compartmentIndex}-${columnIndex}`}
-                          x={(panelIndex * panelWidth) + columnIndex * panelWidth / columns}
-                          y={span * compartmentHeight} span={compartment.rowSpan}
-                          columns={columns}
-                        >
-                          {renderCompartmentContent(column.type,
-                            (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,
-                            span * compartmentHeight + (compartment.rowSpan * compartmentHeight + reservedTopSpace) / 2,
-                            columns)}
-                        </CompartmentSVG>
-                      )
-                    })
-                  })}
-                </PanelSVG>
-              )
-            })}
-            {/* <PanelSVG x={10} y={1}>
-              <CompartmentSVG x={10} y={1} span={4}>
-                <CircuitBreaker3VASVG x={10 + panelWidth / 2 - 150 / 2} y={(4 * compartmentHeight + reservedTopSpace) / 2 - 150 / 2} />
-              </CompartmentSVG>
-              <CompartmentSVG x={10} y={1 + 4 * compartmentHeight} span={4} />
-              <CompartmentSVG x={10} y={1 + 8 * compartmentHeight} span={4} />
-            </PanelSVG> */}
-          </svg>
+          <UniversalTabs
+            name='elevation'
+            tabs={renderTabsWithSwitchboards()}
+          />
         </Grid>
       </Grid>
     </React.Fragment>

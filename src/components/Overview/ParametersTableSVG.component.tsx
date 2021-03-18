@@ -10,10 +10,11 @@ export interface IParametersTableSVG {
   parameter1: string | number,
   parameter2: string | number,
   parameter3: string | number,
-  deviceType: string
+  deviceType: string,
+  breakerName: string
 }
 
-export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3, deviceType }) => {
+export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3, deviceType, breakerName }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -84,7 +85,12 @@ export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableN
         width={1.1 * lineLength}
         height={1.2 * lineLength}
         className={classes.clickableOverlay}
-        onClick={()=>dispatch(setDeviceDataDialogOpen(true, tableName, deviceType))}
+        onClick={()=>dispatch(setDeviceDataDialogOpen({
+          open: true,
+          deviceName: tableName,
+          deviceType: deviceType,
+          breakerName: breakerName
+        }))}
       />
     </React.Fragment>
   )

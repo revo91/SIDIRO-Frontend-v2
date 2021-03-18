@@ -7,7 +7,7 @@ interface ICircuitBreakerSVG {
   x: number,
   y: number,
   state: string,
-  name?: string,
+  name: string,
   tableName?: string,
   activePower?: number,
   current?: number,
@@ -50,7 +50,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
       {!overview ?
         <text
           x={x}
-          y={y}
+          y={y + 0.1 * lineLength}
           className={classes.circuitBreakersNameStyle}
         >
           {name}&nbsp;
@@ -109,10 +109,11 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
           parameter2={`${current} A`}
           parameter3={`${powerFactor} PF`}
           deviceType={DeviceTypes.circuitBreaker}
+          breakerName={name}
         /> : null
       }
       {/* DeviceDataDialog's OverviewTab visualization */}
-      {overview && sectionName && outgoingFeederName ?
+      {overview && outgoingFeederName ?
         <React.Fragment>
           {topSection ?
             <React.Fragment>

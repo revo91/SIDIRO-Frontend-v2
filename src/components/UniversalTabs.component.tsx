@@ -51,10 +51,10 @@ const useStyles = makeStyles((theme) => ({
     '& > * + *': {
       paddingTop: theme.spacing(2),
     },
-  },
+  }
 }));
 
-interface IUniversalTabsProps {
+export interface IUniversalTabsProps {
   name: string,
   tabs: Array<{ label: string; content: React.ReactNode; }>
 }

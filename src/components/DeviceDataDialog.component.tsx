@@ -40,6 +40,7 @@ export const DeviceDataDialog: React.FC = () => {
   const open = useSelector((state: RootState) => state.deviceDataDialog.open);
   const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
   const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
+  const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
   const dispatch = useDispatch();
 
   const showTabsAccordingToDeviceType = () => {
@@ -56,10 +57,18 @@ export const DeviceDataDialog: React.FC = () => {
   }
 
   return (
-    <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen(false, deviceName, deviceType))} TransitionComponent={Transition}>
+    <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen({open: false,
+      deviceName: deviceName,
+      deviceType: deviceType,
+      breakerName: breakerName}))} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={() => dispatch(setDeviceDataDialogOpen(false, deviceName, deviceType))} aria-label="close">
+          <IconButton edge="start" color="inherit" onClick={() => dispatch(setDeviceDataDialogOpen({
+            open: false,
+            deviceName: deviceName,
+            deviceType: deviceType,
+            breakerName: breakerName
+          }))} aria-label="close">
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>

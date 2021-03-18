@@ -19,7 +19,7 @@ export const Events = () => {
           <Typography variant='h2' gutterBottom>{t('eventsPage.title')}</Typography>
         </Grid>
       </Grid>
-      <Grid container spacing={5}>
+      <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <DatePicker
             cancelLabel={t('datePicker.cancelButton')}

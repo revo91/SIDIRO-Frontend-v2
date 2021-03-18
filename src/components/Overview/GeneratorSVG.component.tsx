@@ -4,7 +4,7 @@ import { ParametersTableSVG } from './ParametersTableSVG.component';
 import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 import { ITransformerSVGProps } from './TransformerSVG.component';
 
-export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, reactivePower, powerFactor, voltageApplied, noTable, overview }) => {
+export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, tableName, activePower, current, powerFactor, voltageApplied, noTable, overview, breakerName }) => {
   const classes = useStyles();
 
   return (
@@ -48,9 +48,10 @@ export const GeneratorSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, table
           y={y + 0.5 * lineLength}
           tableName={tableName}
           parameter1={`${activePower} kW`}
-          parameter2={`${reactivePower} kVar`}
+          parameter2={`${current} A`}
           parameter3={`${powerFactor} PF`}
           deviceType={DeviceTypes.generator}
+          breakerName={breakerName}
         />
         : null
       }

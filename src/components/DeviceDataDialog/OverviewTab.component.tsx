@@ -53,6 +53,7 @@ export const OverviewTab = () => {
   const { t } = useTranslation();
   const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
   const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
+  const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
   const dispatch = useDispatch();
 
   const currentTable = (
@@ -175,9 +176,9 @@ export const OverviewTab = () => {
               y={0}
               state={BreakerStates.open}
               overview
-              sectionName='Sekcja TR1'
+              sectionName=''
               outgoingFeederName={deviceName}
-              name='CB1'
+              name={breakerName}
               topSection
             />
           </svg>
@@ -191,6 +192,7 @@ export const OverviewTab = () => {
               name='TR1'
               noTable
               overview
+              breakerName='kk'
             />
             <CouplingBreakerSVG
               x={8}
@@ -212,6 +214,7 @@ export const OverviewTab = () => {
               name='GEN1'
               noTable
               overview
+              breakerName='df'
             />
             <CouplingBreakerSVG
               x={8}

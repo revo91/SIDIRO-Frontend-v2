@@ -1,0 +1,1 @@
+export const SET_ELEVATION = 'SET_ELEVATION';

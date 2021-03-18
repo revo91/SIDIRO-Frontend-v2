@@ -23,12 +23,12 @@ export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
       {/* breaker component passed as a prop, if coupling */}
-      {endCoupling !== undefined ?
+      {endCoupling ?
         endCoupling
         : null
       }
       {/* line connection to next section */}
-      {endCoupling !== undefined ?
+      {endCoupling ?
         <React.Fragment>
           {/* horizontal line */}
           <line

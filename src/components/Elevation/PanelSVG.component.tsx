@@ -5,14 +5,17 @@ interface IPanelSVG {
   x: number,
   y: number,
   name?: string
+  empty?: boolean
 }
 
-export const PanelSVG: React.FC<IPanelSVG> = ({ x, y, name, children }) => {
+export const PanelSVG: React.FC<IPanelSVG> = ({ x, y, name, empty, children }) => {
   const classes = useStyles();
 
   return (
     <React.Fragment>
-      {/* top sivacon plate */}
+      {!empty?
+      /* top sivacon plate */
+      <React.Fragment>
       <text
         x={x + 0.5 * panelWidth}
         y={y + 0.2 * compartmentHeight}
@@ -90,6 +93,9 @@ export const PanelSVG: React.FC<IPanelSVG> = ({ x, y, name, children }) => {
       >
         {name}
       </text>
+      </React.Fragment>
+    :null}
+      
     </React.Fragment>
   )
 }
