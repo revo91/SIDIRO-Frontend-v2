@@ -2,7 +2,7 @@ export const resources = {
   en: {
     translation: {
       drawer: {
-        overviewRouteName: "Overview",
+        overviewRouteName: "System topology",
         elevationRouteName: "Elevation",
         eventsRouteName: "Events",
         powermonitorRouteName: "Load monitoring",
@@ -19,13 +19,18 @@ export const resources = {
       eventsPage: {
         title: "Events",
         dateFromLabel: "From",
-        dateToLabel: "To"
+        dateToLabel: "To",
+        severity: "Severity",
+        time: "Time",
+        event: "Event",
+        switchboard: "Switchboard",
+        device: "Device"
       },
       powermonitorPage: {
         title: "Power monitor"
       },
       overviewPage: {
-        title: "Overview"
+        switchboard: "Switchboard"
       },
       elevationPage: {
         title: "Elevation"
@@ -79,7 +84,7 @@ export const resources = {
   pl: {
     translation: {
       drawer: {
-        overviewRouteName: "Przegląd",
+        overviewRouteName: "Topologia systemu",
         elevationRouteName: "Elewacja",
         eventsRouteName: "Zdarzenia",
         powermonitorRouteName: "Strażnik mocy",
@@ -96,13 +101,18 @@ export const resources = {
       eventsPage: {
         title: "Zdarzenia",
         dateFromLabel: "Od",
-        dateToLabel: "Do"
+        dateToLabel: "Do",
+        severity: "Ważność",
+        time: "Czas",
+        event: "Zdarzenie",
+        switchboard: "Rozdzielnica",
+        device: "Urządzenie"
       },
       powermonitorPage: {
         title: "Strażnik mocy"
       },
       overviewPage: {
-        title: "Przegląd"
+        switchboard: "Rozdzielnica"
       },
       elevationPage: {
         title: "Elewacja"

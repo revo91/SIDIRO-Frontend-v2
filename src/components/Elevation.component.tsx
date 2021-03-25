@@ -69,11 +69,11 @@ export const useStyles = makeStyles((theme: Theme) =>
       fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentBlue.light1
     },
     panelName: {
-      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentYellow.dark6,
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentBlue.dark5,
       textAnchor: 'middle',
       dominantBaseline: 'central',
       letterSpacing: '-0.02em',
-      font: `bold ${panelWidth / 100}em sans-serif`
+      font: `bold ${panelWidth / 150}em sans-serif`
     },
     compartmentNameHorizontal: {
       fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentBlue.dark1,

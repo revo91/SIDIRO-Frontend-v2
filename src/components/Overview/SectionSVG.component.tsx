@@ -16,9 +16,9 @@ export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied
     <React.Fragment>
       {/* top to bottom */}
       <line
-        x1={x}
+        x1={x - 0.25 * lineLength}
         y1={y}
-        x2={x + length}
+        x2={x + length + 0.25 * lineLength}
         y2={y}
         className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />

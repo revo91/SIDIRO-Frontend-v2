@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { LineChart } from '../LineChart.component';
-import { SiemensAccentTeal, SiemensAccentGreen, SiemensAccentRed } from '../../utilities/SiemensColors.utility';
+import { SiemensAccentTeal, SiemensAccentGreen, SiemensAccentRed, SiemensAccentBlue } from '../../utilities/SiemensColors.utility';
 import { DatePicker, TimePicker } from "@material-ui/pickers";
 import { useTranslation } from 'react-i18next';
 
@@ -16,35 +16,42 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const CurrentTab = () => {
+export const PowerTab = () => {
   const [dateFrom, changeDateFrom] = React.useState<Date | null>(new Date());
   const classes = useStyles();
   const { t } = useTranslation();
-  const [l1, setL1] = React.useState<Array<{t: number | Date, y: number}>>([{t: 0, y: 0}])
-  const [l2, setL2] = React.useState<Array<{t: number | Date, y: number}>>([{t: 0, y: 0}])
-  const [l3, setL3] = React.useState<Array<{t: number | Date, y: number}>>([{t: 0, y: 0}])
+  const [activePowerExport, setActivePowerExport] = React.useState<Array<{t: number | Date, y: number}>>([{t: 0, y: 0}])
+  const [reactivePowerExport, setReactivePowerExport] = React.useState<Array<{t: number | Date, y: number}>>([{t: 0, y: 0}])
+  const [activePowerImport, setActivePowerImport] = React.useState<Array<{t: number | Date, y: number}>>([{t: 0, y: 0}])
+  const [reactivePowerImport, setRectivePowerImport] = React.useState<Array<{t: number | Date, y: number}>>([{t: 0, y: 0}])
 
   const generateSampleData = () => {
     let arr1 = []
     let arr2 = []
     let arr3 = []
-    for (let i = 0; i < 25; i++) {
+    let arr4 = []
+    for (let i = 0; i < 24; i++) {
       arr1.push({
-        t: new Date(2021, 2, 1, i+1),
+        t: new Date(2021, 2, 5, i),
         y: 10+ Math.random()*10
       })
       arr2.push({
-        t: new Date(2021, 2, 1, i+1),
+        t: new Date(2021, 2, 5, i),
         y: 10+ Math.random()*10
       })
       arr3.push({
-        t: new Date(2021, 2, 1, i+1),
+        t: new Date(2021, 2, 5, i),
+        y: 10+ Math.random()*10
+      })
+      arr4.push({
+        t: new Date(2021, 2, 5, i),
         y: 10+ Math.random()*10
       })
     }
-    setL1(arr1)
-    setL2(arr2)
-    setL3(arr3)
+    setActivePowerExport(arr1)
+    setReactivePowerExport(arr2)
+    setActivePowerImport(arr3)
+    setRectivePowerImport(arr4)
   }
 
   React.useEffect(()=>{
@@ -59,29 +66,37 @@ export const CurrentTab = () => {
             data={{
               datasets: [
                 {
-                  label: "Prąd L1 [A]",
-                  backgroundColor: SiemensAccentRed.dark6,
-                  borderColor: SiemensAccentRed.dark6,
+                  label: "Total Active Power Import [kW]",
+                  backgroundColor: SiemensAccentTeal.light1,
+                  borderColor: SiemensAccentTeal.light1,
                   fill: false,
                   lineTension: 0,
-                  data: l1
+                  data: activePowerImport
                 },
                 {
-                  label: "Prąd L2 [A]",
-                  backgroundColor: SiemensAccentGreen.dark6,
-                  borderColor: SiemensAccentGreen.dark6,
+                  label: "Total Active Power Export [kW]",
+                  backgroundColor: SiemensAccentRed.light1,
+                  borderColor: SiemensAccentRed.light1,
                   fill: false,
                   lineTension: 0,
-                  data: l2
+                  data: activePowerExport
                 },
                 {
-                  label: "Prąd L3 [A]",
-                  backgroundColor: SiemensAccentTeal.dark6,
-                  borderColor: SiemensAccentTeal.dark6,
+                  label: "Total Reactive Power import [kvar]",
+                  backgroundColor: SiemensAccentGreen.light1,
+                  borderColor: SiemensAccentGreen.light1,
                   fill: false,
                   lineTension: 0,
-                  data: l3
-                }
+                  data: reactivePowerImport
+                },
+                {
+                  label: "Total Reactive Power export [kvar]",
+                  backgroundColor: SiemensAccentBlue.light1,
+                  borderColor: SiemensAccentBlue.light1,
+                  fill: false,
+                  lineTension: 0,
+                  data: reactivePowerExport
+                },
               ]
             }} />
         </Grid>

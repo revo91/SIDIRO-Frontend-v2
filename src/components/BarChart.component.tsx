@@ -24,11 +24,13 @@ export const BarChart: React.FC<BarChartProps> = ({ data, chartTitle, horizontal
       options: {
         scales: {
           yAxes: [{
+            stacked: true,
             ticks: {
               fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
             }
           }],
           xAxes: [{
+            stacked: true,
             ticks: {
               fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
             }

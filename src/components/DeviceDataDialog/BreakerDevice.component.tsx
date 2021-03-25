@@ -2,6 +2,8 @@ import React from 'react';
 import { UniversalTabs } from '../UniversalTabs.component';
 import { CurrentTab } from './CurrentTab.component';
 import { OverviewTab } from './OverviewTab.component';
+import { PowerTab } from './PowerTab.component';
+import { THDITab } from './THDITab.component';
 import { useTranslation } from 'react-i18next';
 
 export const BreakerDevice = () => {
@@ -18,10 +20,10 @@ export const BreakerDevice = () => {
           label: t('deviceDataDialog.currentTab'), content: <CurrentTab />
         },
         {
-          label: t('deviceDataDialog.powerTab'), content: <CurrentTab />
+          label: t('deviceDataDialog.powerTab'), content: <PowerTab />
         },
         {
-          label: t('deviceDataDialog.THDITab'), content: <CurrentTab />
+          label: t('deviceDataDialog.THDITab'), content: <THDITab />
         }]}
     />
   )

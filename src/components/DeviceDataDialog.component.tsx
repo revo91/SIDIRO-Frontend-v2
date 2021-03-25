@@ -48,7 +48,6 @@ export const DeviceDataDialog: React.FC = () => {
       case DeviceTypes.circuitBreaker:
         return <BreakerDevice />
       case DeviceTypes.generator:
-        return <GeneratorDevice />
       case DeviceTypes.transformer:
         return <TransformerDevice />
       default:
@@ -57,10 +56,12 @@ export const DeviceDataDialog: React.FC = () => {
   }
 
   return (
-    <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen({open: false,
+    <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen({
+      open: false,
       deviceName: deviceName,
       deviceType: deviceType,
-      breakerName: breakerName}))} TransitionComponent={Transition}>
+      breakerName: breakerName
+    }))} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={() => dispatch(setDeviceDataDialogOpen({

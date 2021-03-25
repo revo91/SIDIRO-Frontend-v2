@@ -7,7 +7,7 @@ import { useUpdateChartDatasets } from '../hooks/useUpdateChartDatasets.hook';
 
 export interface PieChartProps {
   data: {
-    labels: Array<string>,
+    labels?: Array<string>,
     datasets: Array<{ label: string, backgroundColor: Array<string>, borderColor?: Array<string>, borderWidth?: number, data: Array<number> }>
   },
   chartTitle?: string

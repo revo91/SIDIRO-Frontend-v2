@@ -19,15 +19,22 @@ interface LineChartProps {
       }>
     }>
   },
-  chartTitle?: string
+  chartTitle?: string,
+  minTime?: Date | number,
+  maxTime?: Date | number
 }
 
-export const LineChart: React.FC<LineChartProps> = ({ data,chartTitle }) => {
+export const LineChart: React.FC<LineChartProps> = ({ data,chartTitle, minTime, maxTime }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
   useUpdateChartFontColor(chartInstance, SiemensAccentYellow.light6); 
   useUpdateChartDatasets(chartInstance, data)
+ 
+  if(Chart.defaults.global.elements?.point?.radius)
+  {
+    Chart.defaults.global.elements.point.radius = 0
+  }
 
   const chartConfig = useMemo(() => {
     return {
@@ -44,13 +51,15 @@ export const LineChart: React.FC<LineChartProps> = ({ data,chartTitle }) => {
               fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
             },
             time: {
+             
               tooltipFormat: "YYYY-MM-DD HH:mm:ss",
               displayFormats: {
                 millisecond: "HH:mm:ss",
                 second: "HH:mm:ss",
                 minute: "HH:mm",
-                hour: "HH",
-                day: "MMM D"
+                hour: "HH:mm:ss",
+                day: "MMM D",
+                
               },
             },
           }],
@@ -78,7 +87,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data,chartTitle }) => {
         },
         responsive: true,
         maintainAspectRatio: true,
-        aspectRatio: 3
+        aspectRatio: 3,
       },
     }
   }, [data, chartTitle, theme.palette.type, theme.palette.text.primary]);

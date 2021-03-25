@@ -82,7 +82,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAnchor: 'end',
       dominantBaseline: 'hanging',
       letterSpacing: '-0.05em',
-      fontSize: `${circleRadius / 18}em`,
+      fontSize: `${circleRadius / 26}em`,
     },
     clickableOverlay: {
       fill: 'rgba(255, 255, 255, 0)',
@@ -125,6 +125,9 @@ enum BreakerTypes {
   drawOutCircuitBreaker = 'drawOutCircuitBreaker'
 }
 
+const negativeOffsetX = -4;
+const negativeOffsetY = -3;
+
 export const Overview = () => {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -153,9 +156,10 @@ export const Overview = () => {
     overview.diagrams.forEach((diagram, diagramIndex) => {
       const content = (
         <div className={classes.svgContainer}>
-          <svg viewBox={`-4 -3 ${svgViewBoxX} ${svgViewBoxY}`} className={classes.svgElement}>
-            {diagram.sections.map((section, sectionIndex) => {
-              const infeeds = section.infeeds?.map((infeed, infeedIndex) => {
+          <svg viewBox={`${negativeOffsetX} ${negativeOffsetY} ${svgViewBoxX} ${svgViewBoxY}`} className={classes.svgElement}>
+            {renderDiagramName(diagram.name, svgViewBoxX + negativeOffsetX, 0 + negativeOffsetY)}
+            {diagram.sections.map((section: any, sectionIndex: any) => {
+              const infeeds = section.infeeds?.map((infeed: any, infeedIndex: any) => {
                 return renderInfeed(infeed.name,
                   infeed.tableName,
                   infeed.breaker,
@@ -164,22 +168,25 @@ export const Overview = () => {
                   0)
               })
               ///////////////////////////
-              const sectionLines = renderSection(sectionIndex * svgViewBoxX / diagram.sections.length + lineLength / 2,
-                6 * lineLength,
-                svgViewBoxX / diagram.sections.length - lineLength,
+              const sectionLines = renderSection(sectionIndex * svgViewBoxX / diagram.sections.length + lineLength / 2, // x
+                6 * lineLength, // y
+                svgViewBoxX / diagram.sections.length - lineLength, // length
                 section.coupling.type !== '' ? {
                   state: section.coupling.state,
                   name: section.coupling.name,
                   drawOut: section.coupling.type === 'drawOutcircuitBreaker' ? true : false
                 } :
                   false);
-              const breakers = section.breakers?.map((breaker, breakerIndex) => {
+              const breakers = section.breakers?.map((breaker: any, breakerIndex: any) => {
+                const nextSwitchboardIndex = overview.diagrams.findIndex(diagram => diagram.name === breaker.nextSwitchboardName);
                 return renderBreaker(breaker.name,
                   breaker.tableName,
                   breaker.type,
                   breaker.state,
                   sectionIndex * svgViewBoxX / diagram.sections.length + lineLength / 2 + breakerIndex * lineLength * 1.2,
-                  6 * lineLength)
+                  6 * lineLength,
+                  nextSwitchboardIndex !== -1 ? nextSwitchboardIndex : undefined
+                )
               })
               return <React.Fragment key={sectionIndex}>{infeeds}{sectionLines}{breakers}</React.Fragment>
 
@@ -192,7 +199,19 @@ export const Overview = () => {
     return tabs
   }
 
-  const renderInfeed = (name: string, tableName: string, breaker: { name: string, type: string, state: string }, type: string, x: number, y: number) => {
+  const renderDiagramName = (name: string, x: number, y: number) => {
+    return (
+      <text
+        x={x}
+        y={y}
+        className={classes.infeedsNameStyle}
+      >
+        {`${t('overviewPage.switchboard')} ${name}`}
+      </text>
+    )
+  }
+
+  const renderInfeed = (name: string, tableName: string, breaker: { name: string, type: string, tableName: string, state: string }, type: string, x: number, y: number) => {
     switch (type) {
       case InfeedTypes.transformer:
         return (
@@ -206,6 +225,7 @@ export const Overview = () => {
               current={sampleParams.current}
               powerFactor={sampleParams.powerFactor}
               breakerName={breaker.name}
+
             />
             {renderBreaker(breaker.name, 'test', breaker.type, breaker.state, x, y + 3 * lineLength)}
           </React.Fragment>
@@ -222,16 +242,29 @@ export const Overview = () => {
               current={sampleParams.current}
               powerFactor={sampleParams.powerFactor}
               breakerName={breaker.name}
+              voltageApplied
             />
             {renderBreaker(breaker.name, 'test', breaker.type, breaker.state, x, y + 3 * lineLength)}
           </React.Fragment>
         )
-      default: return renderBreaker(breaker.name, '', breaker.type, breaker.state, x, y + 3 * lineLength)
+      case '': //no infeed - for distribution boards to not show gen/tr and table above cb
+        const previousSwitchboardIndex = overview.diagrams.findIndex(diagram => diagram.name === breaker.tableName)
+        return renderBreaker(breaker.name, breaker.tableName, breaker.type, breaker.state, x, y + 3 * lineLength, undefined, true, previousSwitchboardIndex !== -1 ? previousSwitchboardIndex : undefined)
+      default:
+        return renderBreaker(breaker.name, '', breaker.type, breaker.state, x, y + 3 * lineLength)
 
     }
   }
 
-  const renderBreaker = (name: string, tableName: string | undefined, type: string, state: string, x: number, y: number) => {
+  const renderBreaker = (name: string,
+    tableName: string | undefined,
+    type: string,
+    state: string,
+    x: number,
+    y: number,
+    nextSwitchboardIndex: number | undefined = undefined,
+    tableAbove: boolean | undefined = undefined,
+    previousSwitchboardIndex: number | undefined = undefined) => {
     switch (type) {
       case BreakerTypes.circuitBreaker:
         return (
@@ -247,6 +280,9 @@ export const Overview = () => {
             powerFactor={sampleParams.powerFactor}
             voltageApplied={false}
             noTable={tableName === undefined}
+            nextSwitchboardIndex={nextSwitchboardIndex}
+            previousSwitchboardIndex={previousSwitchboardIndex}
+            tableAbove={tableAbove}
           />
         )
       case BreakerTypes.drawOutCircuitBreaker:
@@ -267,7 +303,7 @@ export const Overview = () => {
   const renderSection = (x: number, y: number, length: number, endCoupling?: { state: string, name: string, drawOut: boolean } | false,) => {
     return (
       <SectionSVG
-      key={`${x}-${y}`}
+        key={`${x}-${y}`}
         x={x}
         y={y}
         length={length}
@@ -295,75 +331,6 @@ export const Overview = () => {
             tabs={renderTabsWithCircuitDiagrams()}
           />
         </Grid>
-        {/* <Grid item xs={12}>
-          <div className={classes.svgContainer}>
-            <svg viewBox={`0 0 150 74`} className={classes.svgElement}>
-              <TransformerSVG
-                x={10}
-                y={1}
-                name='TR1'
-                tableName='Trafo TR1'
-                activePower={sampleParams.activePower}
-                reactivePower={sampleParams.reactivePower}
-                powerFactor={sampleParams.powerFactor}
-                voltageApplied
-              />
-              <TransformerSVG
-                x={30}
-                y={1}
-                name='TR1'
-                tableName='Trafo TR1'
-                activePower={sampleParams.activePower}
-                reactivePower={sampleParams.reactivePower}
-                powerFactor={sampleParams.powerFactor}
-                voltageApplied
-              />
-              <CouplingBreakerSVG
-                x={10}
-                y={1 + 3 * lineLength}
-                state='open'
-                name='Q1'
-                voltageApplied
-                drawOut
-              />
-              <CircuitBreakerSVG
-                x={10}
-                y={1 + 6 * lineLength}
-                state='open'
-                name='cb1'
-                tableName='B1A komp.'
-                activePower={sampleParams.activePower}
-                current={sampleParams.current}
-                powerFactor={sampleParams.powerFactor}
-                voltageApplied={false}
-              />
-              <GeneratorSVG
-                x={120}
-                y={1}
-                name='GEN1'
-                tableName='Generator'
-                activePower={sampleParams.activePower}
-                reactivePower={sampleParams.reactivePower}
-                powerFactor={sampleParams.powerFactor}
-                voltageApplied
-              />
-              <SectionSVG
-                x={10}
-                y={1 + 6 * lineLength}
-                length={50}
-                voltageApplied={false}
-                endCoupling={<CouplingBreakerSVG
-                  x={60}
-                  y={1 + 3 * lineLength}
-                  state='open'
-                  name='Q1'
-                  voltageApplied={false}
-                />}
-              />
-            </svg>
-          </div>
-        </Grid>
-       */}
       </Grid>
     </React.Fragment>
   )

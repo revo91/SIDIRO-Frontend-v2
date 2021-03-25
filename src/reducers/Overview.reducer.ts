@@ -19,9 +19,9 @@ const initialState = {
               tableName: 'Trafo',
               type: 'transformer',
               breaker: {
-                name: 'Q00',
+                name: 'Q0',
                 type: 'drawOutCircuitBreaker',
-                state: 'open'
+                state: 'closed'
               }
             },
             {
@@ -40,46 +40,49 @@ const initialState = {
               name: 'QT02',
               tableName: 'Reserve',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed',
             }
           ],
           coupling: {
             name: 'QT01',
             type: 'circuitBreaker',
-            state: 'open'
+            state: 'closed'
           }
         },
         {
           breakers: [
             {
               name: 'QT01',
-              tableName: 'L34-35',
+              tableName: 'HVPP-1',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed',
+              nextSwitchboardName: 'HVPP-1'
             },
             {
               name: 'QT02',
-              tableName: 'Mixing r.1',
+              tableName: 'HVPP-2',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed',
+              nextSwitchboardName: 'HVPP-2'
             },
             {
               name: 'QT03',
-              tableName: 'Build. inst.',
+              tableName: 'HVPP-3',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed',
+              nextSwitchboardName: 'HVPP-3'
             },
             {
               name: 'QT04',
               tableName: 'Compress.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT05',
               tableName: 'Res./charg.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             }
           ],
           coupling: {
@@ -102,8 +105,9 @@ const initialState = {
               type: '',
               breaker: {
                 name: 'Q0',
+                tableName: 'RG-MDP1',
                 type: 'circuitBreaker',
-                state: 'open'
+                state: 'closed'
               }
             }
           ],
@@ -112,55 +116,55 @@ const initialState = {
               name: 'QT01',
               tableName: 'L34-Cast.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT02',
               tableName: 'L35-Cast.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT03',
               tableName: 'L34-Wind.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT04',
               tableName: 'L35-Wind.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT05',
               tableName: 'L36-Cast.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT11',
               tableName: 'Cooling',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT6',
               tableName: 'L37-Cast.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT7',
               tableName: 'L36-Wind.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT8',
               tableName: 'L37-Wind.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             }
           ],
           coupling: {
@@ -184,7 +188,8 @@ const initialState = {
               breaker: {
                 name: 'Q0',
                 type: 'circuitBreaker',
-                state: 'open'
+                tableName: 'RG-MDP1',
+                state: 'closed'
               }
             }
           ],
@@ -193,61 +198,61 @@ const initialState = {
               name: 'QT01',
               tableName: 'L34&L35 Mix.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT02',
               tableName: 'L36&L37 Mix.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT11',
               tableName: 'Blend. RB34',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT12',
               tableName: 'Blend. RB35',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT13',
               tableName: 'Blend. RB36',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT14',
               tableName: 'Blend. RB37',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT21',
               tableName: 'Mix. ZTM34',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT22',
               tableName: 'Mix. ZTM35',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT23',
               tableName: 'Mix. ZTM36',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT24',
               tableName: 'Mix. ZTM37',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
           ],
           coupling: {
@@ -271,7 +276,8 @@ const initialState = {
               breaker: {
                 name: 'Q0',
                 type: 'circuitBreaker',
-                state: 'open'
+                tableName: 'RG-MDP1',
+                state: 'closed'
               }
             }
           ],
@@ -280,85 +286,85 @@ const initialState = {
               name: 'QM01',
               tableName: '29-40/A-B1',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QM02',
               tableName: '29-40/B1-D',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QM03',
               tableName: '13-29/A-D',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QM04',
               tableName: '1-13/A-D',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QP01',
               tableName: 'L34&L35 Cas.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QP02',
               tableName: 'L36&L37 Cas.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QP03',
               tableName: 'Mixing r.1',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QP04',
               tableName: 'Reserve',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QB01',
               tableName: 'IT Room',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QB02',
               tableName: 'Office gr.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QB03',
               tableName: 'Office 1f.',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QB04',
               tableName: 'Reserve',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT01',
               tableName: 'Pump Room',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
             {
               name: 'QT02',
               tableName: 'Boiler room',
               type: 'circuitBreaker',
-              state: 'open'
+              state: 'closed'
             },
           ],
           coupling: {

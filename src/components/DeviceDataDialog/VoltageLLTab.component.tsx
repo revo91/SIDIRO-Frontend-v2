@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const CurrentTab = () => {
+export const VoltageLLTab = () => {
   const [dateFrom, changeDateFrom] = React.useState<Date | null>(new Date());
   const classes = useStyles();
   const { t } = useTranslation();
@@ -28,18 +28,18 @@ export const CurrentTab = () => {
     let arr1 = []
     let arr2 = []
     let arr3 = []
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i <= 150; i++) {
       arr1.push({
-        t: new Date(2021, 2, 1, i+1),
-        y: 10+ Math.random()*10
+        t: parseInt((new Date('2021.01.01').getTime()).toFixed(0)) + i*90000,
+        y: 230+ Math.random()*10
       })
       arr2.push({
-        t: new Date(2021, 2, 1, i+1),
-        y: 10+ Math.random()*10
+        t: parseInt((new Date('2021.01.01').getTime()).toFixed(0)) + i*90000,
+        y: 230+ Math.random()*10
       })
       arr3.push({
-        t: new Date(2021, 2, 1, i+1),
-        y: 10+ Math.random()*10
+        t: parseInt((new Date('2021.01.01').getTime()).toFixed(0)) + i*90000,
+        y: 230
       })
     }
     setL1(arr1)
@@ -59,7 +59,7 @@ export const CurrentTab = () => {
             data={{
               datasets: [
                 {
-                  label: "Prąd L1 [A]",
+                  label: "Voltage L1-L2 [V]",
                   backgroundColor: SiemensAccentRed.dark6,
                   borderColor: SiemensAccentRed.dark6,
                   fill: false,
@@ -67,7 +67,7 @@ export const CurrentTab = () => {
                   data: l1
                 },
                 {
-                  label: "Prąd L2 [A]",
+                  label: "Voltage L2-L3 [V]",
                   backgroundColor: SiemensAccentGreen.dark6,
                   borderColor: SiemensAccentGreen.dark6,
                   fill: false,
@@ -75,7 +75,7 @@ export const CurrentTab = () => {
                   data: l2
                 },
                 {
-                  label: "Prąd L3 [A]",
+                  label: "Voltage L3-L1 [V]",
                   backgroundColor: SiemensAccentTeal.dark6,
                   borderColor: SiemensAccentTeal.dark6,
                   fill: false,

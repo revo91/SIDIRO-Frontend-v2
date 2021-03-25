@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '5px'
     },
     overviewTabSVGMaxHeight: {
-      maxHeight: '800px',
+      maxHeight: '600px',
       boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)'
     }
   }),
@@ -55,6 +55,15 @@ export const OverviewTab = () => {
   const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
   const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
   const dispatch = useDispatch();
+
+  const eventTable = (
+    <div className={classes.masonryLayoutPanel}>
+      <UniversalTable
+        columns={['Ważność', 'Zdarzenie', 'Czas']}
+        rows={[[`Wysoka`, 'Wyłączenie wyłącznika QT01', '2021.03.11'], [`Wysoka`, 'Wyłączenie wyłącznika QT01', '2021.03.10'], [`Wysoka`, 'Wyłączenie wyłącznika QT01', '2021.03.09']]}
+        small />
+    </div>
+  )
 
   const currentTable = (
     <div className={classes.masonryLayoutPanel}>
@@ -78,7 +87,8 @@ export const OverviewTab = () => {
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
-        rows={[[`${t('deviceDataDialog.activePower')}`, '100 kW'], [`${t('deviceDataDialog.reactivePower')}`, '50 kvar'], [`${t('deviceDataDialog.apparentPower')}`, '30 kVA'], [`${t('deviceDataDialog.cosTotal')}`, '0.99 PF']]}
+        rows={[['Moc czynna pobrana z sieci', '100 kW'], ['Moc czynna oddana do sieci', '10 kW'], ['Moc bierna indukcyjna', '100 kvar'], ['Moc indukcyjna pojemnościowa', '100 kvar'],
+        ['Współczynnik mocy', '0.99 PF']]}
         small />
     </div>
   )
@@ -189,7 +199,7 @@ export const OverviewTab = () => {
             <TransformerSVG
               x={8}
               y={0}
-              name='TR1'
+              name={deviceName}
               noTable
               overview
               breakerName='kk'
@@ -198,9 +208,9 @@ export const OverviewTab = () => {
               x={8}
               y={18}
               state={BreakerStates.open}
-              name='CB1'
+              name={breakerName}
               overview
-              sectionName='section1'
+              sectionName=''
               bottomSection
             />
           </svg>
@@ -211,7 +221,7 @@ export const OverviewTab = () => {
             <GeneratorSVG
               x={8}
               y={0}
-              name='GEN1'
+              name={deviceName}
               noTable
               overview
               breakerName='df'
@@ -220,9 +230,9 @@ export const OverviewTab = () => {
               x={8}
               y={18}
               state={BreakerStates.open}
-              name='CB1'
+              name={breakerName}
               overview
-              sectionName='section1'
+              sectionName=''
               bottomSection
             />
           </svg>
@@ -249,6 +259,7 @@ export const OverviewTab = () => {
             {currentTable}
             {powerTable}
             {thdiTable}
+            {eventTable}
             {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? thduTable : null}
             {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? voltageLLTable : null}
             {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? voltageLNTable : null}

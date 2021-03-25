@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { LineChart } from '../LineChart.component';
-import { SiemensAccentTeal, SiemensAccentGreen, SiemensAccentRed } from '../../utilities/SiemensColors.utility';
+import { SiemensAccentTeal, SiemensAccentGreen, SiemensAccentRed, SiemensAccentBlue } from '../../utilities/SiemensColors.utility';
 import { DatePicker, TimePicker } from "@material-ui/pickers";
 import { useTranslation } from 'react-i18next';
 
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const CurrentTab = () => {
+export const THDITab = () => {
   const [dateFrom, changeDateFrom] = React.useState<Date | null>(new Date());
   const classes = useStyles();
   const { t } = useTranslation();
@@ -30,16 +30,16 @@ export const CurrentTab = () => {
     let arr3 = []
     for (let i = 0; i < 25; i++) {
       arr1.push({
-        t: new Date(2021, 2, 1, i+1),
-        y: 10+ Math.random()*10
+        t: new Date(2021, 2, i+1, 1),
+        y: 30+ Math.random()*10
       })
       arr2.push({
-        t: new Date(2021, 2, 1, i+1),
-        y: 10+ Math.random()*10
+        t: new Date(2021, 2, i+1, 1),
+        y: 30+ Math.random()*10
       })
       arr3.push({
-        t: new Date(2021, 2, 1, i+1),
-        y: 10+ Math.random()*10
+        t: new Date(2021, 2, i+1, 1),
+        y: 4
       })
     }
     setL1(arr1)
@@ -59,25 +59,25 @@ export const CurrentTab = () => {
             data={{
               datasets: [
                 {
-                  label: "Prąd L1 [A]",
-                  backgroundColor: SiemensAccentRed.dark6,
-                  borderColor: SiemensAccentRed.dark6,
+                  label: "THD I L1 [%]",
+                  backgroundColor: SiemensAccentTeal.light1,
+                  borderColor: SiemensAccentTeal.light1,
                   fill: false,
                   lineTension: 0,
                   data: l1
                 },
                 {
-                  label: "Prąd L2 [A]",
-                  backgroundColor: SiemensAccentGreen.dark6,
-                  borderColor: SiemensAccentGreen.dark6,
+                  label: "THD I L2 [%]",
+                  backgroundColor: SiemensAccentRed.light1,
+                  borderColor: SiemensAccentRed.light1,
                   fill: false,
                   lineTension: 0,
                   data: l2
                 },
                 {
-                  label: "Prąd L3 [A]",
-                  backgroundColor: SiemensAccentTeal.dark6,
-                  borderColor: SiemensAccentTeal.dark6,
+                  label: "THD I L3 [%]",
+                  backgroundColor: SiemensAccentGreen.light1,
+                  borderColor: SiemensAccentGreen.light1,
                   fill: false,
                   lineTension: 0,
                   data: l3

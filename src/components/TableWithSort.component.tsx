@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import { useTranslation } from 'react-i18next';
 
 interface IData {
-  rows: Array<Array<string | number | Date>>
+  rows: Array<Array<string | number | Date | React.ReactNode>>
   columns: Array<string>
 }
 
@@ -22,7 +22,7 @@ interface ITableWithSort extends IData {
 
 type TOrder = 'asc' | 'desc';
 
-type TOrderDataType = 'number' | 'string' | 'Date'
+type TOrderDataType = 'number' | 'string' | 'Date' | 'reactNode'
 
 interface IEnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
@@ -129,6 +129,13 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense }
   const isNumber = (element: unknown): element is number => {
     return (element as number).toExponential !== undefined;
   }
+   /**
+   * [Type guard]
+   * @return boolean
+   */
+    const isString = (element: unknown): element is string => {
+      return (element as string).toUpperCase !== undefined;
+    }
   //
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: string, columnIndex: number) => {
@@ -142,8 +149,11 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense }
     else if (isNumber(rowValue)) {
       setOrderDataType('number')
     }
-    else {
+    else if (isString(rowValue)) {
       setOrderDataType('string')
+    }
+    else {
+      setOrderDataType('reactNode')
     }
   };
 
@@ -195,7 +205,7 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense }
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={rows.length} />
+                  <TableCell colSpan={columns.length} />
                 </TableRow>
               )}
             </TableBody>
