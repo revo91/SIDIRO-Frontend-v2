@@ -8,9 +8,12 @@ import { GeneratorSVG } from './Overview/GeneratorSVG.component';
 import { CouplingBreakerSVG } from './Overview/CouplingBreakerSVG.component';
 import { SiemensAccentBlue, SiemensAccentTeal, SiemensAccentYellow } from '../utilities/SiemensColors.utility';
 import { SectionSVG } from './Overview/SectionSVG.component';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
 import { UniversalTabs } from './UniversalTabs.component';
+import { DeviceTypes } from '../utilities/DeviceTypes.utility';
+import { fetchTimeseries } from '../services/FetchTimeseriesAPI.service';
+import { setAssetData } from '../actions/SystemTopologyData.action';
 
 //common constants for SVGs to import /////////////////
 export const lineLength = 6;
@@ -57,7 +60,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       fill: theme.palette.type === 'dark' ? theme.palette.background.paper : SiemensAccentBlue.light6,
     },
     paramsTableTitleTextStyle: {
-      fontSize: `${circleRadius / 36}em`,
+      fontSize: `${circleRadius / 39}em`,
       fill: theme.palette.type === 'dark' ? theme.palette.text.primary : '#ffffff',
       textAnchor: 'middle',
       dominantBaseline: 'central',
@@ -115,16 +118,6 @@ export const useStyles = makeStyles((theme: Theme) =>
   }));
 ///////////////////////////////////////////////////
 
-enum InfeedTypes {
-  transformer = 'transformer',
-  generator = 'generator'
-}
-
-enum BreakerTypes {
-  circuitBreaker = 'circuitBreaker',
-  drawOutCircuitBreaker = 'drawOutCircuitBreaker'
-}
-
 const negativeOffsetX = -4;
 const negativeOffsetY = -3;
 
@@ -132,24 +125,37 @@ export const Overview = () => {
   const { t } = useTranslation();
   const classes = useStyles();
   const overview = useSelector((state: RootState) => state.overview);
+  const systemTopologyData = useSelector((state: RootState) => state.systemTopologyData);
+  const dispatch = useDispatch();
+
   const svgViewBoxX = 150;
   const svgViewBoxY = 74;
-  //for testing purposes///////////////////////////
-  const [sampleParams, setSampleParams] = React.useState<{ activePower: number, reactivePower: number, powerFactor: number, current: number }>({ activePower: 100, reactivePower: 50, powerFactor: 0.88, current: 10 })
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setSampleParams({
-        ...sampleParams,
-        activePower: parseFloat((Math.random() * 1000).toFixed(2)),
-        reactivePower: parseFloat((Math.random() * 100).toFixed(2)),
-        powerFactor: parseFloat((Math.random()).toFixed(2)),
-        current: parseFloat((Math.random() * 10).toFixed(2))
+    overview.diagrams.forEach(diagram => {
+      diagram.sections.forEach((section: any) => {
+        section.infeeds?.forEach((infeed: any) => {
+          if (infeed.breaker.assetID !== '') {
+            fetchTimeseries(infeed.breaker.assetID, 1).then(res => dispatch(setAssetData(infeed.breaker.assetID, res[0])))
+            fetchTimeseries(infeed.breaker.assetID, 15).then(res => dispatch(setAssetData(infeed.breaker.assetID, res[0])))
+          }
+        })
+        section.breakers?.forEach((breaker: any) => {
+          fetchTimeseries(breaker.assetID, 1).then(res => dispatch(setAssetData(breaker.assetID, res[0])))
+          fetchTimeseries(breaker.assetID, 15).then(res => dispatch(setAssetData(breaker.assetID, res[0])))
+        })
+        if (section.coupling) {
+          fetchTimeseries(section.coupling.assetID, 1).then(res => dispatch(setAssetData(section.coupling.assetID, res[0])))
+          fetchTimeseries(section.coupling.assetID, 15).then(res => dispatch(setAssetData(section.coupling.assetID, res[0])))
+        }
       })
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [sampleParams])
-  ////////////////////////////////////////////////
+    })
+  }, [overview.diagrams, dispatch])
+
+  React.useEffect(() => {
+    //console.log(systemTopologyData['1fd7c385632747ea9735256ebbbdb921'])
+  }, [systemTopologyData])
+
 
   const renderTabsWithCircuitDiagrams = (): Array<{ label: string, content: React.ReactNode }> => {
     let tabs: Array<{ label: string, content: React.ReactNode }> = [];
@@ -161,6 +167,8 @@ export const Overview = () => {
             {diagram.sections.map((section: any, sectionIndex: any) => {
               const infeeds = section.infeeds?.map((infeed: any, infeedIndex: any) => {
                 return renderInfeed(infeed.name,
+                  `${t('deviceDataDialog.section')} ${section.name}`,
+                  section,
                   infeed.tableName,
                   infeed.breaker,
                   infeed.type,
@@ -171,21 +179,30 @@ export const Overview = () => {
               const sectionLines = renderSection(sectionIndex * svgViewBoxX / diagram.sections.length + lineLength / 2, // x
                 6 * lineLength, // y
                 svgViewBoxX / diagram.sections.length - lineLength, // length
-                section.coupling.type !== '' ? {
-                  state: section.coupling.state,
+                section, //voltageApplied
+                diagram.sections[sectionIndex - 1] !== undefined ? checkSectionVoltageApplied(diagram.sections[sectionIndex - 1]) : false, // previousSectionUnderVoltage
+                section.coupling ? {
+                  assetID: section.coupling.assetID,
                   name: section.coupling.name,
-                  drawOut: section.coupling.type === 'drawOutcircuitBreaker' ? true : false
+                  type: section.coupling.type,
+                  nextSectionUnderVoltage: diagram.sections[sectionIndex + 1] !== undefined ? checkSectionVoltageApplied(diagram.sections[sectionIndex + 1]) : false,
+                  fixedState: section.coupling.state
                 } :
-                  false);
+                  false)
               const breakers = section.breakers?.map((breaker: any, breakerIndex: any) => {
                 const nextSwitchboardIndex = overview.diagrams.findIndex(diagram => diagram.name === breaker.nextSwitchboardName);
                 return renderBreaker(breaker.name,
+                  `${diagram.name} ${t('deviceDataDialog.section')} ${section.name}`,
+                  section,
                   breaker.tableName,
                   breaker.type,
-                  breaker.state,
+                  breaker.assetID,
                   sectionIndex * svgViewBoxX / diagram.sections.length + lineLength / 2 + breakerIndex * lineLength * 1.2,
                   6 * lineLength,
-                  nextSwitchboardIndex !== -1 ? nextSwitchboardIndex : undefined
+                  nextSwitchboardIndex !== -1 ? nextSwitchboardIndex : undefined,
+                  undefined,
+                  undefined,
+                  breaker.state
                 )
               })
               return <React.Fragment key={sectionIndex}>{infeeds}{sectionLines}{breakers}</React.Fragment>
@@ -211,9 +228,9 @@ export const Overview = () => {
     )
   }
 
-  const renderInfeed = (name: string, tableName: string, breaker: { name: string, type: string, tableName: string, state: string }, type: string, x: number, y: number) => {
+  const renderInfeed = (name: string, sectionName: string, sectionObject: object, tableName: string, breaker: { name: string, type: string, tableName: string, assetID: string, state?: number }, type: string, x: number, y: number) => {
     switch (type) {
-      case InfeedTypes.transformer:
+      case DeviceTypes.transformer:
         return (
           <React.Fragment key={`${x}-${y}`}>
             <TransformerSVG
@@ -221,16 +238,17 @@ export const Overview = () => {
               y={y}
               name={name}
               tableName={tableName}
-              activePower={sampleParams.activePower}
-              current={sampleParams.current}
-              powerFactor={sampleParams.powerFactor}
+              activePower={systemTopologyData[breaker.assetID]?.Active_Power_Import || 0}
+              current={sumCurrent(systemTopologyData[breaker.assetID]?.Current_L1, systemTopologyData[breaker.assetID]?.Current_L2, systemTopologyData[breaker.assetID]?.Current_L3)}
+              powerFactor={calculatePowerFactor(systemTopologyData[breaker.assetID]?.Active_Power_Import, systemTopologyData[breaker.assetID]?.Reactive_Power_Import)}
               breakerName={breaker.name}
-
+              sectionName={sectionName}
+              voltageApplied={checkSectionVoltageApplied(sectionObject) && checkBreakerState(breaker.assetID).closed}
             />
-            {renderBreaker(breaker.name, 'test', breaker.type, breaker.state, x, y + 3 * lineLength)}
+            {renderBreaker(breaker.name, sectionName, sectionObject, '', breaker.type, breaker.assetID, x, y + 3 * lineLength, undefined, undefined, undefined, breaker.state, true)}
           </React.Fragment>
         )
-      case InfeedTypes.generator:
+      case DeviceTypes.generator:
         return (
           <React.Fragment key={`${x}-${y}`}>
             <GeneratorSVG
@@ -238,88 +256,160 @@ export const Overview = () => {
               y={y}
               name={name}
               tableName={tableName}
-              activePower={sampleParams.activePower}
-              current={sampleParams.current}
-              powerFactor={sampleParams.powerFactor}
+              activePower={systemTopologyData[breaker.assetID]?.Active_Power_Import || 0}
+              current={sumCurrent(systemTopologyData[breaker.assetID]?.Current_L1, systemTopologyData[breaker.assetID]?.Current_L2, systemTopologyData[breaker.assetID]?.Current_L3)}
+              powerFactor={calculatePowerFactor(systemTopologyData[breaker.assetID]?.Active_Power_Import, systemTopologyData[breaker.assetID]?.Reactive_Power_Import)}
               breakerName={breaker.name}
-              voltageApplied
+              sectionName={sectionName}
+              voltageApplied={checkSectionVoltageApplied(sectionObject) && checkBreakerState(breaker.assetID).closed}
             />
-            {renderBreaker(breaker.name, 'test', breaker.type, breaker.state, x, y + 3 * lineLength)}
+            {renderBreaker(breaker.name, sectionName, sectionObject, '', breaker.type, breaker.assetID, x, y + 3 * lineLength, undefined, undefined, undefined, breaker.state, true)}
           </React.Fragment>
         )
       case '': //no infeed - for distribution boards to not show gen/tr and table above cb
         const previousSwitchboardIndex = overview.diagrams.findIndex(diagram => diagram.name === breaker.tableName)
-        return renderBreaker(breaker.name, breaker.tableName, breaker.type, breaker.state, x, y + 3 * lineLength, undefined, true, previousSwitchboardIndex !== -1 ? previousSwitchboardIndex : undefined)
+        return renderBreaker(breaker.name, sectionName, sectionObject, breaker.tableName, breaker.type, breaker.assetID, x, y + 3 * lineLength, undefined, true, previousSwitchboardIndex !== -1 ? previousSwitchboardIndex : undefined, breaker.state)
       default:
-        return renderBreaker(breaker.name, '', breaker.type, breaker.state, x, y + 3 * lineLength)
-
+        return renderBreaker(breaker.name, sectionName, sectionObject, '', breaker.type, breaker.assetID, x, y + 3 * lineLength)
     }
   }
 
   const renderBreaker = (name: string,
+    sectionName: string,
+    sectionObject: object,
     tableName: string | undefined,
     type: string,
-    state: string,
+    assetID: string,
     x: number,
     y: number,
     nextSwitchboardIndex: number | undefined = undefined,
     tableAbove: boolean | undefined = undefined,
-    previousSwitchboardIndex: number | undefined = undefined) => {
+    previousSwitchboardIndex: number | undefined = undefined,
+    fixedState: number | undefined = undefined,
+    infeedBreaker: boolean | undefined = undefined // reversed voltageAbove with voltageBelow
+  ) => {
+
     switch (type) {
-      case BreakerTypes.circuitBreaker:
+      case DeviceTypes.circuitBreaker:
+      case DeviceTypes.infeedBreaker:
+      case DeviceTypes.drawOutCircuitBreaker:
         return (
           <CircuitBreakerSVG
             key={`${x}-${y}`}
             x={x}
             y={y}
-            state={state}
+            state={fixedState !== undefined ? decodeState(fixedState) : decodeState(systemTopologyData[assetID]?.Breaker_State) || false}
             name={name}
             tableName={tableName}
-            activePower={sampleParams.activePower}
-            current={sampleParams.current}
-            powerFactor={sampleParams.powerFactor}
-            voltageApplied={false}
+            activePower={systemTopologyData[assetID]?.Active_Power_Import || 0}
+            current={sumCurrent(systemTopologyData[assetID]?.Current_L1, systemTopologyData[assetID]?.Current_L2, systemTopologyData[assetID]?.Current_L3)}
+            powerFactor={calculatePowerFactor(systemTopologyData[assetID]?.Active_Power_Import, systemTopologyData[assetID]?.Reactive_Power_Import)}
             noTable={tableName === undefined}
             nextSwitchboardIndex={nextSwitchboardIndex}
             previousSwitchboardIndex={previousSwitchboardIndex}
             tableAbove={tableAbove}
+            sectionName={sectionName}
+            deviceType={type}
+            drawOut={type === DeviceTypes.drawOutCircuitBreaker}
+            voltageBelow={infeedBreaker ? checkSectionVoltageApplied(sectionObject) : decodeState(systemTopologyData[assetID]?.Breaker_State).closed && checkSectionVoltageApplied(sectionObject)}
+            voltageAbove={infeedBreaker ? checkVoltageApplied(assetID) : checkSectionVoltageApplied(sectionObject)}
           />
         )
-      case BreakerTypes.drawOutCircuitBreaker:
-        return (
-          <CouplingBreakerSVG
-            key={`${name}-${tableName}`}
-            x={x}
-            y={y}
-            state={state}
-            name={name}
-            voltageApplied={false}
-            drawOut
-          />
-        )
+      default:
+        return null
     }
   }
 
-  const renderSection = (x: number, y: number, length: number, endCoupling?: { state: string, name: string, drawOut: boolean } | false,) => {
+  const renderSection = (x: number,
+    y: number,
+    length: number,
+    section: object,
+    previousSectionUnderVoltage: boolean,
+    endCoupling?: {
+      assetID: string,
+      name: string,
+      type: string,
+      nextSectionUnderVoltage: boolean,
+      fixedState: number
+    } | false) => {
+
     return (
       <SectionSVG
         key={`${x}-${y}`}
         x={x}
         y={y}
         length={length}
-        voltageApplied={false}
+        voltageApplied={checkSectionVoltageApplied(section)}
+        nextSectionVoltageApplied={endCoupling ? endCoupling.nextSectionUnderVoltage : false}
         endCoupling={endCoupling ?
-          <CouplingBreakerSVG
+          <CircuitBreakerSVG
             x={x + length}
             y={y - 3 * lineLength}
-            state={endCoupling.state}
+            state={endCoupling.fixedState !== undefined ? decodeState(endCoupling.fixedState) : decodeState(systemTopologyData[endCoupling.assetID]?.Breaker_State)}
             name={endCoupling.name}
-            voltageApplied={false}
-            drawOut={endCoupling.drawOut === true}
+            //voltageApplied={false}
+            drawOut={endCoupling.type === DeviceTypes.drawOutCircuitBreaker}
+            deviceType={endCoupling.type}
+            sectionName=''
+            voltageBelow={checkSectionVoltageApplied(section) || previousSectionUnderVoltage}
+            voltageAbove={endCoupling ? endCoupling.nextSectionUnderVoltage : false}
           />
           : false}
       />
     )
+  }
+
+  const calculatePowerFactor = (P: number, Q: number) => {
+    const result = parseFloat((P / (Math.sqrt(Math.pow(P, 2) + Math.pow(Q, 2)))).toFixed(2))
+    if (isNaN(result)) {
+      return 0
+    }
+    else {
+      return result
+    }
+  }
+
+  const sumCurrent = (L1: number, L2: number, L3: number) => {
+    const result = parseFloat((L1 + L2 + L3).toFixed(2))
+    if (isNaN(result)) {
+      return 0
+    }
+    else {
+      return result
+    }
+  }
+
+  const decodeState = (state: number) => {
+    let closed: boolean = false;
+    let tripped: boolean = false;
+    let drawnOut: boolean = false;
+    if (Boolean(state & 1)) {
+      closed = true
+    }
+    if (Boolean(state & 2)) {
+      tripped = true
+    }
+    if (Boolean(state & 4)) {
+      drawnOut = true
+    }
+    return {
+      closed,
+      tripped,
+      drawnOut
+    }
+  }
+
+  const checkVoltageApplied = (deviceID: string) => {
+    const voltage = Math.max(systemTopologyData[deviceID]?.Voltage_L1_N, systemTopologyData[deviceID]?.Voltage_L2_N, systemTopologyData[deviceID]?.Voltage_L3_N)
+    return voltage > 0 ? true : false
+  }
+
+  const checkSectionVoltageApplied = (section: any) => {
+    return section.breakers.filter((breaker: any) => checkVoltageApplied(breaker.assetID)).length > 0 ? true : false
+  }
+
+  const checkBreakerState = (assetID: string) => {
+    return decodeState(systemTopologyData[assetID]?.Breaker_State)
   }
 
   return (

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: 'orange'
     },
     info: {
-      color: 'blue'
+      color: '#2196f3'
     },
     select: {
       width: '100%'

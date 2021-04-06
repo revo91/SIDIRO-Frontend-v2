@@ -11,13 +11,14 @@ export interface IParametersTableSVG {
   parameter2: string | number,
   parameter3: string | number,
   deviceType: string,
-  breakerName: string
+  breakerName: string,
+  sectionName: string
 }
 
-export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3, deviceType, breakerName }) => {
+export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3, deviceType, breakerName, sectionName }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-
+  
   return (
     <React.Fragment>
       {/* parameters table */}
@@ -89,7 +90,8 @@ export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableN
           open: true,
           deviceName: tableName,
           deviceType: deviceType,
-          breakerName: breakerName
+          breakerName: breakerName,
+          sectionName: sectionName
         }))}
       />
     </React.Fragment>

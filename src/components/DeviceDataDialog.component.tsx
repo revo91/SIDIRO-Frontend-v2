@@ -12,9 +12,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
 import { setDeviceDataDialogOpen } from '../actions/DeviceDataDialog.action';
 import { BreakerDevice } from './DeviceDataDialog/BreakerDevice.component';
-import { GeneratorDevice } from './DeviceDataDialog/GeneratorDevice.component';
 import { TransformerDevice } from './DeviceDataDialog/TransformerDevice.component';
 import { DeviceTypes } from '../utilities/DeviceTypes.utility';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,11 +41,14 @@ export const DeviceDataDialog: React.FC = () => {
   const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
   const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
   const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
+  const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const showTabsAccordingToDeviceType = () => {
     switch (deviceType) {
       case DeviceTypes.circuitBreaker:
+      case DeviceTypes.infeedBreaker:
         return <BreakerDevice />
       case DeviceTypes.generator:
       case DeviceTypes.transformer:
@@ -60,7 +63,8 @@ export const DeviceDataDialog: React.FC = () => {
       open: false,
       deviceName: deviceName,
       deviceType: deviceType,
-      breakerName: breakerName
+      breakerName: breakerName,
+      sectionName: sectionName
     }))} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
@@ -68,12 +72,14 @@ export const DeviceDataDialog: React.FC = () => {
             open: false,
             deviceName: deviceName,
             deviceType: deviceType,
-            breakerName: breakerName
+            breakerName: breakerName,
+            sectionName: sectionName
           }))} aria-label="close">
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {deviceName}
+            {deviceType === DeviceTypes.circuitBreaker ||
+            deviceType === DeviceTypes.infeedBreaker ? `${t('deviceDataDialog.circuitBreaker')} ${breakerName}` : deviceName}
           </Typography>
         </Toolbar>
       </AppBar>

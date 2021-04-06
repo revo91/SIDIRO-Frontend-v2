@@ -5,11 +5,9 @@ import Grid from '@material-ui/core/Grid';
 import { BarChart } from './BarChart.component';
 import { PieChart } from './PieChart.component';
 import { SiemensColors, SiemensAccentBlue, SiemensAccentRed, SiemensAccentYellow } from '../utilities/SiemensColors.utility';
-import { SiemensColorsAlpha } from '../utilities/SiemensColors.utility';
 import { LineChart } from './LineChart.component';
 import { UniversalTabs } from './UniversalTabs.component';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,13 +16,10 @@ import Button from '@material-ui/core/Button';
 import { DatePicker } from "@material-ui/pickers";
 import { UniversalTable } from './UniversalTable.component';
 import Divider from '@material-ui/core/Divider';
-import { forEachChild } from 'typescript';
+import { StackedBarChart } from './StackedBarChart.component';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    button: {
-      margin: '0px 10px'
-    },
     select: {
       width: '100%'
     }
@@ -33,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Reports = () => {
   const { t } = useTranslation();
-  const [sampleData1, setSampleData1] = React.useState<Array<number>>([2478, 5267, 734, 784])
+  const [sampleData1, setSampleData1] = React.useState<Array<number>>([2478, 5267, 734, 784, 55])
   const [productionTotal, setProductionTotal] = React.useState<Array<number>>([100, 100, 100, 100, 100, 100])
   const [line37, setLine37] = React.useState<Array<number>>([100, 100, 100, 100, 100])
   const [sampleTimeSeriesData, setSampleTimeSeriesData] = React.useState<Array<{ t: number | Date, y: number }>>([{ t: new Date(2021, 1, 1), y: 10 }, { t: new Date(2021, 1, 5), y: 10 }, { t: new Date(2021, 1, 9), y: 10 }])
@@ -64,7 +59,7 @@ export const Reports = () => {
 
   const energyConsumptionTab = (
     <Grid container spacing={2} >
-      <Grid item xs={12} sm={9}>
+      <Grid item xs={12} md={8} lg={8} xl={10}>
         <DatePicker
           cancelLabel={t('datePicker.cancelButton')}
           autoOk
@@ -76,14 +71,18 @@ export const Reports = () => {
           format="MM/yyyy"
         />
       </Grid>
-      <Grid item xs={12} sm={3}>
-        <Button className={classes.button}
+      <Grid item xs={12} md={2} lg={2} xl={1}>
+        <Button
+          fullWidth
           variant="contained"
           color="primary"
         >
           Eksport PDF
       </Button>
-        <Button className={classes.button}
+      </Grid>
+      <Grid item xs={12} md={2} lg={2} xl={1}>
+        <Button
+          fullWidth
           variant="contained"
           color="primary"
         >
@@ -93,7 +92,7 @@ export const Reports = () => {
       <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
         <Typography gutterBottom variant="h5">Całościowe zużycie energii czynnej</Typography>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={5}>
         <PieChart
           chartTitle=""
           data={{
@@ -109,7 +108,7 @@ export const Reports = () => {
         />
 
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={7}>
         <UniversalTable
           columns={['Nazwa grupy', 'Zużycie energii czynnej']}
           rows={[['Produkcja', `${sampleData1[0]} kWh`], ['Magazyny', `${sampleData1[1]} kWh`], ['Biura', `${sampleData1[2]} kWh`], ['Ładowanie samochodów', `${sampleData1[3]} kWh`], ['Zużycie całkowite', `${sampleData1[0] + sampleData1[1] + sampleData1[2] + sampleData1[3]} kWh`]]}
@@ -122,7 +121,7 @@ export const Reports = () => {
       <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
         <Typography gutterBottom variant="h5">Production total</Typography>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={5}>
         <PieChart
           chartTitle=""
           data={{
@@ -137,7 +136,7 @@ export const Reports = () => {
           }}
         />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={7}>
         <UniversalTable
           columns={['Nazwa grupy', 'Zużycie energii czynnej']}
           rows={[['Linia produkcyjna L34', `${productionTotal[0]} kWh`], ['Linia produkcyjna L35', `${productionTotal[1]} kWh`], ['Linia produkcyjna L36', `${productionTotal[2]} kWh`], ['Linia produkcyjna L37', `${productionTotal[3]} kWh`],
@@ -152,7 +151,7 @@ export const Reports = () => {
       <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
         <Typography gutterBottom variant="h5">Line 37</Typography>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={5}>
         <PieChart
           chartTitle=""
           data={{
@@ -167,7 +166,7 @@ export const Reports = () => {
           }}
         />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={7}>
         <UniversalTable
           columns={['Nazwa grupy', 'Zużycie energii czynnej']}
           rows={[['Formowanie', `${line37[0]} kWh`], ['Nawijanie', `${line37[1]} kWh`], ['Mieszanie', `${line37[2]} kWh`], ['Blender RB37', `${line37[3]} kWh`],
@@ -256,7 +255,7 @@ export const Reports = () => {
 
   const usageProfileTab = (
     <Grid container spacing={2}>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} md={5} lg={5}>
         <DatePicker
           cancelLabel={t('datePicker.cancelButton')}
           autoOk
@@ -268,7 +267,7 @@ export const Reports = () => {
           format="MM/yyyy"
         />
       </Grid>
-      <Grid item xs={12} sm={3}>
+      <Grid item xs={12} md={3} lg={3}>
         <FormControl className={classes.select}>
           <InputLabel id="breaker-select-label">Energia</InputLabel>
           <Select
@@ -284,21 +283,93 @@ export const Reports = () => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={12} sm={3}>
-        <Button className={classes.button}
+      <Grid item xs={12} md={2} lg={2}>
+        <Button
+          fullWidth
           variant="contained"
           color="primary"
         >
           Eksport PDF
       </Button>
-        <Button className={classes.button}
+      </Grid>
+      <Grid item xs={12} md={2} lg={2}>
+        <Button
+          fullWidth
           variant="contained"
           color="primary"
         >
           Eksport CSV
       </Button>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={12}>
+        <StackedBarChart
+          chartTitle=""
+          data={{
+            labels: ['Standing costs', 'Running costs'], // responsible for how many bars are gonna show on the chart
+            // create 12 datasets, since we have 12 items
+            // data[0] = labels[0] (data for first bar - 'Standing costs') | data[1] = labels[1] (data for second bar - 'Running costs')
+            // put 0, if there is no data for the particular bar
+            datasets: [{
+               label: 'Washing and cleaning',
+               data: [0, 8],
+               backgroundColor: '#22aa99'
+            }, {
+               label: 'Traffic tickets',
+               data: [0, 2],
+               backgroundColor: '#994499'
+            }, {
+               label: 'Tolls',
+               data: [0, 1],
+               backgroundColor: '#316395'
+            }, {
+               label: 'Parking',
+               data: [5, 2],
+               backgroundColor: '#b82e2e'
+            }, {
+               label: 'Car tax',
+               data: [0, 1],
+               backgroundColor: '#66aa00'
+            }, {
+               label: 'Repairs and improvements',
+               data: [0, 2],
+               backgroundColor: '#dd4477'
+            }, {
+               label: 'Maintenance',
+               data: [6, 1],
+               backgroundColor: '#0099c6'
+            }, {
+               label: 'Inspection',
+               data: [0, 2],
+               backgroundColor: '#990099'
+            }, {
+               label: 'Loan interest',
+               data: [0, 3],
+               backgroundColor: '#109618'
+            }, {
+               label: 'Depreciation of the vehicle',
+               data: [0, 2],
+               backgroundColor: '#109618'
+            }, {
+               label: 'Fuel',
+               data: [0, 1],
+               backgroundColor: '#dc3912'
+            }, {
+               label: 'Insurance and Breakdown cover',
+               data: [4, 0],
+               backgroundColor: '#3366cc'
+            }]
+         }}
+        />
+      </Grid>
+      <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
+        <Typography gutterBottom variant="h5">Całościowa energia czynna</Typography>
+      </Grid>
+    </Grid>
+  )
+
+  const outgoingFeedersParameters = (
+    <Grid container spacing={1}>
+      <Grid item xs={12} md={5} lg={5}>
         <FormControl className={classes.select}>
           <InputLabel id="breaker-select-label">Wybierz rozdzielnicę</InputLabel>
           <Select
@@ -312,7 +383,7 @@ export const Reports = () => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={12} md={3} lg={3}>
         <FormControl className={classes.select}>
           <InputLabel id="breaker-select-label">Wybierz odbiór</InputLabel>
           <Select
@@ -326,229 +397,23 @@ export const Reports = () => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={12}>
-        <BarChart
-          chartTitle=""
-          data={{
-            labels: ["2021-01-01", "2021-01-02", "2021-01-03", "2021-01-04", "2021-01-05", "2021-01-06", "2021-01-07", "2021-01-08", "2021-01-09", "2021-01-10", "2021-01-11", "2021-01-12", "2021-01-13", "2021-01-14", "2021-01-15", "2021-01-16",
-              "2021-01-16", "2021-01-17", "2021-01-18", "2021-01-19", "2021-01-20", "2021-01-21", "2021-01-22", "2021-01-23", "2021-01-24", "2021-01-25", "2021-01-26", "2021-01-27", "2021-01-28", "2021-01-29", "2021-01-30"],
-            datasets: [
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.redDark, SiemensColors.redDark, SiemensColors.redDark, SiemensColors.redDark, SiemensColors.redDark],
-                borderColor: [SiemensColors.redDark, SiemensColors.redDark, SiemensColors.redDark, SiemensColors.redDark, SiemensColors.redDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.tealLight, SiemensColors.tealLight, SiemensColors.tealLight, SiemensColors.tealLight, SiemensColors.tealLight],
-                borderColor: [SiemensColors.tealLight, SiemensColors.tealLight, SiemensColors.tealLight, SiemensColors.tealLight, SiemensColors.tealLight],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              }
-              , {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              },
-              {
-                label: "Energia czynna [kWh]",
-                backgroundColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderColor: [SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark, SiemensColors.blueDark],
-                borderWidth: 2,
-                data: sampleData1,
-              }
-            ]
-          }}
-        />
+      <Grid item xs={12} md={2} lg={2}>
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+        >
+          Eksport PDF
+      </Button>
       </Grid>
-      <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
-        <Typography gutterBottom variant="h5">Całościowa energia czynna</Typography>
+      <Grid item xs={12} md={2} lg={2}>
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+        >
+          Eksport CSV
+      </Button>
       </Grid>
     </Grid>
   )
@@ -581,7 +446,7 @@ export const Reports = () => {
           },
           {
             label: 'Parametry odbiorów',
-            content: <p>Infeeds parameters tab content</p>
+            content: outgoingFeedersParameters
           }
         ]}
       />

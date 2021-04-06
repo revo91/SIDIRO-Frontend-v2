@@ -1,5 +1,7 @@
 export enum DeviceTypes {
   circuitBreaker = 'circuitBreaker',
   transformer = 'transformer',
-  generator = 'generator'
+  generator = 'generator',
+  infeedBreaker = 'infeedBreaker',
+  drawOutCircuitBreaker = 'drawOutCircuitBreaker',
 }

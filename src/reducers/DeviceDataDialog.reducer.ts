@@ -4,7 +4,8 @@ export interface IDeviceDataDialog {
   open: boolean,
   deviceName: string,
   deviceType: string,
-  breakerName: string
+  breakerName: string,
+  sectionName: string
 }
 
 interface IDeviceDataDialogReducer extends IDeviceDataDialog {
@@ -15,7 +16,8 @@ const initialState = {
   open: false,
   deviceName: '',
   deviceType: '',
-  breakerName: ''
+  breakerName: '',
+  sectionName: ''
 }
 
 export const DeviceDataDialogReducer = (state = initialState, action: IDeviceDataDialogReducer) => {
@@ -26,7 +28,8 @@ export const DeviceDataDialogReducer = (state = initialState, action: IDeviceDat
         open: action.open,
         deviceName: action.deviceName,
         deviceType: action.deviceType,
-        breakerName: action.breakerName
+        breakerName: action.breakerName,
+        sectionName: action.sectionName
       }
     default:
       return state

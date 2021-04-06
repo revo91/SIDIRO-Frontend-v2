@@ -14,6 +14,7 @@ import { SwitchDisconnector3NJ4SVG } from './Elevation/SwitchDisconnector3NJ4SVG
 import { UniversalTabs } from './UniversalTabs.component';
 import { useSelector } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
+import { useTranslation } from 'react-i18next';
 
 //common constants for SVGs to import /////////////////
 export const panelWidth = 600;
@@ -92,6 +93,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     svgElement: {
       height: 'calc(100vh - 150px)'
+    },
+    switchboardName: {
+      fontSize: `6em`,
+      fill: theme.palette.type === 'dark' ? theme.palette.text.primary : SiemensAccentTeal.dark3,
+      textAnchor: 'end',
+      dominantBaseline: 'hanging',
+      letterSpacing: '-0.05em'
     }
   }));
 ///////////////////////////////////////////////////
@@ -100,6 +108,7 @@ export const useStyles = makeStyles((theme: Theme) =>
 export const Elevation = () => {
   const elevation = useSelector((state: RootState) => state.elevation);
   const classes = useStyles()
+  const { t } = useTranslation()
 
   const renderCompartmentContent = (type: string, compartmentX: number, compartmentY: number, columns: number) => {
     switch (type) {
@@ -127,40 +136,54 @@ export const Elevation = () => {
     elevation.switchboards.map(switchboard => {
       const content = (
         <div className={classes.svgContainer}>
-        <svg viewBox={`-5 -5 ${switchboard.panels.length * 620} 2350`} className={classes.svgElement}>
-          {switchboard.panels.map((panel, panelIndex) => {
-            let span: number = 0
-            return (
-              <PanelSVG key={panelIndex} x={panelIndex * panelWidth} y={0} name={panel.name} empty={panel.name === 'empty'}>
-                {panel.compartments.map((compartment, compartmentIndex) => {
-                  span += panel.compartments[compartmentIndex - 1] ? panel.compartments[compartmentIndex - 1].rowSpan : 0;
-                  const columns = compartment.columns.length;
-                  return compartment.columns.map((column, columnIndex) => {
-                    return (
-                      <CompartmentSVG
-                        key={`${compartmentIndex}-${columnIndex}`}
-                        x={(panelIndex * panelWidth) + columnIndex * panelWidth / columns}
-                        y={span * compartmentHeight} span={compartment.rowSpan}
-                        columns={columns}
-                        name={column.name}
-                      >
-                        {renderCompartmentContent(column.type,
-                          (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,
-                          span * compartmentHeight + (compartment.rowSpan * compartmentHeight + reservedTopSpace) / 2,
-                          columns)}
-                      </CompartmentSVG>
-                    )
-                  })
-                })}
-              </PanelSVG>
-            )
-          })}
-        </svg>
+          <svg viewBox={`-80 -5 ${switchboard.panels.length * 620} 2350`} className={classes.svgElement}>
+            {renderSwitchboardName(switchboard.name, -80, 0)}
+            {switchboard.panels.map((panel, panelIndex) => {
+              let span: number = 0
+              return (
+                <PanelSVG key={panelIndex} x={panelIndex * panelWidth} y={0} name={panel.name} empty={panel.name === 'empty'}>
+                  {panel.compartments.map((compartment, compartmentIndex) => {
+                    span += panel.compartments[compartmentIndex - 1] ? panel.compartments[compartmentIndex - 1].rowSpan : 0;
+                    const columns = compartment.columns.length;
+                    return compartment.columns.map((column, columnIndex) => {
+                      return (
+                        <CompartmentSVG
+                          key={`${compartmentIndex}-${columnIndex}`}
+                          x={(panelIndex * panelWidth) + columnIndex * panelWidth / columns}
+                          y={span * compartmentHeight} span={compartment.rowSpan}
+                          columns={columns}
+                          name={column.name}
+                        >
+                          {renderCompartmentContent(column.type,
+                            (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,
+                            span * compartmentHeight + (compartment.rowSpan * compartmentHeight + reservedTopSpace) / 2,
+                            columns)}
+                        </CompartmentSVG>
+                      )
+                    })
+                  })}
+                </PanelSVG>
+              )
+            })}
+          </svg>
         </div>
       )
       return tabs.push({ label: switchboard.name, content: content })
     })
     return tabs
+  }
+
+  const renderSwitchboardName = (name: string, x: number, y: number) => {
+    return (
+      <text
+        x={x}
+        y={y}
+        className={classes.switchboardName}
+        transform={`rotate(-90 ${x} ${y})`}
+      >
+        {`${t('overviewPage.switchboard')} ${name}`}
+      </text>
+    )
   }
 
   const scaleService = (columnNumber: number) => {
@@ -181,10 +204,10 @@ export const Elevation = () => {
   return (
     <React.Fragment>
       <Grid container spacing={1}>
-        
+
         <Grid item xs={12}>
           <UniversalTabs
-            name='elevation'
+            name='overview'
             tabs={renderTabsWithSwitchboards()}
           />
         </Grid>

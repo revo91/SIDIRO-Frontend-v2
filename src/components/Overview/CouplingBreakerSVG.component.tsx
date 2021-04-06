@@ -5,7 +5,11 @@ import { useStyles } from '../Overview.component';
 interface ICouplingBreakerSVG {
   x: number,
   y: number,
-  state: string,
+  state: {
+    closed: boolean,
+    tripped: boolean,
+    drawnOut: boolean
+  },
   name: string,
   voltageApplied?: boolean,
   drawOut?: boolean,
@@ -102,15 +106,15 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
         y1={y + 1 * lineLength}
         x2={x}
         y2={y + 2 * lineLength}
-        transform={state === 'open' ? `rotate(-45 ${x} ${y + 2 * lineLength})` : `rotate(0 ${x} ${y + 2 * lineLength})`}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        transform={state.closed ? `rotate(0 ${x} ${y + 2 * lineLength})` : `rotate(-45 ${x} ${y + 2 * lineLength})`}
+        className={voltageApplied && state.closed ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
       <line
         x1={x}
         y1={y + 2 * lineLength}
         x2={x}
         y2={y + 3 * lineLength}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={voltageApplied && state.closed ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
       {drawOut ?
         /* bottom dashes - 4 * 90deg connected lines */
@@ -120,7 +124,7 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
             y1={y + 2.6 * lineLength}
             x2={x}
             y2={y + 2.85 * lineLength}
-            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageApplied && state.closed ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(135 ${x} ${y + 2.6 * lineLength})`}
           />
           <line
@@ -128,7 +132,7 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
             y1={y + 2.6 * lineLength}
             x2={x}
             y2={y + 2.85 * lineLength}
-            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageApplied && state.closed ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(225 ${x} ${y + 2.6 * lineLength})`}
           />
           <line
@@ -136,7 +140,7 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
             y1={y + 2.5 * lineLength}
             x2={x}
             y2={y + 2.75 * lineLength}
-            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageApplied && state.closed ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(45 ${x} ${y + 2.75 * lineLength})`}
           />
           <line
@@ -144,7 +148,7 @@ export const CouplingBreakerSVG: React.FC<ICouplingBreakerSVG> = ({ x, y, state,
             y1={y + 2.5 * lineLength}
             x2={x}
             y2={y + 2.75 * lineLength}
-            className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageApplied && state.closed ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(315 ${x} ${y + 2.75 * lineLength})`}
           />
         </React.Fragment>

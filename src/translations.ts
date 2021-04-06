@@ -73,7 +73,10 @@ export const resources = {
         generatorReady: "Ready",
         generatorStopped: "Stop",
         generatorState: "Generator state",
-        showChartTooltip: "Show chart"
+        showChartTooltip: "Show chart",
+        section: "Section",
+        events: "Events",
+        circuitBreaker: "Circuit breaker"
       },
       tableWithSort: {
         labelRowsPerPage: "Rows per page",
@@ -156,6 +159,9 @@ export const resources = {
         generatorStopped: "Stop",
         generatorState: "Stan generatora",
         showChartTooltip: "Pokaż wykres",
+        section: "Sekcja",
+        events: "Zdarzenia",
+        circuitBreaker: "Wyłącznik"
       },
       tableWithSort: {
         labelRowsPerPage: "Wierszy na stronę",

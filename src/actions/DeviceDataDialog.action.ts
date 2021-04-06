@@ -7,6 +7,7 @@ export const setDeviceDataDialogOpen = (params: IDeviceDataDialog) => (
     open: params.open,
     deviceName: params.deviceName,
     deviceType: params.deviceType,
-    breakerName: params.breakerName
+    breakerName: params.breakerName,
+    sectionName: params.sectionName
   }
 );

@@ -6,10 +6,11 @@ interface ISectionSVG {
   y: number,
   length: number,
   voltageApplied?: boolean,
-  endCoupling?: React.ReactNode
+  endCoupling?: React.ReactNode,
+  nextSectionVoltageApplied?: boolean
 }
 
-export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied, endCoupling }) => {
+export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied, endCoupling, nextSectionVoltageApplied }) => {
   const classes = useStyles();
 
   return (
@@ -36,7 +37,7 @@ export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied
             y1={y - 3 * lineLength}
             x2={x + length + lineLength}
             y2={y - 3 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={nextSectionVoltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
           />
           {/* vertical line */}
           <line
@@ -44,7 +45,7 @@ export const SectionSVG: React.FC<ISectionSVG> = ({ x, y, length, voltageApplied
             y1={y - 3 * lineLength}
             x2={x + length + lineLength}
             y2={y}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={nextSectionVoltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
           />
         </React.Fragment>
         : null

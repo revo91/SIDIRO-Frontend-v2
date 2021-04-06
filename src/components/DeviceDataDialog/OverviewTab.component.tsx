@@ -7,15 +7,17 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
-import { CircuitBreakerSVG } from '../Overview/CircuitBreakerSVG.component';
-import { GeneratorSVG } from '../Overview/GeneratorSVG.component';
-import { TransformerSVG } from '../Overview/TransformerSVG.component';
-import { CouplingBreakerSVG } from '../Overview/CouplingBreakerSVG.component';
 import { BreakerStates } from '../../utilities/BreakerStates.utility';
 import IconButton from '@material-ui/core/IconButton';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
 import Tooltip from '@material-ui/core/Tooltip';
+import { OverviewTabCircuitBreakerSVG } from './OverviewTabCircuitBreakerSVG.component';
+import { OverviewTabTransformerSVG } from './OverviewTabTransformerSVG.component';
+import { OverviewTabGeneratorSVG } from './OverviewTabGeneratorSVG.component';
+import WarningIcon from '@material-ui/icons/Warning';
+import InfoIcon from '@material-ui/icons/Info';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,7 +46,13 @@ const useStyles = makeStyles((theme: Theme) =>
     overviewTabSVGMaxHeight: {
       maxHeight: '600px',
       boxShadow: '0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%)'
-    }
+    },
+    warning: {
+      color: 'orange'
+    },
+    info: {
+      color: '#2196f3'
+    },
   }),
 );
 
@@ -54,13 +62,14 @@ export const OverviewTab = () => {
   const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
   const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
   const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
+  const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
   const dispatch = useDispatch();
 
   const eventTable = (
     <div className={classes.masonryLayoutPanel}>
       <UniversalTable
         columns={['Ważność', 'Zdarzenie', 'Czas']}
-        rows={[[`Wysoka`, 'Wyłączenie wyłącznika QT01', '2021.03.11'], [`Wysoka`, 'Wyłączenie wyłącznika QT01', '2021.03.10'], [`Wysoka`, 'Wyłączenie wyłącznika QT01', '2021.03.09']]}
+        rows={[[<WarningIcon className={classes.warning} />, 'Wyłączenie wyłącznika QT01', '2021.03.11'], [<InfoIcon className={classes.info} />, 'Wyłączenie wyłącznika QT01', '2021.03.10'], [<InfoIcon className={classes.info} />, 'Wyłączenie wyłącznika QT01', '2021.03.09']]}
         small />
     </div>
   )
@@ -181,12 +190,11 @@ export const OverviewTab = () => {
       case DeviceTypes.circuitBreaker:
         return (
           <svg width='100%' viewBox={`0 -2 16 24`} className={classes.overviewTabSVGMaxHeight}>
-            <CircuitBreakerSVG
+            <OverviewTabCircuitBreakerSVG
               x={8}
               y={0}
               state={BreakerStates.open}
-              overview
-              sectionName=''
+              sectionName={sectionName}
               outgoingFeederName={deviceName}
               name={breakerName}
               topSection
@@ -195,44 +203,50 @@ export const OverviewTab = () => {
         )
       case DeviceTypes.transformer:
         return (
-          <svg width='100%' viewBox={`0 -2 16 40`} className={classes.overviewTabSVGMaxHeight}>
-            <TransformerSVG
+          <svg width='100%' viewBox={`0 -2 16 36`} className={classes.overviewTabSVGMaxHeight}>
+            <OverviewTabTransformerSVG
               x={8}
               y={0}
               name={deviceName}
-              noTable
-              overview
-              breakerName='kk'
             />
-            <CouplingBreakerSVG
+            <OverviewTabCircuitBreakerSVG
               x={8}
-              y={18}
+              y={12}
               state={BreakerStates.open}
               name={breakerName}
-              overview
-              sectionName=''
+              sectionName={sectionName}
               bottomSection
             />
           </svg>
         )
       case DeviceTypes.generator:
         return (
-          <svg width='100%' viewBox={`0 -2 16 40`} className={classes.overviewTabSVGMaxHeight}>
-            <GeneratorSVG
+          <svg width='100%' viewBox={`0 -2 16 32`} className={classes.overviewTabSVGMaxHeight}>
+            <OverviewTabGeneratorSVG
               x={8}
               y={0}
               name={deviceName}
-              noTable
-              overview
-              breakerName='df'
             />
-            <CouplingBreakerSVG
+            <OverviewTabCircuitBreakerSVG
               x={8}
-              y={18}
+              y={6}
               state={BreakerStates.open}
               name={breakerName}
-              overview
-              sectionName=''
+              sectionName={sectionName}
+              bottomSection
+            />
+          </svg>
+        )
+      case DeviceTypes.infeedBreaker:
+        return (
+          <svg width='100%' viewBox={`0 -2 16 24`} className={classes.overviewTabSVGMaxHeight}>
+            <OverviewTabCircuitBreakerSVG
+              x={8}
+              y={0}
+              state={BreakerStates.open}
+              sectionName={sectionName}
+              outgoingFeederName={deviceName}
+              name={breakerName}
               bottomSection
             />
           </svg>
@@ -245,8 +259,14 @@ export const OverviewTab = () => {
   return (
     <Grid container justify='center' alignItems='flex-start' spacing={2}>
       <Grid container spacing={1} item xs={12} sm={12} md={4}>
-        <Grid container item xs={12}>
+        <Grid item xs={12}>
           {svgVisualization()}
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant='h5'>{t('deviceDataDialog.events')}</Typography>
+        </Grid>
+        <Grid item xs={12}>
+          {eventTable}
         </Grid>
       </Grid>
       <Grid container spacing={1} item xs={12} sm={12} md={8}>
@@ -259,7 +279,6 @@ export const OverviewTab = () => {
             {currentTable}
             {powerTable}
             {thdiTable}
-            {eventTable}
             {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? thduTable : null}
             {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? voltageLLTable : null}
             {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? voltageLNTable : null}

@@ -1,19 +1,21 @@
 import Chart from 'chart.js';
 import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { PieChartProps } from './PieChart.component';
 import { useTheme } from '@material-ui/core/styles';
 import { SiemensAccentYellow } from '../utilities/SiemensColors.utility';
 import { useUpdateChartFontColor } from '../hooks/useUpdateChartFontColor.hook';
 import { useUpdateChartDatasets } from '../hooks/useUpdateChartDatasets.hook';
 
-export interface PieChartProps {
+interface BarChartProps {
   data: {
     labels?: Array<string>,
-    datasets: Array<{ label: string, backgroundColor: Array<string>, borderColor?: Array<string>, borderWidth?: number, data: Array<number> }>
+    datasets: Array<{ label: string, backgroundColor: string, borderColor?: Array<string>, borderWidth?: number, data: Array<number> }>
   },
-  chartTitle?: string
+  chartTitle?: string,
+  horizontal?: boolean
 }
 
-export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle }) => {
+export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, horizontal }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
@@ -22,32 +24,39 @@ export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle }) => {
 
   const chartConfig = useMemo(() => {
     return {
-      type: 'pie',
+      type: horizontal ? 'horizontalBar' : 'bar',
       data,
       options: {
-        legend: {
-          labels: {
-            fontColor: theme.palette.text.primary,
-            fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-            fontSize: 12
-          }
+        scales: {
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
+            }
+          }],
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
+            }
+          }]
         },
         title: {
           display: chartTitle ? true : false,
           text: chartTitle ? chartTitle : '',
           fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666',
           fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-        },
-        aspectRatio: 1
+        }
       }
     }
-  }, [data, chartTitle, theme.palette.type, theme.palette.text.primary]);
+  }, [data, chartTitle, horizontal, theme.palette.type]);
 
   useEffect(() => {
+    //instantiate chart with first given data
     if (chartInstance === null) {
       setChartInstance(new Chart(chartContainer.current, chartConfig))
     }
-  }, [data, chartInstance, chartTitle, chartConfig])
+  }, [chartInstance, chartConfig])
 
   return (
     <React.Fragment>

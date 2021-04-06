@@ -8,8 +8,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 interface IUniversalTableProps {
-  rows: Array<Array<string>>,
-  columns: Array<string | React.ReactNode>,
+  rows: Array<Array<string | number | React.ReactNode>>,
+  columns: Array<string | number | React.ReactNode>,
   small?: boolean,
   noElevation?: boolean
 }

@@ -1,15 +1,20 @@
 import React from 'react';
 import { lineLength, useStyles } from '../Overview.component';
 import { ParametersTableSVG } from './ParametersTableSVG.component';
-import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
 import { useDispatch } from 'react-redux';
 import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
 
 interface ICircuitBreakerSVG {
   x: number,
   y: number,
-  state: string,
+  state: {
+    closed: boolean,
+    tripped: boolean,
+    drawnOut: boolean
+  },
   name: string,
+  deviceType: string,
+  sectionName: string,
   tableName?: string,
   activePower?: number,
   current?: number,
@@ -19,12 +24,9 @@ interface ICircuitBreakerSVG {
   tableAbove?: boolean,
   nextSwitchboardIndex?: number,
   previousSwitchboardIndex?: number,
-  //for DeviceDataDialog.component's OverviewTab visualization
-  overview?: boolean,
-  sectionName?: string,
-  outgoingFeederName?: string,
-  bottomSection?: boolean,
-  topSection?: boolean
+  drawOut?: boolean,
+  voltageAbove?: boolean,
+  voltageBelow?: boolean
 }
 
 export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
@@ -33,6 +35,8 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
     y,
     state,
     name,
+    deviceType,
+    sectionName,
     tableName,
     activePower,
     current,
@@ -42,45 +46,110 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
     tableAbove,
     nextSwitchboardIndex,
     previousSwitchboardIndex,
-    overview,
-    sectionName,
-    outgoingFeederName,
-    bottomSection,
-    topSection
+    drawOut,
+    voltageAbove,
+    voltageBelow
   }
 ) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  console.log(previousSwitchboardIndex)
+
   return (
     <React.Fragment>
       {/* top to bottom */}
-      {/* circuit breaker name */}
-      {!overview ?
-        <text
-          x={x}
-          y={y + 0.1 * lineLength}
-          className={classes.circuitBreakersNameStyle}
-        >
-          {name}&nbsp;
+      <text
+        x={x}
+        y={y + 0.07 * lineLength}
+        className={classes.circuitBreakersNameStyle}
+      >
+        {name}&nbsp;
         </text>
-        : null
-      }
       {/* top line */}
       <line
         x1={x}
         y1={y}
         x2={x}
         y2={y + lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
+      {drawOut ?
+        /* top dashes if drawOut - 4 * 90deg connected lines */
+        <React.Fragment>
+          <line
+            x1={x}
+            y1={y + 0.25 * lineLength}
+            x2={x}
+            y2={y + 0.5 * lineLength}
+            className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(45 ${x} ${y + 0.25 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 0.25 * lineLength}
+            x2={x}
+            y2={y + 0.5 * lineLength}
+            className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(315 ${x} ${y + 0.25 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 0.15 * lineLength}
+            x2={x}
+            y2={y + 0.4 * lineLength}
+            className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(135 ${x} ${y + 0.4 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 0.15 * lineLength}
+            x2={x}
+            y2={y + 0.4 * lineLength}
+            className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(225 ${x} ${y + 0.4 * lineLength})`}
+          />
+          {/* bottom dashes - 4 * 90deg connected lines */}
+          <line
+            x1={x}
+            y1={y + 2.6 * lineLength}
+            x2={x}
+            y2={y + 2.85 * lineLength}
+            className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(135 ${x} ${y + 2.6 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 2.6 * lineLength}
+            x2={x}
+            y2={y + 2.85 * lineLength}
+            className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(225 ${x} ${y + 2.6 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 2.5 * lineLength}
+            x2={x}
+            y2={y + 2.75 * lineLength}
+            className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(45 ${x} ${y + 2.75 * lineLength})`}
+          />
+          <line
+            x1={x}
+            y1={y + 2.5 * lineLength}
+            x2={x}
+            y2={y + 2.75 * lineLength}
+            className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            transform={`rotate(315 ${x} ${y + 2.75 * lineLength})`}
+          />
+        </React.Fragment>
+        : null
+      }
       {/* 'X' symbol - 2 * 90deg crossed lines*/}
       <line
         x1={x}
         y1={y + 0.75 * lineLength}
         x2={x}
         y2={y + 1.25 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
         transform={`rotate(45 ${x} ${y + lineLength})`}
       />
       <line
@@ -88,7 +157,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
         y1={y + 0.75 * lineLength}
         x2={x}
         y2={y + 1.25 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
         transform={`rotate(-45 ${x} ${y + lineLength})`}
       />
       {/* breaker's rotating element */}
@@ -97,8 +166,8 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
         y1={y + lineLength}
         x2={x}
         y2={y + 2 * lineLength}
-        transform={state === 'open' ? `rotate(-45 ${x} ${y + 2 * lineLength})` : `rotate(0 ${x} ${y + 2 * lineLength})`}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        transform={state.closed ? `rotate(0 ${x} ${y + 2 * lineLength})` : `rotate(-45 ${x} ${y + 2 * lineLength})`}
+        className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
       {/* end line */}
       <line
@@ -106,7 +175,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
         y1={y + 2 * lineLength}
         x2={x}
         y2={y + 3 * lineLength}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
       {/* params table */}
       {
@@ -117,8 +186,9 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
           parameter1={`${activePower} kW`}
           parameter2={`${current} A`}
           parameter3={`${powerFactor} PF`}
-          deviceType={DeviceTypes.circuitBreaker}
+          deviceType={deviceType}
           breakerName={name}
+          sectionName={sectionName}
         /> : null
       }
       {/* arrow top if tableAbove */}
@@ -130,7 +200,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             x2={x}
             y1={y - 2.2 * lineLength}
             y2={y - 1.25 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
           />
           {/* 2 crossed lines forming arrow */}
           <line
@@ -138,7 +208,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             y1={y - 2.2 * lineLength}
             x2={x}
             y2={y - 1.95 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(45 ${x} ${y - 2.2 * lineLength})`}
           />
           <line
@@ -146,7 +216,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             y1={y + -2.2 * lineLength}
             x2={x}
             y2={y - 1.95 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(315 ${x} ${y - 2.2 * lineLength})`}
           />
           {/* clickable overlay */}
@@ -161,68 +231,6 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
         </React.Fragment>
         : null
       }
-      {/* DeviceDataDialog's OverviewTab visualization */}
-      {overview && outgoingFeederName ?
-        <React.Fragment>
-          {topSection ?
-            <React.Fragment>
-              {/* topSection name */}
-              <text
-                x={x}
-                y={y - 1}
-                className={classes.overviewTabSVGTextsCentralAnchor}
-              >
-                {sectionName}
-              </text>
-              {/* topSection horizontal line */}
-              <line
-                x1={x - lineLength}
-                y1={y}
-                x2={x + lineLength}
-                y2={y}
-                className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
-              />
-              {/* outgoing feeder name */}
-              <text
-                x={x}
-                y={y + 3.2 * lineLength}
-                className={classes.overviewTabSVGTextsCentralAnchor}
-              >
-                {outgoingFeederName}
-              </text>
-            </React.Fragment>
-            : null
-          }
-          {bottomSection ?
-            <React.Fragment>
-              {/* bottomSection name */}
-              <text
-                x={x}
-                y={y + 3.2 * lineLength}
-                className={classes.overviewTabSVGTextsCentralAnchor}
-              >
-                {sectionName}
-              </text>
-              {/* bottomSection horizontal line */}
-              <line
-                x1={x - lineLength}
-                y1={y + 3 * lineLength}
-                x2={x + lineLength}
-                y2={y + 3 * lineLength}
-                className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
-              />
-            </React.Fragment>
-            : null}
-          {/* central circuit breaker name */}
-          <text
-            x={x}
-            y={y + 1.5 * lineLength}
-            className={classes.overviewTabSVGTextsCentralLeftAnchor}
-          >
-            &nbsp;&nbsp;{name}
-          </text>
-        </React.Fragment>
-        : null}
       {/* arrow to next diagram if the circuit breaker infeeds next switchboard */}
       {nextSwitchboardIndex !== undefined ?
         <React.Fragment>
@@ -232,7 +240,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             x2={x}
             y1={y + 4.25 * lineLength}
             y2={y + 4.75 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
           />
           {/* 2 crossed lines forming arrow */}
           <line
@@ -240,7 +248,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             y1={y + 4.75 * lineLength}
             x2={x}
             y2={y + 5 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(135 ${x} ${y + 4.75 * lineLength})`}
           />
           <line
@@ -248,7 +256,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             y1={y + 4.75 * lineLength}
             x2={x}
             y2={y + 5 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
             transform={`rotate(225 ${x} ${y + 4.75 * lineLength})`}
           />
           {/* clickable overlay */}

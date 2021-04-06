@@ -5,6 +5,7 @@ import { DeviceDataDialogReducer } from './DeviceDataDialog.reducer';
 import { BackdropReducer } from './Backdrop.reducer';
 import { ElevationReducer } from './Elevation.reducer';
 import { OverviewReducer } from './Overview.reducer';
+import { SystemTopologyData } from './SystemTopologyData.reducer';
 
 export const rootReducer = combineReducers({
   universalTabs: UniversalTabsReducer,
@@ -12,7 +13,8 @@ export const rootReducer = combineReducers({
   deviceDataDialog: DeviceDataDialogReducer,
   backdrop: BackdropReducer,
   elevation: ElevationReducer,
-  overview: OverviewReducer
+  overview: OverviewReducer,
+  systemTopologyData: SystemTopologyData
 })
 
 export type RootState = ReturnType<typeof rootReducer>
