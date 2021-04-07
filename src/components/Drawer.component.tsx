@@ -22,12 +22,16 @@ import { useTranslation } from 'react-i18next';
 import StorageIcon from '@material-ui/icons/Storage';
 import MultilineChartIcon from '@material-ui/icons/MultilineChart';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setLanguageDialogOpen } from '../actions/LanguageDialog.action';
 import siemensLogoPetrol from '../assets/sie-logo-petrol-rgb.svg';
 import siemensLogoWhite from '../assets/sie-logo-white-rgb.svg';
 import Brightness2Icon from '@material-ui/icons/Brightness2';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
+import { RootState } from '../reducers/Root.reducer';
+import createWorker from "workerize-loader!../workers/TimeseriesData.worker"; //eslint-disable-line import/no-webpack-loader-syntax
+import * as Worker from "../workers/TimeseriesData.worker";
+import { setAssetData } from '../actions/SystemTopologyData.action';
 
 const drawerWidth = 240;
 
@@ -108,6 +112,8 @@ interface IDrawer {
   onThemeChange(): void
 }
 
+const TimeseriesWorker = createWorker<typeof Worker>();
+
 export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
@@ -116,10 +122,48 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const theme = useTheme();
+  const overview = useSelector((state: RootState) => state.overview);
 
   useEffect(() => {
     setBottomNaviValue(location.pathname)
   }, [location])
+
+  useEffect(() => {
+    const handleSetAssetData = (message: MessageEvent) => {
+      if (message.data.length > 0) {
+        message.data.forEach((device: any) => {
+          dispatch(setAssetData(device.assetID, device[0]))
+        })
+      }
+    }
+    TimeseriesWorker.addEventListener("message", handleSetAssetData)
+    return () => {
+      TimeseriesWorker.removeEventListener("message", handleSetAssetData)
+      TimeseriesWorker.terminate()
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    const ids: Array<string> = []
+    overview.diagrams.forEach(diagram => {
+      diagram.sections.forEach((section: any) => {
+        section.infeeds?.forEach((infeed: any) => {
+          if (infeed.breaker.assetID !== '') {
+            ids.push(infeed.breaker.assetID)
+          }
+        })
+        section.breakers?.forEach((breaker: any) => {
+          ids.push(breaker.assetID)
+        })
+        if (section.coupling) {
+          ids.push(section.coupling.assetID)
+        }
+      })
+    })
+    TimeseriesWorker.postMessage({ ids })
+  }, [overview.diagrams, dispatch])
+
+
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -197,7 +241,7 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
             </ListItem>
             <ListItem button onClick={() => handleThemeChange()}>
               <ListItemIcon>
-                {theme.palette.type === 'dark' ? <Brightness7Icon/> : <Brightness2Icon />}
+                {theme.palette.type === 'dark' ? <Brightness7Icon /> : <Brightness2Icon />}
               </ListItemIcon>
               <ListItemText primary={theme.palette.type === 'dark' ? t('drawer.toggleLightMode') : t('drawer.toggleDarkMode')} />
             </ListItem>

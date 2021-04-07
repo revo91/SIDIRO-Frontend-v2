@@ -5,15 +5,13 @@ import Grid from '@material-ui/core/Grid';
 import { TransformerSVG } from './Overview/TransformerSVG.component';
 import { CircuitBreakerSVG } from './Overview/CircuitBreakerSVG.component';
 import { GeneratorSVG } from './Overview/GeneratorSVG.component';
-import { CouplingBreakerSVG } from './Overview/CouplingBreakerSVG.component';
 import { SiemensAccentBlue, SiemensAccentTeal, SiemensAccentYellow } from '../utilities/SiemensColors.utility';
 import { SectionSVG } from './Overview/SectionSVG.component';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
 import { UniversalTabs } from './UniversalTabs.component';
 import { DeviceTypes } from '../utilities/DeviceTypes.utility';
-import { fetchTimeseries } from '../services/FetchTimeseriesAPI.service';
-import { setAssetData } from '../actions/SystemTopologyData.action';
+import { decodeState } from '../utilities/DecodeState.utility';
 
 //common constants for SVGs to import /////////////////
 export const lineLength = 6;
@@ -126,36 +124,9 @@ export const Overview = () => {
   const classes = useStyles();
   const overview = useSelector((state: RootState) => state.overview);
   const systemTopologyData = useSelector((state: RootState) => state.systemTopologyData);
-  const dispatch = useDispatch();
 
   const svgViewBoxX = 150;
   const svgViewBoxY = 74;
-
-  React.useEffect(() => {
-    overview.diagrams.forEach(diagram => {
-      diagram.sections.forEach((section: any) => {
-        section.infeeds?.forEach((infeed: any) => {
-          if (infeed.breaker.assetID !== '') {
-            fetchTimeseries(infeed.breaker.assetID, 1).then(res => dispatch(setAssetData(infeed.breaker.assetID, res[0])))
-            fetchTimeseries(infeed.breaker.assetID, 15).then(res => dispatch(setAssetData(infeed.breaker.assetID, res[0])))
-          }
-        })
-        section.breakers?.forEach((breaker: any) => {
-          fetchTimeseries(breaker.assetID, 1).then(res => dispatch(setAssetData(breaker.assetID, res[0])))
-          fetchTimeseries(breaker.assetID, 15).then(res => dispatch(setAssetData(breaker.assetID, res[0])))
-        })
-        if (section.coupling) {
-          fetchTimeseries(section.coupling.assetID, 1).then(res => dispatch(setAssetData(section.coupling.assetID, res[0])))
-          fetchTimeseries(section.coupling.assetID, 15).then(res => dispatch(setAssetData(section.coupling.assetID, res[0])))
-        }
-      })
-    })
-  }, [overview.diagrams, dispatch])
-
-  React.useEffect(() => {
-    //console.log(systemTopologyData['1fd7c385632747ea9735256ebbbdb921'])
-  }, [systemTopologyData])
-
 
   const renderTabsWithCircuitDiagrams = (): Array<{ label: string, content: React.ReactNode }> => {
     let tabs: Array<{ label: string, content: React.ReactNode }> = [];
@@ -376,26 +347,6 @@ export const Overview = () => {
     }
     else {
       return result
-    }
-  }
-
-  const decodeState = (state: number) => {
-    let closed: boolean = false;
-    let tripped: boolean = false;
-    let drawnOut: boolean = false;
-    if (Boolean(state & 1)) {
-      closed = true
-    }
-    if (Boolean(state & 2)) {
-      tripped = true
-    }
-    if (Boolean(state & 4)) {
-      drawnOut = true
-    }
-    return {
-      closed,
-      tripped,
-      drawnOut
     }
   }
 

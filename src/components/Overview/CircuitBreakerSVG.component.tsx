@@ -41,7 +41,6 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
     activePower,
     current,
     powerFactor,
-    voltageApplied,
     noTable,
     tableAbove,
     nextSwitchboardIndex,

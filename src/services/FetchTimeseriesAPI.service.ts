@@ -12,5 +12,9 @@ export const fetchTimeseries = async (assetID: string, interval: number) => {
     })
   })
   const data = await response.json()
-  return data
+  const returnDataWithAssetID = {
+    ...data,
+    assetID
+  }
+  return returnDataWithAssetID
 }

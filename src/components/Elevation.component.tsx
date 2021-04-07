@@ -10,11 +10,11 @@ import { CircuitBreaker3VAHorizontalSVG } from './Elevation/CircuitBreaker3VAHor
 import { SwitchDisconnector3NP1VerticalSVG } from './Elevation/SwitchDisconnector3NP1VerticalSVG.component';
 import { SwitchDisconnector3NJ6SVG } from './Elevation/SwitchDisconnector3NJ6SVG.component';
 import { SwitchDisconnector3NJ4SVG } from './Elevation/SwitchDisconnector3NJ4SVG.component';
-// import { elevation } from '../mock/elevation.mock';
 import { UniversalTabs } from './UniversalTabs.component';
 import { useSelector } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
 import { useTranslation } from 'react-i18next';
+import { decodeState } from '../utilities/DecodeState.utility';
 
 //common constants for SVGs to import /////////////////
 export const panelWidth = 600;
@@ -100,6 +100,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAnchor: 'end',
       dominantBaseline: 'hanging',
       letterSpacing: '-0.05em'
+    },
+    cbTrippedOverlay: {
+      fill: 'rgba(255, 0, 0, 0.4)'
+    },
+    cbOpenOverlay: {
+      fill: 'rgba(255, 206, 53, 0.4)'
+    },
+    transparent: {
+      fill: 'none'
     }
   }));
 ///////////////////////////////////////////////////
@@ -107,7 +116,8 @@ export const useStyles = makeStyles((theme: Theme) =>
 
 export const Elevation = () => {
   const elevation = useSelector((state: RootState) => state.elevation);
-  const classes = useStyles()
+  const classes = useStyles();
+  const systemTopologyData = useSelector((state: RootState) => state.systemTopologyData);
   const { t } = useTranslation()
 
   const renderCompartmentContent = (type: string, compartmentX: number, compartmentY: number, columns: number) => {
@@ -153,6 +163,8 @@ export const Elevation = () => {
                           y={span * compartmentHeight} span={compartment.rowSpan}
                           columns={columns}
                           name={column.name}
+                          nonInteractive={column.nonInteractive}
+                          state={checkBreakerState(column.assetID)}
                         >
                           {renderCompartmentContent(column.type,
                             (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,
@@ -199,6 +211,10 @@ export const Elevation = () => {
     else {
       return 1
     }
+  }
+
+  const checkBreakerState = (assetID: string) => {
+    return decodeState(systemTopologyData[assetID]?.Breaker_State)
   }
 
   return (

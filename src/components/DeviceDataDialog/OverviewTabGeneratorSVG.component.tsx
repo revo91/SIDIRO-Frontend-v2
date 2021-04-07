@@ -1,5 +1,5 @@
 import React from 'react';
-import { lineLength, circleRadius, useStyles } from '../Overview.component';
+import { circleRadius, useStyles } from '../Overview.component';
 import { IOverviewTabTransformerSVG } from './OverviewTabTransformerSVG.component';
 
 export const OverviewTabGeneratorSVG: React.FC<IOverviewTabTransformerSVG> = ({ x, y, name, voltageApplied }) => {
