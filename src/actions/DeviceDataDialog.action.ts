@@ -9,6 +9,7 @@ export const setDeviceDataDialogOpen = (params: IDeviceDataDialog) => (
     deviceType: params.deviceType,
     breakerName: params.breakerName,
     sectionName: params.sectionName,
-    assetID: params.assetID
+    assetID: params.assetID,
+    switchboardAssetID: params.switchboardAssetID
   }
 );

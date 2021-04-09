@@ -145,7 +145,8 @@ export const Overview = () => {
                   infeed.breaker,
                   infeed.type,
                   ((svgViewBoxX / diagram.sections.length) / section.infeeds.length) / 2 + infeedIndex * (svgViewBoxX / diagram.sections.length) / section.infeeds.length + sectionIndex * (svgViewBoxX / diagram.sections.length),
-                  0)
+                  0,
+                  diagram.assetID ? diagram.assetID : '') //switchboard name
               })
               ///////////////////////////
               const sectionLines = renderSection(sectionIndex * svgViewBoxX / diagram.sections.length + lineLength / 2, // x
@@ -153,6 +154,7 @@ export const Overview = () => {
                 svgViewBoxX / diagram.sections.length - lineLength, // length
                 section, //voltageApplied
                 diagram.sections[sectionIndex - 1] !== undefined ? checkSectionVoltageApplied(diagram.sections[sectionIndex - 1]) : false, // previousSectionUnderVoltage
+                diagram.assetID ? diagram.assetID : '', //switchboard name
                 section.coupling ? {
                   assetID: section.coupling.assetID,
                   name: section.coupling.name,
@@ -175,7 +177,9 @@ export const Overview = () => {
                   nextSwitchboardIndex !== -1 ? nextSwitchboardIndex : undefined,
                   undefined,
                   undefined,
-                  breaker.state
+                  breaker.state,
+                  undefined,
+                  diagram.assetID ? diagram.assetID : ''
                 )
               })
               return <React.Fragment key={sectionIndex}>{infeeds}{sectionLines}{breakers}</React.Fragment>
@@ -201,7 +205,21 @@ export const Overview = () => {
     )
   }
 
-  const renderInfeed = (name: string, sectionName: string, sectionObject: object, tableName: string, breaker: { name: string, type: string, tableName: string, assetID: string, state?: number }, type: string, x: number, y: number) => {
+  const renderInfeed = (name: string,
+    sectionName: string,
+    sectionObject: object,
+    tableName: string,
+    breaker: {
+      name: string,
+      type: string,
+      tableName: string,
+      assetID: string,
+      state?: number
+    },
+    type: string,
+    x: number,
+    y: number,
+    switchboardAssetID: string) => {
     switch (type) {
       case DeviceTypes.transformer:
         return (
@@ -218,8 +236,22 @@ export const Overview = () => {
               breakerName={breaker.name}
               sectionName={sectionName}
               voltageApplied={checkSectionVoltageApplied(sectionObject) && checkBreakerState(breaker.assetID).closed}
+              switchboardAssetID={switchboardAssetID}
             />
-            {renderBreaker(breaker.name, sectionName, sectionObject, '', breaker.type, breaker.assetID, x, y + 3 * lineLength, undefined, undefined, undefined, breaker.state, true)}
+            {renderBreaker(breaker.name,
+              sectionName,
+              sectionObject,
+              '',
+              breaker.type,
+              breaker.assetID,
+              x,
+              y + 3 * lineLength,
+              undefined,
+              undefined,
+              undefined,
+              breaker.state,
+              true,
+              switchboardAssetID)}
           </React.Fragment>
         )
       case DeviceTypes.generator:
@@ -237,13 +269,40 @@ export const Overview = () => {
               breakerName={breaker.name}
               sectionName={sectionName}
               voltageApplied={checkSectionVoltageApplied(sectionObject) && checkBreakerState(breaker.assetID).closed}
+              switchboardAssetID={switchboardAssetID}
             />
-            {renderBreaker(breaker.name, sectionName, sectionObject, '', breaker.type, breaker.assetID, x, y + 3 * lineLength, undefined, undefined, undefined, breaker.state, true)}
+            {renderBreaker(breaker.name,
+              sectionName,
+              sectionObject,
+              '',
+              breaker.type,
+              breaker.assetID,
+              x,
+              y + 3 * lineLength,
+              undefined,
+              undefined,
+              undefined,
+              breaker.state,
+              true,
+              switchboardAssetID)}
           </React.Fragment>
         )
       case '': //no infeed - for distribution boards to not show gen/tr and table above cb
         const previousSwitchboardIndex = overview.diagrams.findIndex(diagram => diagram.name === breaker.tableName)
-        return renderBreaker(breaker.name, sectionName, sectionObject, breaker.tableName, breaker.type, breaker.assetID, x, y + 3 * lineLength, undefined, true, previousSwitchboardIndex !== -1 ? previousSwitchboardIndex : undefined, breaker.state)
+        return renderBreaker(breaker.name,
+          sectionName,
+          sectionObject,
+          breaker.tableName,
+          breaker.type,
+          breaker.assetID,
+          x,
+          y + 3 * lineLength,
+          undefined,
+          true,
+          previousSwitchboardIndex !== -1 ? previousSwitchboardIndex : undefined,
+          breaker.state,
+          undefined,
+          switchboardAssetID)
       default:
         return null
     }
@@ -261,7 +320,8 @@ export const Overview = () => {
     tableAbove: boolean | undefined = undefined,
     previousSwitchboardIndex: number | undefined = undefined,
     fixedState: number | undefined = undefined,
-    infeedBreaker: boolean | undefined = undefined // reversed voltageAbove with voltageBelow
+    infeedBreaker: boolean | undefined = undefined, // reversed voltageAbove with voltageBelow
+    switchboardAssetID: string
   ) => {
     //console.log(name, sectionName, sectionObject, tableName, type, assetID)
     switch (type) {
@@ -289,6 +349,7 @@ export const Overview = () => {
             drawOut={type === DeviceTypes.drawOutCircuitBreaker}
             voltageBelow={infeedBreaker ? checkSectionVoltageApplied(sectionObject) : decodeState(systemTopologyData[assetID]?.Breaker_State).closed && checkSectionVoltageApplied(sectionObject)}
             voltageAbove={infeedBreaker ? checkVoltageApplied(assetID) : checkSectionVoltageApplied(sectionObject)}
+            switchboardAssetID={switchboardAssetID}
           />
         )
       default:
@@ -301,14 +362,16 @@ export const Overview = () => {
     length: number,
     section: object,
     previousSectionUnderVoltage: boolean,
+    switchboardAssetID: string,
     endCoupling?: {
       assetID: string,
       name: string,
       type: string,
       nextSectionUnderVoltage: boolean,
       fixedState: number,
-      tableName?: string
-    } | false) => {
+      tableName?: string,
+    } | false
+  ) => {
 
     return (
       <SectionSVG
@@ -336,6 +399,7 @@ export const Overview = () => {
             sectionName=''
             voltageBelow={checkSectionVoltageApplied(section) || previousSectionUnderVoltage}
             voltageAbove={endCoupling ? endCoupling.nextSectionUnderVoltage : false}
+            switchboardAssetID={switchboardAssetID}
           />
           : false}
       />

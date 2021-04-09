@@ -28,6 +28,7 @@ interface ICircuitBreakerSVG {
   drawOut?: boolean,
   voltageAbove?: boolean,
   voltageBelow?: boolean,
+  switchboardAssetID: string
 }
 
 export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
@@ -49,7 +50,8 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
     previousSwitchboardIndex,
     drawOut,
     voltageAbove,
-    voltageBelow
+    voltageBelow,
+    switchboardAssetID
   }
 ) => {
   const classes = useStyles();
@@ -191,6 +193,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
           breakerName={name}
           sectionName={sectionName}
           assetID={assetID}
+          switchboardAssetID={switchboardAssetID}
         /> : null
       }
       {/* arrow top if tableAbove */}

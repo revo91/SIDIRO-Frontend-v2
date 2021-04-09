@@ -8,6 +8,7 @@ interface IElevation {
 export interface IElevationSchema {
   switchboards: Array<{
     name: string,
+    assetID?: string,
     panels: Array<{
       name: string,
       compartments: Array<{
@@ -27,6 +28,7 @@ const initialState:IElevationSchema = {
   switchboards: [
     {
       name: 'RG-MDP1',
+      assetID: 'fb338fea96ae45749922905455eda2d4',
       panels: [
         {
           name: 'RG MDP1.1',
@@ -245,6 +247,7 @@ const initialState:IElevationSchema = {
     },
     {
       name: 'HVPP-1',
+      assetID: '0262043356314a8db5406237072193a8',
       panels: [
         {
           name: 'HVPP-1.1',
@@ -392,6 +395,7 @@ const initialState:IElevationSchema = {
     },
     {
       name: 'HVPP-2',
+      assetID: 'd29d308d9a2941809751dccdfa6b464d',
       panels: [
         {
           name: 'HVPP-2.1',
@@ -550,6 +554,7 @@ const initialState:IElevationSchema = {
     //HVPP-3
     {
       name: 'HVPP-3',
+      assetID: '4f1ca548b2224ad795227e686473cc0a',
       panels: [
         {
           name: 'HVPP-3.1',

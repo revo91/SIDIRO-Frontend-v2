@@ -13,10 +13,11 @@ export interface IParametersTableSVG {
   deviceType: string,
   breakerName: string,
   sectionName: string,
-  assetID: string
+  assetID: string,
+  switchboardAssetID: string
 }
 
-export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3, deviceType, breakerName, sectionName, assetID }) => {
+export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableName, parameter1, parameter2, parameter3, deviceType, breakerName, sectionName, assetID, switchboardAssetID }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
@@ -88,14 +89,14 @@ export const ParametersTableSVG: React.FC<IParametersTableSVG> = ({ x, y, tableN
         height={1.2 * lineLength}
         className={classes.clickableOverlay}
         onClick={() => {
-          console.log(tableName, deviceType, breakerName, sectionName, assetID)
           dispatch(setDeviceDataDialogOpen({
             open: true,
             deviceName: tableName,
             deviceType: deviceType,
             breakerName: breakerName,
             sectionName: sectionName,
-            assetID: assetID
+            assetID: assetID,
+            switchboardAssetID: switchboardAssetID
           }))
         }
         }

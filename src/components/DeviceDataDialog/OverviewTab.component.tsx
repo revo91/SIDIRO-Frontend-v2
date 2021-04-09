@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Alert, AlertTitle } from '@material-ui/lab';
@@ -20,6 +20,10 @@ import Typography from '@material-ui/core/Typography';
 import { powerFactorCalculator } from '../../utilities/PowerFactorCalculator.utility';
 import { decodeState } from '../../utilities/DecodeState.utility';
 import { TableWithSort } from '../TableWithSort.component';
+import { fetchEvents } from '../../services/FetchEventsAPI.service';
+import { setBackdropOpen } from '../../actions/Backdrop.action';
+import { setEvents } from '../../actions/Events.action';
+import ErrorIcon from '@material-ui/icons/Error';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,32 +59,71 @@ const useStyles = makeStyles((theme: Theme) =>
     info: {
       color: '#2196f3'
     },
+    error: {
+      color: 'red'
+    },
   }),
 );
 
 export const OverviewTab = () => {
   const classes = useStyles();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
   const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
   const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
   const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
   const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
+  const switchboardAssetID = useSelector((state: RootState) => state.deviceDataDialog.switchboardAssetID);
   const systemTopologyData = useSelector((state: RootState) => state.systemTopologyData);
   const events = useSelector((state: RootState) => state.events);
   const dispatch = useDispatch();
 
+  const setSeverityIcon = (severity: number) => {
+    switch (severity) {
+      case 20:
+        return <ErrorIcon className={classes.error} />
+      case 30:
+        return <WarningIcon className={classes.warning} />
+      case 40:
+        return <InfoIcon className={classes.info} />
+      default:
+        return <InfoIcon className={classes.info} />
+    }
+  }
+
+  useEffect(() => {
+    loadEventsForDevice()
+  }, [])
+
+  const loadEventsForDevice = () => {
+    if (!events[switchboardAssetID]) {
+      //no data - need to refresh events
+      dispatch(setBackdropOpen(true))
+      fetchEvents(switchboardAssetID, new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(), new Date().toISOString()).then(res => {
+        if (res._embedded && res._embedded.events && switchboardAssetID) {
+          dispatch(setEvents(switchboardAssetID, res._embedded.events))
+          dispatch(setBackdropOpen(false))
+        }
+        else {
+          dispatch(setEvents(switchboardAssetID, []))
+          dispatch(setBackdropOpen(false))
+        }
+      }).catch(err => {
+        console.log(err)
+        dispatch(setBackdropOpen(false))
+      })
+    }
+  }
+
   const eventTable = (
     <div className={classes.masonryLayoutPanel}>
-      {/* <TableWithSort
+      <TableWithSort
         defaultOrderColumnIndex={2}
         columns={[t('eventsPage.severity'), t('eventsPage.event'), t('eventsPage.time')]}
-        rows={rows ? [...rows] : [[]]}
-      /> */}
-      <UniversalTable
-        columns={[t('eventsPage.severity'), t('eventsPage.event'), t('eventsPage.time')]}
-        rows={[[<WarningIcon className={classes.warning} />, 'Wyłączenie wyłącznika QT01', '2021.03.11'], [<InfoIcon className={classes.info} />, 'Wyłączenie wyłącznika QT01', '2021.03.10'], [<InfoIcon className={classes.info} />, 'Wyłączenie wyłącznika QT01', '2021.03.09']]}
-        small />
+        //rows={deviceEvents.map((ev)=> [ev.severity, ev.description, ev.timestamp])}
+        rows={events[switchboardAssetID]? events[switchboardAssetID].filter((el) => el.source === assetID).map(ev => [setSeverityIcon(ev.severity),
+        i18n.language === 'pl' ? JSON.parse(ev.description).pl : JSON.parse(ev.description).en, new Date(Date.parse(ev.timestamp))]) : [[]]}
+      />
     </div>
   )
 
@@ -314,12 +357,16 @@ export const OverviewTab = () => {
         <Grid item xs={12}>
           {svgVisualization()}
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant='h5'>{t('deviceDataDialog.events')}</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          {eventTable}
-        </Grid>
+        {events[switchboardAssetID] ?
+          <React.Fragment>
+            <Grid item xs={12}>
+              <Typography variant='h5'>{t('deviceDataDialog.events')}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {eventTable}
+            </Grid>
+          </React.Fragment>
+          : null}
       </Grid>
       <Grid container spacing={1} item xs={12} sm={12} md={8}>
         {breakerStateAlert()}

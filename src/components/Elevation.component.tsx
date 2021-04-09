@@ -217,6 +217,7 @@ export const Elevation = () => {
                           deviceName={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).deviceName : ''}
                           deviceType={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).deviceType : ''}
                           sectionName={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).sectionName : ''}
+                          switchboardAssetID={switchboard.assetID ? switchboard.assetID : ''}
                         >
                           {renderCompartmentContent(column.type,
                             (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,

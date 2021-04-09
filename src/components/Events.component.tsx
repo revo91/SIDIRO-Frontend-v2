@@ -132,17 +132,12 @@ export const Events = () => {
         </Grid>
       )
     })
-
     return <UniversalTabs name='Events' tabs={tabs} />
   }
 
   useEffect(() => {
     fetchEventsFromMS()
   }, [dateFrom, dateTo])
-
-  useEffect(() => {
-    console.log(events)
-  }, [events])
 
   const tabPanel = initializeTabs()
 

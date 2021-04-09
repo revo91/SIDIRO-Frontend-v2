@@ -61,6 +61,7 @@ const EnhancedTableHead = (props: IEnhancedTableProps) => {
             align='left'
             padding={'default'}
             sortDirection={orderBy === headCell ? order : false}
+            style={{width: `${100/columns.length}%`}}
           >
             <TableSortLabel
               active={orderBy === headCell}
@@ -89,9 +90,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       width: '100%',
       marginBottom: theme.spacing(2),
-    },
-    table: {
-      minWidth: 750,
     },
     visuallyHidden: {
       border: 0,
@@ -174,7 +172,7 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense, 
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
-            className={classes.table}
+            
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
             aria-label="enhanced table"

@@ -17,10 +17,11 @@ export interface ITransformerSVGProps {
   noTable?: boolean,
   //for DeviceDataDialog.component's OverviewTab visualization
   overview?: boolean,
-  breakerName: string
+  breakerName: string,
+  switchboardAssetID: string
 }
 
-export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, sectionName, tableName, assetID, activePower, current, powerFactor, voltageApplied, noTable, overview, breakerName }) => {
+export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, sectionName, tableName, assetID, activePower, current, powerFactor, voltageApplied, noTable, overview, breakerName, switchboardAssetID }) => {
   const classes = useStyles();
 
   return (
@@ -76,6 +77,7 @@ export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, sec
           breakerName={breakerName}
           sectionName={sectionName}
           assetID={assetID}
+          switchboardAssetID={switchboardAssetID}
         />
         : null
       }

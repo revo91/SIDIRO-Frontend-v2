@@ -43,6 +43,7 @@ export const DeviceDataDialog: React.FC = () => {
   const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
   const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
   const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
+  const switchboardAssetID = useSelector((state: RootState) => state.deviceDataDialog.switchboardAssetID);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -67,7 +68,8 @@ export const DeviceDataDialog: React.FC = () => {
       deviceType: deviceType,
       breakerName: breakerName,
       sectionName: sectionName,
-      assetID: assetID
+      assetID: assetID,
+      switchboardAssetID: switchboardAssetID
     }))} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
@@ -77,7 +79,8 @@ export const DeviceDataDialog: React.FC = () => {
             deviceType: deviceType,
             breakerName: breakerName,
             sectionName: sectionName,
-            assetID: assetID
+            assetID: assetID,
+            switchboardAssetID: switchboardAssetID
           }))} aria-label="close">
             <CloseIcon />
           </IconButton>

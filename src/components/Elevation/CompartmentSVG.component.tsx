@@ -19,7 +19,8 @@ interface ICompartmentSVG {
   deviceType: string,
   sectionName: string,
   breakerName: string,
-  assetID: string
+  assetID: string,
+  switchboardAssetID: string
 }
 
 export interface ICompartmentDevice {
@@ -28,7 +29,7 @@ export interface ICompartmentDevice {
   scale: number
 }
 
-export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns, name, nonInteractive, children, state, deviceName, deviceType, sectionName, breakerName, assetID }) => {
+export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns, name, nonInteractive, children, state, deviceName, deviceType, sectionName, breakerName, assetID, switchboardAssetID }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const width = panelWidth / columns - 2 * strokeWidth
@@ -71,7 +72,8 @@ export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns,
               deviceType: deviceType,
               breakerName: breakerName,
               sectionName: sectionName,
-              assetID: assetID
+              assetID: assetID,
+              switchboardAssetID: switchboardAssetID
             }))
           }}
         />
