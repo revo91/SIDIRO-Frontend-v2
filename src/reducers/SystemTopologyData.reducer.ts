@@ -46,7 +46,7 @@ export interface IDeviceParameters1Min {
   _time: string
 }
 
-export interface IDeviceParameters15Min extends IDeviceParameters1Min {
+interface IDeviceParameters15Min extends IDeviceParameters1Min {
   Active_Power_Export: number
   Active_Power_Export_qc: number
   Active_Power_Import: number
@@ -57,14 +57,22 @@ export interface IDeviceParameters15Min extends IDeviceParameters1Min {
   Reactive_Power_Import_qc: number
 }
 
+interface IDeviceParameters extends IDeviceParameters15Min {
+  assetID: string,
+  breakerName: string,
+  deviceName: string,
+  deviceType: string,
+  sectionName: string,
+}
+
 interface ISystemTopologyData {
   type: string,
   assetID: string,
-  parameters: IDeviceParameters15Min
+  parameters: IDeviceParameters
 }
 
 interface DeviceID {
-  [index: string]: IDeviceParameters15Min
+  [index: string]: IDeviceParameters
 }
 
 const initialState: DeviceID = {}

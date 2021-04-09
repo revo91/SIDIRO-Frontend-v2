@@ -15,6 +15,7 @@ interface ICircuitBreakerSVG {
   name: string,
   deviceType: string,
   sectionName: string,
+  assetID: string,
   tableName?: string,
   activePower?: number,
   current?: number,
@@ -26,7 +27,7 @@ interface ICircuitBreakerSVG {
   previousSwitchboardIndex?: number,
   drawOut?: boolean,
   voltageAbove?: boolean,
-  voltageBelow?: boolean
+  voltageBelow?: boolean,
 }
 
 export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
@@ -37,6 +38,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
     name,
     deviceType,
     sectionName,
+    assetID,
     tableName,
     activePower,
     current,
@@ -180,7 +182,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
       {
         !noTable && tableName ? <ParametersTableSVG
           x={x - 1.1 * lineLength / 2}
-          y={tableAbove ? y - 1.2 * lineLength : y + 3 * lineLength}
+          y={tableAbove ? y - 1.25 * lineLength : y + 3 * lineLength}
           tableName={tableName}
           parameter1={`${activePower} kW`}
           parameter2={`${current} A`}
@@ -188,6 +190,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
           deviceType={deviceType}
           breakerName={name}
           sectionName={sectionName}
+          assetID={assetID}
         /> : null
       }
       {/* arrow top if tableAbove */}
@@ -198,7 +201,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             x1={x}
             x2={x}
             y1={y - 2.2 * lineLength}
-            y2={y - 1.25 * lineLength}
+            y2={y - 1.3 * lineLength}
             className={voltageAbove ? classes.lineStyleVoltageApplied : classes.lineStyle}
           />
           {/* 2 crossed lines forming arrow */}
@@ -224,7 +227,7 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
             x={x - 0.55 * lineLength}
             y={y - 2.3 * lineLength}
             width={1.1 * lineLength}
-            height={1.1 * lineLength}
+            height={1.05 * lineLength}
             className={classes.clickableOverlay}
           />
         </React.Fragment>

@@ -4,26 +4,26 @@ import { fetchTimeseries } from '../services/FetchTimeseriesAPI.service';
 let interval;
 
 self.addEventListener("message", message => {
-  const promises = []
+  let promises = []
   const { data } = message;
   //once instantly
-  data.ids.forEach((assetID) => {
-    promises.push(fetchTimeseries(assetID, 1))
-    promises.push(fetchTimeseries(assetID, 15))
+  data.deviceData.forEach((device) => {
+    promises.push(fetchTimeseries(device.assetID, 1))
+    promises.push(fetchTimeseries(device.assetID, 15))
   })
   Promise.all(promises).then(res => {
     postMessage(res)
   })
   //intervally every x seconds
   interval = setInterval(() => {
-    data.ids.forEach((assetID) => {
-      promises.push(fetchTimeseries(assetID, 1))
-      promises.push(fetchTimeseries(assetID, 15))
+    promises = []
+    data.deviceData.forEach((device) => {
+      promises.push(fetchTimeseries(device.assetID, 1))
+      promises.push(fetchTimeseries(device.assetID, 15))
     })
     Promise.all(promises).then(res => {
       postMessage(res)
     })
   }, 60000) // 1 minute
-
 });
 

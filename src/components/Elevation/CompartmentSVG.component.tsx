@@ -1,5 +1,7 @@
 import React from 'react';
 import { compartmentHeight, reservedTopSpace, panelWidth, strokeWidth, useStyles } from '../Elevation.component';
+import { setDeviceDataDialogOpen } from '../../actions/DeviceDataDialog.action';
+import { useDispatch } from 'react-redux';
 
 interface ICompartmentSVG {
   x: number,
@@ -12,7 +14,12 @@ interface ICompartmentSVG {
     closed: boolean,
     tripped: boolean,
     drawnOut: boolean
-  }
+  },
+  deviceName: string,
+  deviceType: string,
+  sectionName: string,
+  breakerName: string,
+  assetID: string
 }
 
 export interface ICompartmentDevice {
@@ -21,8 +28,9 @@ export interface ICompartmentDevice {
   scale: number
 }
 
-export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns, name, nonInteractive, children, state }) => {
+export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns, name, nonInteractive, children, state, deviceName, deviceType, sectionName, breakerName, assetID }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const width = panelWidth / columns - 2 * strokeWidth
   const height = span * compartmentHeight - 2 * strokeWidth
   return (
@@ -56,7 +64,16 @@ export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns,
           width={width}
           height={height}
           className={classes.clickableOverlay}
-          onClick={() => console.log(name)}
+          onClick={()=> {
+            dispatch(setDeviceDataDialogOpen({
+              open: true,
+              deviceName: deviceName,
+              deviceType: deviceType,
+              breakerName: breakerName,
+              sectionName: sectionName,
+              assetID: assetID
+            }))
+          }}
         />
         : null
       }

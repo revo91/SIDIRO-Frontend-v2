@@ -5,7 +5,25 @@ interface IElevation {
   open: boolean
 }
 
-const initialState = {
+export interface IElevationSchema {
+  switchboards: Array<{
+    name: string,
+    panels: Array<{
+      name: string,
+      compartments: Array<{
+        rowSpan: number,
+        columns: Array<{
+          type: string,
+          name: string,
+          assetID: string | false,
+          nonInteractive: boolean
+        }>
+      }>
+    }>
+  }>
+}
+
+const initialState:IElevationSchema = {
   switchboards: [
     {
       name: 'RG-MDP1',
@@ -24,7 +42,7 @@ const initialState = {
                   type: 'infeed3WL',
                   name: 'Q0',
                   assetID: '453abff100514e52ab7d29542b550271',
-                  nonInteractive: false
+                  nonInteractive: false,
                 }
               ]
             }
@@ -241,7 +259,7 @@ const initialState = {
                 {
                   type: 'infeed3WL',
                   name: 'Q0',
-                  assetID: 'f40c525703c84859ba3f708cc3d977d2',
+                  assetID: false,
                   nonInteractive: true
                 }
               ]
@@ -388,7 +406,7 @@ const initialState = {
                 {
                   type: 'infeed3WL',
                   name: 'Q0',
-                  assetID: 'e4cafb60f3954a64b08243b461fc7a52',
+                  assetID: false,
                   nonInteractive: true
                 }
               ]
@@ -546,7 +564,7 @@ const initialState = {
                 {
                   type: 'infeed3WL',
                   name: 'Q0',
-                  assetID: '926887d50bb546779f3127c1030388c9',
+                  assetID: false,
                   nonInteractive: true
                 }
               ]

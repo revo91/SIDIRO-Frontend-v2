@@ -6,15 +6,19 @@ import { BackdropReducer } from './Backdrop.reducer';
 import { ElevationReducer } from './Elevation.reducer';
 import { OverviewReducer } from './Overview.reducer';
 import { SystemTopologyData } from './SystemTopologyData.reducer';
+import { DeviceDataDialogElevationDataSource } from './DeviceDataDialogElevationDataSource.reducer';
+import { EventsReducer } from './Events.reducer';
 
 export const rootReducer = combineReducers({
   universalTabs: UniversalTabsReducer,
   languageDialog: LanguageDialogReducer,
   deviceDataDialog: DeviceDataDialogReducer,
+  deviceDataDialogElevationDataSource: DeviceDataDialogElevationDataSource,
   backdrop: BackdropReducer,
   elevation: ElevationReducer,
   overview: OverviewReducer,
-  systemTopologyData: SystemTopologyData
+  systemTopologyData: SystemTopologyData,
+  events: EventsReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>

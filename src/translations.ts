@@ -24,7 +24,11 @@ export const resources = {
         time: "Time",
         event: "Event",
         switchboard: "Switchboard",
-        device: "Device"
+        device: "Device",
+        allDevices: "All",
+        refreshButton: "Refresh",
+        startDate: "Start date",
+        endDate: "End date"
       },
       powermonitorPage: {
         title: "Power monitor"
@@ -54,6 +58,8 @@ export const resources = {
         switchingDeviceStateTitle: "Switching device state",
         breakerClosed: "Closed",
         breakerOpen: "Open",
+        breakerTripped: "Tripped",
+        breakerDrawnOut: "Drawn out",
         lastTripTitle: "Last trip",
         noTrippingOrAcknowledged: "No tripping operation or last tripping operation acknowledged",
         current: "Current",
@@ -61,7 +67,7 @@ export const resources = {
         activePower: "Active Power",
         reactivePower: "Reactive Power",
         apparentPower: "Apparent Power",
-        cosTotal: "Cos Total",
+        powerFactor: "Power factor",
         voltageLL: "L-L Voltage",
         voltageLN: "L-N Voltage",
         voltageL1L2: "L1-L2 Voltage",
@@ -76,7 +82,11 @@ export const resources = {
         showChartTooltip: "Show chart",
         section: "Section",
         events: "Events",
-        circuitBreaker: "Circuit breaker"
+        circuitBreaker: "Circuit breaker",
+        activePowerExport: "Active power export",
+        activePowerImport: "Active power import",
+        reactivePowerExport: "Reactive power export",
+        reactivePowerImport: "Reactive power import"
       },
       tableWithSort: {
         labelRowsPerPage: "Rows per page",
@@ -109,7 +119,11 @@ export const resources = {
         time: "Czas",
         event: "Zdarzenie",
         switchboard: "Rozdzielnica",
-        device: "Urządzenie"
+        device: "Urządzenie",
+        allDevices: "Wszystko",
+        refreshButton: "Odśwież",
+        startDate: "Data początkowa",
+        endDate: "Data końcowa"
       },
       powermonitorPage: {
         title: "Strażnik mocy"
@@ -139,6 +153,8 @@ export const resources = {
         switchingDeviceStateTitle: "Stan wyłącznika",
         breakerClosed: "Załączony",
         breakerOpen: "Wyłączony",
+        breakerTripped: "Wyzwolony",
+        breakerDrawnOut: "Wysunięty",
         lastTripTitle: "Ostatnie wyzwolenie",
         noTrippingOrAcknowledged: "Brak operacji wyzwolenia lub ostatnie wyzwolenie potwierdzone",
         current: "Prąd",
@@ -146,7 +162,7 @@ export const resources = {
         activePower: "Moc czynna",
         reactivePower: "Moc bierna",
         apparentPower: "Moc pozorna",
-        cosTotal: "Cos Total",
+        powerFactor: "Współczynnik mocy",
         voltageLL: "Napięcie L-L",
         voltageLN: "Napięcie L-N",
         voltageL1L2: "Napięcie L1-L2",
@@ -161,7 +177,11 @@ export const resources = {
         showChartTooltip: "Pokaż wykres",
         section: "Sekcja",
         events: "Zdarzenia",
-        circuitBreaker: "Wyłącznik"
+        circuitBreaker: "Wyłącznik",
+        activePowerExport: "Moc czynna oddana do sieci",
+        activePowerImport: "Moc czynna pobrana z sieci",
+        reactivePowerExport: "Moc bierna pojemnościowa",
+        reactivePowerImport: "Moc bierna indukcyjna"
       },
       tableWithSort: {
         labelRowsPerPage: "Wierszy na stronę",

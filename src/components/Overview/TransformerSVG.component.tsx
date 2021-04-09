@@ -8,6 +8,7 @@ export interface ITransformerSVGProps {
   y: number,
   name: string,
   sectionName: string,
+  assetID: string,
   tableName?: string,
   activePower?: number,
   current?: number,
@@ -19,7 +20,7 @@ export interface ITransformerSVGProps {
   breakerName: string
 }
 
-export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, sectionName, tableName, activePower, current, powerFactor, voltageApplied, noTable, overview, breakerName }) => {
+export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, sectionName, tableName, assetID, activePower, current, powerFactor, voltageApplied, noTable, overview, breakerName }) => {
   const classes = useStyles();
 
   return (
@@ -74,6 +75,7 @@ export const TransformerSVG: React.FC<ITransformerSVGProps> = ({ x, y, name, sec
           deviceType={DeviceTypes.transformer}
           breakerName={breakerName}
           sectionName={sectionName}
+          assetID={assetID}
         />
         : null
       }

@@ -12,6 +12,7 @@ import { RootState } from '../reducers/Root.reducer';
 import { UniversalTabs } from './UniversalTabs.component';
 import { DeviceTypes } from '../utilities/DeviceTypes.utility';
 import { decodeState } from '../utilities/DecodeState.utility';
+import { powerFactorCalculator } from '../utilities/PowerFactorCalculator.utility';
 
 //common constants for SVGs to import /////////////////
 export const lineLength = 6;
@@ -157,7 +158,8 @@ export const Overview = () => {
                   name: section.coupling.name,
                   type: section.coupling.type,
                   nextSectionUnderVoltage: diagram.sections[sectionIndex + 1] !== undefined ? checkSectionVoltageApplied(diagram.sections[sectionIndex + 1]) : false,
-                  fixedState: section.coupling.state
+                  fixedState: section.coupling.state,
+                  tableName: section.coupling.name
                 } :
                   false)
               const breakers = section.breakers?.map((breaker: any, breakerIndex: any) => {
@@ -209,9 +211,10 @@ export const Overview = () => {
               y={y}
               name={name}
               tableName={tableName}
+              assetID={breaker.assetID}
               activePower={systemTopologyData[breaker.assetID]?.Active_Power_Import || 0}
               current={sumCurrent(systemTopologyData[breaker.assetID]?.Current_L1, systemTopologyData[breaker.assetID]?.Current_L2, systemTopologyData[breaker.assetID]?.Current_L3)}
-              powerFactor={calculatePowerFactor(systemTopologyData[breaker.assetID]?.Active_Power_Import, systemTopologyData[breaker.assetID]?.Reactive_Power_Import)}
+              powerFactor={powerFactorCalculator(systemTopologyData[breaker.assetID]?.Active_Power_Import, systemTopologyData[breaker.assetID]?.Reactive_Power_Import)}
               breakerName={breaker.name}
               sectionName={sectionName}
               voltageApplied={checkSectionVoltageApplied(sectionObject) && checkBreakerState(breaker.assetID).closed}
@@ -227,9 +230,10 @@ export const Overview = () => {
               y={y}
               name={name}
               tableName={tableName}
+              assetID={breaker.assetID}
               activePower={systemTopologyData[breaker.assetID]?.Active_Power_Import || 0}
               current={sumCurrent(systemTopologyData[breaker.assetID]?.Current_L1, systemTopologyData[breaker.assetID]?.Current_L2, systemTopologyData[breaker.assetID]?.Current_L3)}
-              powerFactor={calculatePowerFactor(systemTopologyData[breaker.assetID]?.Active_Power_Import, systemTopologyData[breaker.assetID]?.Reactive_Power_Import)}
+              powerFactor={powerFactorCalculator(systemTopologyData[breaker.assetID]?.Active_Power_Import, systemTopologyData[breaker.assetID]?.Reactive_Power_Import)}
               breakerName={breaker.name}
               sectionName={sectionName}
               voltageApplied={checkSectionVoltageApplied(sectionObject) && checkBreakerState(breaker.assetID).closed}
@@ -241,7 +245,7 @@ export const Overview = () => {
         const previousSwitchboardIndex = overview.diagrams.findIndex(diagram => diagram.name === breaker.tableName)
         return renderBreaker(breaker.name, sectionName, sectionObject, breaker.tableName, breaker.type, breaker.assetID, x, y + 3 * lineLength, undefined, true, previousSwitchboardIndex !== -1 ? previousSwitchboardIndex : undefined, breaker.state)
       default:
-        return renderBreaker(breaker.name, sectionName, sectionObject, '', breaker.type, breaker.assetID, x, y + 3 * lineLength)
+        return null
     }
   }
 
@@ -259,7 +263,7 @@ export const Overview = () => {
     fixedState: number | undefined = undefined,
     infeedBreaker: boolean | undefined = undefined // reversed voltageAbove with voltageBelow
   ) => {
-
+    //console.log(name, sectionName, sectionObject, tableName, type, assetID)
     switch (type) {
       case DeviceTypes.circuitBreaker:
       case DeviceTypes.infeedBreaker:
@@ -272,9 +276,10 @@ export const Overview = () => {
             state={fixedState !== undefined ? decodeState(fixedState) : decodeState(systemTopologyData[assetID]?.Breaker_State) || false}
             name={name}
             tableName={tableName}
+            assetID={assetID}
             activePower={systemTopologyData[assetID]?.Active_Power_Import || 0}
             current={sumCurrent(systemTopologyData[assetID]?.Current_L1, systemTopologyData[assetID]?.Current_L2, systemTopologyData[assetID]?.Current_L3)}
-            powerFactor={calculatePowerFactor(systemTopologyData[assetID]?.Active_Power_Import, systemTopologyData[assetID]?.Reactive_Power_Import)}
+            powerFactor={powerFactorCalculator(systemTopologyData[assetID]?.Active_Power_Import, systemTopologyData[assetID]?.Reactive_Power_Import)}
             noTable={tableName === undefined}
             nextSwitchboardIndex={nextSwitchboardIndex}
             previousSwitchboardIndex={previousSwitchboardIndex}
@@ -301,7 +306,8 @@ export const Overview = () => {
       name: string,
       type: string,
       nextSectionUnderVoltage: boolean,
-      fixedState: number
+      fixedState: number,
+      tableName?: string
     } | false) => {
 
     return (
@@ -318,9 +324,15 @@ export const Overview = () => {
             y={y - 3 * lineLength}
             state={endCoupling.fixedState !== undefined ? decodeState(endCoupling.fixedState) : decodeState(systemTopologyData[endCoupling.assetID]?.Breaker_State)}
             name={endCoupling.name}
-            //voltageApplied={false}
+            assetID={endCoupling.assetID}
+            activePower={systemTopologyData[endCoupling.assetID]?.Active_Power_Import || 0}
+            current={sumCurrent(systemTopologyData[endCoupling.assetID]?.Current_L1, systemTopologyData[endCoupling.assetID]?.Current_L2, systemTopologyData[endCoupling.assetID]?.Current_L3)}
+            powerFactor={powerFactorCalculator(systemTopologyData[endCoupling.assetID]?.Active_Power_Import, systemTopologyData[endCoupling.assetID]?.Reactive_Power_Import)}
             drawOut={endCoupling.type === DeviceTypes.drawOutCircuitBreaker}
             deviceType={endCoupling.type}
+            noTable={endCoupling.tableName === undefined}
+            tableName={endCoupling.tableName}
+            tableAbove
             sectionName=''
             voltageBelow={checkSectionVoltageApplied(section) || previousSectionUnderVoltage}
             voltageAbove={endCoupling ? endCoupling.nextSectionUnderVoltage : false}
@@ -328,16 +340,6 @@ export const Overview = () => {
           : false}
       />
     )
-  }
-
-  const calculatePowerFactor = (P: number, Q: number) => {
-    const result = parseFloat((P / (Math.sqrt(Math.pow(P, 2) + Math.pow(Q, 2)))).toFixed(2))
-    if (isNaN(result)) {
-      return 0
-    }
-    else {
-      return result
-    }
   }
 
   const sumCurrent = (L1: number, L2: number, L3: number) => {

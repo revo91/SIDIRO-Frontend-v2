@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { DeviceTypes } from '../../utilities/DeviceTypes.utility';
-import { BreakerStates } from '../../utilities/BreakerStates.utility';
 import IconButton from '@material-ui/core/IconButton';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
@@ -18,6 +17,9 @@ import { OverviewTabGeneratorSVG } from './OverviewTabGeneratorSVG.component';
 import WarningIcon from '@material-ui/icons/Warning';
 import InfoIcon from '@material-ui/icons/Info';
 import Typography from '@material-ui/core/Typography';
+import { powerFactorCalculator } from '../../utilities/PowerFactorCalculator.utility';
+import { decodeState } from '../../utilities/DecodeState.utility';
+import { TableWithSort } from '../TableWithSort.component';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,12 +65,20 @@ export const OverviewTab = () => {
   const deviceName = useSelector((state: RootState) => state.deviceDataDialog.deviceName);
   const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
   const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
+  const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
+  const systemTopologyData = useSelector((state: RootState) => state.systemTopologyData);
+  const events = useSelector((state: RootState) => state.events);
   const dispatch = useDispatch();
 
   const eventTable = (
     <div className={classes.masonryLayoutPanel}>
+      {/* <TableWithSort
+        defaultOrderColumnIndex={2}
+        columns={[t('eventsPage.severity'), t('eventsPage.event'), t('eventsPage.time')]}
+        rows={rows ? [...rows] : [[]]}
+      /> */}
       <UniversalTable
-        columns={['Ważność', 'Zdarzenie', 'Czas']}
+        columns={[t('eventsPage.severity'), t('eventsPage.event'), t('eventsPage.time')]}
         rows={[[<WarningIcon className={classes.warning} />, 'Wyłączenie wyłącznika QT01', '2021.03.11'], [<InfoIcon className={classes.info} />, 'Wyłączenie wyłącznika QT01', '2021.03.10'], [<InfoIcon className={classes.info} />, 'Wyłączenie wyłącznika QT01', '2021.03.09']]}
         small />
     </div>
@@ -83,7 +93,9 @@ export const OverviewTab = () => {
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
-        rows={[[`${t('deviceDataDialog.current')} L1`, '100 A'], [`${t('deviceDataDialog.current')} L2`, '50 A'], [`${t('deviceDataDialog.current')} L3`, '30 A']]}
+        rows={[[`${t('deviceDataDialog.current')} L1`, `${systemTopologyData[assetID]?.Current_L1 || 0} A`],
+        [`${t('deviceDataDialog.current')} L2`, `${systemTopologyData[assetID]?.Current_L2 || 0} A`],
+        [`${t('deviceDataDialog.current')} L3`, `${systemTopologyData[assetID]?.Current_L3 || 0} A`]]}
         small />
     </div>
   )
@@ -96,8 +108,11 @@ export const OverviewTab = () => {
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
-        rows={[['Moc czynna pobrana z sieci', '100 kW'], ['Moc czynna oddana do sieci', '10 kW'], ['Moc bierna indukcyjna', '100 kvar'], ['Moc indukcyjna pojemnościowa', '100 kvar'],
-        ['Współczynnik mocy', '0.99 PF']]}
+        rows={[[t('deviceDataDialog.activePowerImport'), `${systemTopologyData[assetID]?.Active_Power_Import || 0} kW`],
+        [t('deviceDataDialog.activePowerExport'), `${systemTopologyData[assetID]?.Active_Power_Export || 0} kW`],
+        [t('deviceDataDialog.reactivePowerImport'), `${systemTopologyData[assetID]?.Reactive_Power_Import || 0} kvar`],
+        [t('deviceDataDialog.reactivePowerExport'), `${systemTopologyData[assetID]?.Reactive_Power_Import || 0} kvar`],
+        [t('deviceDataDialog.powerFactor'), `${systemTopologyData[assetID] ? powerFactorCalculator(systemTopologyData[assetID].Active_Power_Import, systemTopologyData[assetID].Reactive_Power_Import) : 0} PF`]]}
         small />
     </div>
   )
@@ -110,7 +125,9 @@ export const OverviewTab = () => {
               <TimelineIcon />
             </IconButton>
           </Tooltip>]}
-        rows={[['THD I L1', '10 %'], ['THD I L2', '10 %'], ['THD I L3', '10 %']]}
+        rows={[['THD I L1', `${systemTopologyData[assetID]?.THD_I_L1 || 0} %`],
+        ['THD I L2', `${systemTopologyData[assetID]?.THD_I_L2 || 0} %`],
+        ['THD I L3', `${systemTopologyData[assetID]?.THD_I_L3 || 0} %`]]}
         small />
     </div>
   )
@@ -123,7 +140,9 @@ export const OverviewTab = () => {
               <TimelineIcon />
             </IconButton>
           </Tooltip>]}
-        rows={[['THD U L1', '10 %'], ['THD U L2', '10 %'], ['THD U L3', '10 %']]}
+        rows={[['THD U L1', `${systemTopologyData[assetID]?.THD_U_L1 || 0} %`],
+        ['THD U L2', `${systemTopologyData[assetID]?.THD_U_L2 || 0} %`],
+        ['THD U L3', `${systemTopologyData[assetID]?.THD_U_L3 || 0} %`]]}
         small />
     </div>
   )
@@ -136,7 +155,9 @@ export const OverviewTab = () => {
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
-        rows={[[t('deviceDataDialog.voltageL1L2'), '401 V'], [t('deviceDataDialog.voltageL2L3'), '399 V'], [t('deviceDataDialog.voltageL3L1'), '402 V']]}
+        rows={[[t('deviceDataDialog.voltageL1L2'), `${systemTopologyData[assetID]?.Voltage_L1_L2 || 0} V`],
+        [t('deviceDataDialog.voltageL2L3'), `${systemTopologyData[assetID]?.Voltage_L2_L3 || 0} V`],
+        [t('deviceDataDialog.voltageL3L1'), `${systemTopologyData[assetID]?.Voltage_L3_L1 || 0} V`]]}
         small />
     </div>
   )
@@ -149,42 +170,58 @@ export const OverviewTab = () => {
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
-        rows={[[t('deviceDataDialog.voltageL1N'), '229 V'], [t('deviceDataDialog.voltageL2N'), '224 V'], [t('deviceDataDialog.voltageL3N'), '226 V']]}
+        rows={[[t('deviceDataDialog.voltageL1N'), `${systemTopologyData[assetID]?.Voltage_L1_N || 0} V`],
+        [t('deviceDataDialog.voltageL2N'), `${systemTopologyData[assetID]?.Voltage_L2_N || 0} V`],
+        [t('deviceDataDialog.voltageL3N'), `${systemTopologyData[assetID]?.Voltage_L3_N || 0} V`]]}
         small />
     </div>
   )
-  const breakerStateAlert = (
-    <Grid item xs={12}>
-      <Alert severity="success">
-        <AlertTitle>{t('deviceDataDialog.breakerClosed')}</AlertTitle>
-        {t('deviceDataDialog.switchingDeviceStateTitle')}
-      </Alert>
-    </Grid>
-  )
-  const breakerLastTripAlert = (
-    <Grid item xs={12}>
-      <Alert severity="success">
-        <AlertTitle>{t('deviceDataDialog.noTrippingOrAcknowledged')}</AlertTitle>
-        {t('deviceDataDialog.lastTripTitle')}
-      </Alert>
-    </Grid>
-  )
-  const generatorReadyAlert = (
-    <Grid item xs={12}>
-      <Alert severity="success">
-        <AlertTitle>{t('deviceDataDialog.generatorReady')}</AlertTitle>
-        {t('deviceDataDialog.generatorState')}
-      </Alert>
-    </Grid>
-  )
-  const generatorRunningAlert = (
-    <Grid item xs={12}>
-      <Alert severity="warning">
-        <AlertTitle>{t('deviceDataDialog.generatorStopped')}</AlertTitle>
-        {t('deviceDataDialog.generatorState')}
-      </Alert>
-    </Grid>
-  )
+  const breakerStateAlert = () => {
+    const state = decodeState(systemTopologyData[assetID]?.Breaker_State || 0)
+    if (state.drawnOut) {
+      //red alert
+      return (
+        <Grid item xs={12}>
+          <Alert severity='error'>
+            <AlertTitle>{t('deviceDataDialog.breakerDrawnOut')}</AlertTitle>
+            {t('deviceDataDialog.switchingDeviceStateTitle')}
+          </Alert>
+        </Grid>
+      )
+    }
+    else if (state.tripped) {
+      //red alert
+      return (
+        <Grid item xs={12}>
+          <Alert severity='error'>
+            <AlertTitle>{t('deviceDataDialog.breakerTripped')}</AlertTitle>
+            {t('deviceDataDialog.switchingDeviceStateTitle')}
+          </Alert>
+        </Grid>
+      )
+    }
+    else if (!state.closed) {
+      //yellow alert
+      return (
+        <Grid item xs={12}>
+          <Alert severity='warning'>
+            <AlertTitle>{t('deviceDataDialog.breakerOpen')}</AlertTitle>
+            {t('deviceDataDialog.switchingDeviceStateTitle')}
+          </Alert>
+        </Grid>
+      )
+    }
+    //all ok
+    return (
+      <Grid item xs={12}>
+        <Alert severity='success'>
+          <AlertTitle>{t('deviceDataDialog.breakerClosed')}</AlertTitle>
+          {t('deviceDataDialog.switchingDeviceStateTitle')}
+        </Alert>
+      </Grid>
+    )
+  }
+
   const svgVisualization = () => {
     switch (deviceType) {
       case DeviceTypes.circuitBreaker:
@@ -193,7 +230,7 @@ export const OverviewTab = () => {
             <OverviewTabCircuitBreakerSVG
               x={8}
               y={0}
-              state={BreakerStates.open}
+              closed={decodeState(systemTopologyData[assetID]?.Breaker_State || 0).closed}
               sectionName={sectionName}
               outgoingFeederName={deviceName}
               name={breakerName}
@@ -212,7 +249,7 @@ export const OverviewTab = () => {
             <OverviewTabCircuitBreakerSVG
               x={8}
               y={12}
-              state={BreakerStates.open}
+              closed={decodeState(systemTopologyData[assetID]?.Breaker_State || 0).closed}
               name={breakerName}
               sectionName={sectionName}
               bottomSection
@@ -230,7 +267,7 @@ export const OverviewTab = () => {
             <OverviewTabCircuitBreakerSVG
               x={8}
               y={6}
-              state={BreakerStates.open}
+              closed={decodeState(systemTopologyData[assetID]?.Breaker_State || 0).closed}
               name={breakerName}
               sectionName={sectionName}
               bottomSection
@@ -243,10 +280,25 @@ export const OverviewTab = () => {
             <OverviewTabCircuitBreakerSVG
               x={8}
               y={0}
-              state={BreakerStates.open}
+              closed={decodeState(systemTopologyData[assetID]?.Breaker_State || 0).closed}
               sectionName={sectionName}
               outgoingFeederName={deviceName}
               name={breakerName}
+              bottomSection
+            />
+          </svg>
+        )
+      case DeviceTypes.couplingBreaker:
+        return (
+          <svg width='100%' viewBox={`0 -2 16 24`} className={classes.overviewTabSVGMaxHeight}>
+            <OverviewTabCircuitBreakerSVG
+              x={8}
+              y={0}
+              closed={decodeState(systemTopologyData[assetID]?.Breaker_State || 0).closed}
+              sectionName=''
+              outgoingFeederName=''
+              name={breakerName}
+              topSection
               bottomSection
             />
           </svg>
@@ -270,10 +322,7 @@ export const OverviewTab = () => {
         </Grid>
       </Grid>
       <Grid container spacing={1} item xs={12} sm={12} md={8}>
-        {breakerStateAlert}
-        {deviceType === DeviceTypes.circuitBreaker ? breakerLastTripAlert : null}
-        {deviceType === DeviceTypes.generator ? generatorReadyAlert : null}
-        {deviceType === DeviceTypes.generator ? generatorRunningAlert : null}
+        {breakerStateAlert()}
         <Grid item xs={12}>
           <div className={classes.masonryLayout}>
             {currentTable}

@@ -4,4 +4,5 @@ export enum DeviceTypes {
   generator = 'generator',
   infeedBreaker = 'infeedBreaker',
   drawOutCircuitBreaker = 'drawOutCircuitBreaker',
+  couplingBreaker = 'couplingBreaker'
 }

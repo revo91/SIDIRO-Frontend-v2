@@ -32,6 +32,7 @@ import { RootState } from '../reducers/Root.reducer';
 import createWorker from "workerize-loader!../workers/TimeseriesData.worker"; //eslint-disable-line import/no-webpack-loader-syntax
 import * as Worker from "../workers/TimeseriesData.worker";
 import { setAssetData } from '../actions/SystemTopologyData.action';
+import { setDeviceDataDialog } from '../actions/deviceDataDialogElevationDataSource.action';
 
 const drawerWidth = 240;
 
@@ -132,7 +133,7 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
     const handleSetAssetData = (message: MessageEvent) => {
       if (message.data.length > 0) {
         message.data.forEach((device: any) => {
-          dispatch(setAssetData(device.assetID, device[0]))
+          dispatch(setAssetData(device.assetID, device))
         })
       }
     }
@@ -144,26 +145,93 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
   }, [dispatch])
 
   useEffect(() => {
-    const ids: Array<string> = []
-    overview.diagrams.forEach(diagram => {
-      diagram.sections.forEach((section: any) => {
-        section.infeeds?.forEach((infeed: any) => {
+    const deviceData: Array<{
+      assetID: string,
+      breakerName: string,
+      deviceName: string,
+      deviceType: string,
+      sectionName: string
+    }> = []
+    overview.diagrams.forEach((diagram) => {
+      diagram.sections.forEach((section) => {
+        section.infeeds?.forEach((infeed) => {
           if (infeed.breaker.assetID !== '') {
-            ids.push(infeed.breaker.assetID)
+            deviceData.push(
+              {
+                assetID: infeed.breaker.assetID,
+                breakerName: infeed.breaker.name,
+                deviceName: infeed.tableName,
+                deviceType: infeed.breaker.type,
+                sectionName: section.name
+              })
+            //ids.push(infeed.breaker.assetID)
           }
         })
         section.breakers?.forEach((breaker: any) => {
-          ids.push(breaker.assetID)
+          deviceData.push(
+            {
+              assetID: breaker.assetID,
+              breakerName: breaker.name,
+              deviceName: breaker.tableName,
+              deviceType: breaker.type,
+              sectionName: section.name
+            })
+          //ids.push(breaker.assetID)
         })
         if (section.coupling) {
-          ids.push(section.coupling.assetID)
+          deviceData.push(
+            {
+              assetID: section.coupling.assetID,
+              breakerName: section.coupling.name,
+              deviceName: '',
+              deviceType: section.coupling.type,
+              sectionName: section.name
+            })
+          //ids.push(section.coupling.assetID)
         }
       })
     })
-    TimeseriesWorker.postMessage({ ids })
+    TimeseriesWorker.postMessage({ deviceData })
   }, [overview.diagrams, dispatch])
 
-
+  //initialize diagram structure
+  useEffect(() => {
+    overview.diagrams.forEach((diagram) => {
+      diagram.sections.forEach((section) => {
+        section.infeeds?.forEach((infeed) => {
+          dispatch(setDeviceDataDialog(`${diagram.name}-${infeed.breaker.assetID}`, {
+            infeedName: infeed.name,
+            infeedTableName: infeed.tableName,
+            infeedType: infeed.type,
+            breakerName: infeed.breaker.name,
+            breakerType: infeed.breaker.type,
+            breakerAssetID: infeed.breaker.assetID,
+            sectionName: section.name,
+            switchboardName: diagram.name
+          }))
+        })
+        section.breakers?.forEach((breaker) => {
+          dispatch(setDeviceDataDialog(`${diagram.name}-${breaker.assetID}`, {
+            breakerName: breaker.name,
+            breakerType: breaker.type,
+            breakerAssetID: breaker.assetID,
+            breakerTableName: breaker.tableName,
+            sectionName: section.name,
+            switchboardName: diagram.name
+          }))
+        })
+        if (section.coupling) {
+          dispatch(setDeviceDataDialog(`${diagram.name}-${section.coupling.assetID}`, {
+            breakerName: section.coupling.name,
+            breakerType: section.coupling.type,
+            breakerAssetID: section.coupling.assetID,
+            sectionName: section.name,
+            switchboardName: diagram.name
+          }))
+        }
+      }) //diagram loop end
+    }) //diagrams loop end
+  }, [])
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);

@@ -1,6 +1,6 @@
-const API_URL = "/apiTimeseries";
+const API_URL = "/apiEvents";
 
-export const fetchTimeseries = async (assetID: string, interval: number) => {
+export const fetchEvents = async (assetID: string, fromDate: string, toDate: string) => {
   const response = await fetch(`${API_URL}`, {
     method: 'POST',
     headers: {
@@ -8,12 +8,13 @@ export const fetchTimeseries = async (assetID: string, interval: number) => {
     },
     body: JSON.stringify({
       asset: assetID,
-      interval: interval
+      fromDate,
+      toDate
     })
   })
   const data = await response.json()
   const dataWithCustomFields = {
-    ...data[0],
+    ...data,
     assetID,
   }
   return dataWithCustomFields

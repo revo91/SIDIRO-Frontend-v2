@@ -17,7 +17,8 @@ interface IData {
 }
 
 interface ITableWithSort extends IData {
-  dense?: boolean
+  dense?: boolean,
+  defaultOrderColumnIndex?: number
 }
 
 type TOrder = 'asc' | 'desc';
@@ -106,11 +107,11 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense }) => {
+export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense, defaultOrderColumnIndex }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState<TOrder>('desc');
   const [orderDataType, setOrderDataType] = React.useState<TOrderDataType>('Date')
-  const [orderBy, setOrderBy] = React.useState<string>(columns[0]);
+  const [orderBy, setOrderBy] = React.useState<string>(defaultOrderColumnIndex ? columns[defaultOrderColumnIndex] : columns[0]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { t } = useTranslation();

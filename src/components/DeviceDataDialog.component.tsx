@@ -42,6 +42,7 @@ export const DeviceDataDialog: React.FC = () => {
   const deviceType = useSelector((state: RootState) => state.deviceDataDialog.deviceType);
   const breakerName = useSelector((state: RootState) => state.deviceDataDialog.breakerName);
   const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
+  const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -49,6 +50,7 @@ export const DeviceDataDialog: React.FC = () => {
     switch (deviceType) {
       case DeviceTypes.circuitBreaker:
       case DeviceTypes.infeedBreaker:
+      case DeviceTypes.couplingBreaker:
         return <BreakerDevice />
       case DeviceTypes.generator:
       case DeviceTypes.transformer:
@@ -64,7 +66,8 @@ export const DeviceDataDialog: React.FC = () => {
       deviceName: deviceName,
       deviceType: deviceType,
       breakerName: breakerName,
-      sectionName: sectionName
+      sectionName: sectionName,
+      assetID: assetID
     }))} TransitionComponent={Transition}>
       <AppBar className={classes.appBar}>
         <Toolbar>
@@ -73,13 +76,15 @@ export const DeviceDataDialog: React.FC = () => {
             deviceName: deviceName,
             deviceType: deviceType,
             breakerName: breakerName,
-            sectionName: sectionName
+            sectionName: sectionName,
+            assetID: assetID
           }))} aria-label="close">
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {deviceType === DeviceTypes.circuitBreaker ||
-            deviceType === DeviceTypes.infeedBreaker ? `${t('deviceDataDialog.circuitBreaker')} ${breakerName}` : deviceName}
+            {deviceType === DeviceTypes.circuitBreaker || deviceType === DeviceTypes.infeedBreaker || deviceType === DeviceTypes.couplingBreaker ?
+              `${t('deviceDataDialog.circuitBreaker')} ${breakerName}`
+              : deviceName}
           </Typography>
         </Toolbar>
       </AppBar>

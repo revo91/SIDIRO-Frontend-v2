@@ -15,6 +15,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
 import { useTranslation } from 'react-i18next';
 import { decodeState } from '../utilities/DecodeState.utility';
+import { DeviceTypes } from '../utilities/DeviceTypes.utility';
+import { IDeviceData } from '../reducers/DeviceDataDialogElevationDataSource.reducer';
 
 //common constants for SVGs to import /////////////////
 export const panelWidth = 600;
@@ -118,6 +120,7 @@ export const Elevation = () => {
   const elevation = useSelector((state: RootState) => state.elevation);
   const classes = useStyles();
   const systemTopologyData = useSelector((state: RootState) => state.systemTopologyData);
+  const dialogData = useSelector((state: RootState) => state.deviceDataDialogElevationDataSource);
   const { t } = useTranslation()
 
   const renderCompartmentContent = (type: string, compartmentX: number, compartmentY: number, columns: number) => {
@@ -141,6 +144,49 @@ export const Elevation = () => {
     }
   }
 
+  const associateTypeWithDisplayData = (obj: IDeviceData) => {
+    if (obj) {
+      if (obj.infeedType && obj.infeedType !== '') {
+        return {
+          deviceName: obj.infeedTableName || '',
+          deviceType: obj.infeedType || '',
+          breakerName: obj.breakerName,
+          sectionName: `${t('deviceDataDialog.section')} ${obj.sectionName}`,
+        }
+      }
+      else {
+        if (obj.breakerType === DeviceTypes.circuitBreaker) {
+          return {
+            deviceName: obj.breakerTableName || '',
+            deviceType: obj.breakerType,
+            breakerName: obj.breakerName,
+            sectionName: `${obj.switchboardName} ${t('deviceDataDialog.section')} ${obj.sectionName}`,
+          }
+        }
+        else if (obj.breakerType === DeviceTypes.infeedBreaker) {
+          return {
+            deviceName: obj.breakerTableName || '',
+            deviceType: obj.breakerType,
+            breakerName: obj.breakerName,
+            sectionName: `${t('deviceDataDialog.section')} ${obj.sectionName}`,
+          }
+        }
+        return {
+          deviceName: obj.breakerTableName || '',
+          deviceType: obj.breakerType,
+          breakerName: obj.breakerName,
+          sectionName: `${t('deviceDataDialog.section')} ${obj.sectionName}`,
+        }
+      }
+    }
+    return {
+      deviceName: '',
+      deviceType: '',
+      breakerName: '',
+      sectionName: '',
+    }
+  }
+
   const renderTabsWithSwitchboards = (): Array<{ label: string, content: React.ReactNode }> => {
     let tabs: Array<{ label: string, content: React.ReactNode }> = [];
     elevation.switchboards.map(switchboard => {
@@ -156,6 +202,7 @@ export const Elevation = () => {
                     span += panel.compartments[compartmentIndex - 1] ? panel.compartments[compartmentIndex - 1].rowSpan : 0;
                     const columns = compartment.columns.length;
                     return compartment.columns.map((column, columnIndex) => {
+                      //console.log(dialogData[column.assetID]?.breakerType)
                       return (
                         <CompartmentSVG
                           key={`${compartmentIndex}-${columnIndex}`}
@@ -164,7 +211,12 @@ export const Elevation = () => {
                           columns={columns}
                           name={column.name}
                           nonInteractive={column.nonInteractive}
-                          state={checkBreakerState(column.assetID)}
+                          state={column.assetID ? checkBreakerState(column.assetID) : { closed: true, tripped: false, drawnOut: false }} //mock if not interactive so it doesnt highlight on visualization
+                          assetID={column.assetID ? column.assetID : ''}
+                          breakerName={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).breakerName : ''}
+                          deviceName={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).deviceName : ''}
+                          deviceType={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).deviceType : ''}
+                          sectionName={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).sectionName : ''}
                         >
                           {renderCompartmentContent(column.type,
                             (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,

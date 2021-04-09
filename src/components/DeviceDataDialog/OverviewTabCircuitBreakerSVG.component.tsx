@@ -4,9 +4,8 @@ import { lineLength, useStyles } from '../Overview.component';
 interface IOverviewTabCircuitBreakerSVG {
   x: number,
   y: number,
-  state: string,
+  closed: boolean,
   name: string,
-  voltageApplied?: boolean,
   sectionName?: string,
   outgoingFeederName?: string,
   bottomSection?: boolean,
@@ -17,9 +16,8 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
   {
     x,
     y,
-    state,
+    closed,
     name,
-    voltageApplied,
     sectionName,
     outgoingFeederName,
     bottomSection,
@@ -36,7 +34,7 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
         y1={y}
         x2={x}
         y2={y + lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={classes.lineStyle}
       />
       {/* 'X' symbol - 2 * 90deg crossed lines*/}
       <line
@@ -44,7 +42,7 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
         y1={y + 0.75 * lineLength}
         x2={x}
         y2={y + 1.25 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={classes.lineStyle}
         transform={`rotate(45 ${x} ${y + lineLength})`}
       />
       <line
@@ -52,7 +50,7 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
         y1={y + 0.75 * lineLength}
         x2={x}
         y2={y + 1.25 * lineLength}
-        className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={classes.lineStyle}
         transform={`rotate(-45 ${x} ${y + lineLength})`}
       />
       {/* breaker's rotating element */}
@@ -61,8 +59,8 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
         y1={y + lineLength}
         x2={x}
         y2={y + 2 * lineLength}
-        transform={state === 'open' ? `rotate(-45 ${x} ${y + 2 * lineLength})` : `rotate(0 ${x} ${y + 2 * lineLength})`}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        transform={closed === false ? `rotate(-45 ${x} ${y + 2 * lineLength})` : `rotate(0 ${x} ${y + 2 * lineLength})`}
+        className={classes.lineStyle}
       />
       {/* end line */}
       <line
@@ -70,7 +68,7 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
         y1={y + 2 * lineLength}
         x2={x}
         y2={y + 3 * lineLength}
-        className={voltageApplied && state === 'closed' ? classes.lineStyleVoltageApplied : classes.lineStyle}
+        className={classes.lineStyle}
       />
       {topSection ?
         <React.Fragment>
@@ -88,7 +86,7 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
             y1={y}
             x2={x + lineLength}
             y2={y}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={classes.lineStyle}
           />
           {/* outgoing feeder name */}
           <text
@@ -125,7 +123,7 @@ export const OverviewTabCircuitBreakerSVG: React.FC<IOverviewTabCircuitBreakerSV
             y1={y + 3 * lineLength}
             x2={x + lineLength}
             y2={y + 3 * lineLength}
-            className={voltageApplied ? classes.lineStyleVoltageApplied : classes.lineStyle}
+            className={classes.lineStyle}
           />
         </React.Fragment>
         : null}
