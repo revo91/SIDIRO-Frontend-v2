@@ -1,9 +1,12 @@
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
+import { ChartType } from 'chart.js';
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { useTheme } from '@material-ui/core/styles';
-import { SiemensAccentYellow } from '../utilities/SiemensColors.utility';
 import { useUpdateChartFontColor } from '../hooks/useUpdateChartFontColor.hook';
 import { useUpdateChartDatasets } from '../hooks/useUpdateChartDatasets.hook';
+import 'chartjs-adapter-date-fns';
+import { useTranslation } from 'react-i18next';
+import { pl, enUS } from 'date-fns/locale';
 
 interface LineChartProps {
   data: {
@@ -12,11 +15,12 @@ interface LineChartProps {
       backgroundColor: string
       borderColor: string,
       lineTension: number,
-			fill: boolean,
+      fill: boolean,
       data: Array<{
-        t: number | Date,
+        x: number | Date,
         y: number
-      }>
+      }>,
+      pointRadius?: number
     }>
   },
   chartTitle?: string,
@@ -24,73 +28,80 @@ interface LineChartProps {
   maxTime?: Date | number
 }
 
-export const LineChart: React.FC<LineChartProps> = ({ data,chartTitle, minTime, maxTime }) => {
+export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, minTime, maxTime }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
-  const [chartInstance, setChartInstance] = useState<Chart | null>(null);
+  const [chartInstance, setChartInstance] = useState<any>(null);
   const theme = useTheme();
-  useUpdateChartFontColor(chartInstance, SiemensAccentYellow.light6); 
+  const { t, i18n } = useTranslation();
+  useUpdateChartFontColor(chartInstance, '#fff');
   useUpdateChartDatasets(chartInstance, data)
- 
-  if(Chart.defaults.global.elements?.point?.radius)
-  {
-    Chart.defaults.global.elements.point.radius = 0
-  }
 
+  const typee: ChartType = 'line'
   const chartConfig = useMemo(() => {
     return {
-      type: 'line',
+      type: typee,
       data,
       options: {
-        scales: {
-          xAxes: [{
-            type: 'time',
-            //distribution: 'auto',
-            ticks: {
-              //source: 'auto',
-              autoSkip: true,
-              fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
-            },
-            time: {
-             
-              tooltipFormat: "YYYY-MM-DD HH:mm:ss",
-              displayFormats: {
-                millisecond: "HH:mm:ss",
-                second: "HH:mm:ss",
-                minute: "HH:mm",
-                hour: "HH:mm:ss",
-                day: "MMM D",
-                
-              },
-            },
-          }],
-          yAxes: [{
-            ticks: {
-              fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
-            }
-          }]
-        },
-        title: {
-          display: chartTitle ? true : false,
-          text: chartTitle ? chartTitle : '',
-          fontColor: theme.palette.text.primary,
-          fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-        },
-        tooltips: {
+        responsive: true,
+        interaction: {
           intersect: false,
+          mode: 'index',
         },
-        legend: {
-          labels: {
-            fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666',
+        plugins: {
+          title: {
+            display: chartTitle ? true : false,
+            text: chartTitle ? chartTitle : '',
+            fontColor: theme.palette.text.primary,
             fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-            fontSize: 12
+            color: Chart.defaults.color
+          },
+          legend: {
+            labels: {
+              color: Chart.defaults.color
+            }
           }
         },
-        responsive: true,
-        maintainAspectRatio: true,
-        aspectRatio: 3,
+        scales: {
+          x: {
+            type: 'time',
+            title: {
+              display: true,
+              text: t('chart.timeAxisLabel')
+            },
+            ticks: {
+              color: Chart.defaults.color
+            },
+            time: {
+              displayFormats: {
+                millisecond: 'HH:mm:ss.SSS',
+                second: 'HH:mm:ss',
+                minute: 'HH:mm',
+                hour: 'HH'
+              },
+              tooltipFormat: 'PPpp'
+            },
+            adapters: {
+              date: {
+                locale: i18n.language === 'pl' ? pl : enUS,
+
+              }
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: t('chart.valueAxisLabel')
+            },
+            ticks: {
+              color: Chart.defaults.color
+            }
+          }
+        },
       },
     }
-  }, [data, chartTitle, theme.palette.type, theme.palette.text.primary]);
+  }, [data, chartTitle, theme.palette.text.primary, i18n.language, t]);
+
+
 
   useEffect(() => {
     //instantiate chart with first given data

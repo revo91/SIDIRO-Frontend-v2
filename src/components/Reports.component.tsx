@@ -2,10 +2,10 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
-import { BarChart } from './BarChart.component';
+// import { BarChart } from './BarChart.component';
 import { PieChart } from './PieChart.component';
+// import { LineChart } from './LineChart.component';
 import { SiemensColors, SiemensAccentBlue, SiemensAccentRed, SiemensAccentYellow } from '../utilities/SiemensColors.utility';
-import { LineChart } from './LineChart.component';
 import { UniversalTabs } from './UniversalTabs.component';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     select: {
       width: '100%'
+    },
+    sectionMargin: {
+      marginTop: theme.spacing(3)
     }
   }),
 );
@@ -32,7 +35,7 @@ export const Reports = () => {
   const [productionTotal, setProductionTotal] = React.useState<Array<number>>([100, 100, 100, 100, 100, 100])
   const [line37, setLine37] = React.useState<Array<number>>([100, 100, 100, 100, 100])
   const [sampleTimeSeriesData, setSampleTimeSeriesData] = React.useState<Array<{ t: number | Date, y: number }>>([{ t: new Date(2021, 1, 1), y: 10 }, { t: new Date(2021, 1, 5), y: 10 }, { t: new Date(2021, 1, 9), y: 10 }])
-  const [dateFrom, changeDateFrom] = React.useState<Date | null>(new Date(new Date().setMonth(new Date().getMonth() - 1)));
+  const [dateFrom, changeDateFrom] = React.useState<Date | null>(new Date(new Date().setMonth(new Date().getMonth())));
   const classes = useStyles()
   const [energyType, setEnergyType] = React.useState('0');
 
@@ -63,7 +66,7 @@ export const Reports = () => {
         <DatePicker
           cancelLabel={t('datePicker.cancelButton')}
           autoOk
-          label={'Wybierz miesiąc'}
+          label={t('reportsPage.chooseMonth')}
           value={dateFrom}
           onChange={changeDateFrom}
           fullWidth
@@ -77,7 +80,7 @@ export const Reports = () => {
           variant="contained"
           color="primary"
         >
-          Eksport PDF
+          {t('reportsPage.exportToPDF')}
       </Button>
       </Grid>
       <Grid item xs={12} md={2} lg={2} xl={1}>
@@ -86,11 +89,11 @@ export const Reports = () => {
           variant="contained"
           color="primary"
         >
-          Eksport CSV
+          {t('reportsPage.exportToCSV')}
       </Button>
       </Grid>
-      <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
-        <Typography gutterBottom variant="h5">Całościowe zużycie energii czynnej</Typography>
+      <Grid item xs={12} className={classes.sectionMargin}>
+        <Typography gutterBottom variant="h5">{t('reportsPage.totalActivePowerConsumption')}</Typography>
       </Grid>
       <Grid item xs={12} md={5}>
         <PieChart
@@ -110,7 +113,7 @@ export const Reports = () => {
       </Grid>
       <Grid item xs={12} md={7}>
         <UniversalTable
-          columns={['Nazwa grupy', 'Zużycie energii czynnej']}
+          columns={[t('reportsPage.groupName'), t('reportsPage.activeEnergyUsage')]}
           rows={[['Produkcja', `${sampleData1[0]} kWh`], ['Magazyny', `${sampleData1[1]} kWh`], ['Biura', `${sampleData1[2]} kWh`], ['Ładowanie samochodów', `${sampleData1[3]} kWh`], ['Zużycie całkowite', `${sampleData1[0] + sampleData1[1] + sampleData1[2] + sampleData1[3]} kWh`]]}
         />
       </Grid>
@@ -118,7 +121,7 @@ export const Reports = () => {
         <Divider />
       </Grid>
       {/* NEXTLEVEL */}
-      <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
+      <Grid item xs={12} className={classes.sectionMargin}>
         <Typography gutterBottom variant="h5">Production total</Typography>
       </Grid>
       <Grid item xs={12} md={5}>
@@ -138,7 +141,7 @@ export const Reports = () => {
       </Grid>
       <Grid item xs={12} md={7}>
         <UniversalTable
-          columns={['Nazwa grupy', 'Zużycie energii czynnej']}
+          columns={[t('reportsPage.groupName'), t('reportsPage.activeEnergyUsage')]}
           rows={[['Linia produkcyjna L34', `${productionTotal[0]} kWh`], ['Linia produkcyjna L35', `${productionTotal[1]} kWh`], ['Linia produkcyjna L36', `${productionTotal[2]} kWh`], ['Linia produkcyjna L37', `${productionTotal[3]} kWh`],
           ['Stacja budynkowa dla linii produkcyjnych', `${productionTotal[4]} kWh`], ['Ogrzewanie, chłodzenie, sprężone powietrze', `${productionTotal[5]} kWh`], ['Zużycie całkowite', `${productionTotal[0] + productionTotal[1] + productionTotal[2] + productionTotal[3] + productionTotal[4] + productionTotal[5]} kWh`]]}
         />
@@ -148,7 +151,7 @@ export const Reports = () => {
       </Grid>
 
       {/* NEXTLEVEL */}
-      <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>
+      <Grid item xs={12} className={classes.sectionMargin}>
         <Typography gutterBottom variant="h5">Line 37</Typography>
       </Grid>
       <Grid item xs={12} md={5}>
@@ -168,7 +171,7 @@ export const Reports = () => {
       </Grid>
       <Grid item xs={12} md={7}>
         <UniversalTable
-          columns={['Nazwa grupy', 'Zużycie energii czynnej']}
+          columns={[t('reportsPage.groupName'), t('reportsPage.activeEnergyUsage')]}
           rows={[['Formowanie', `${line37[0]} kWh`], ['Nawijanie', `${line37[1]} kWh`], ['Mieszanie', `${line37[2]} kWh`], ['Blender RB37', `${line37[3]} kWh`],
           ['Mikser ZTM37', `${line37[4]} kWh`], ['Zużycie całkowite', `${line37[0] + line37[1] + line37[2] + line37[3] + line37[4]} kWh`]]}
         />
@@ -429,23 +432,23 @@ export const Reports = () => {
         name='Reports'
         tabs={[
           {
-            label: 'Miesięczne zużycie energii',
+            label: t('reportsPage.monthlyEnergyUsage'),
             content: energyConsumptionTab
           },
           {
-            label: 'Profil zużycia energii',
+            label: t('reportsPage.energyUsageProfile'),
             content: usageProfileTab
           },
           {
-            label: 'Moce 15-minutowe',
+            label: t('reportsPage.powers15min'),
             content: <p>Power demand tab content</p>
           },
           {
-            label: 'Parametry zasilania',
+            label: t('reportsPage.infeedParameters'),
             content: <p>Supply parameters tab content</p>
           },
           {
-            label: 'Parametry odbiorów',
+            label: t('reportsPage.outgoingFeederParameters'),
             content: outgoingFeedersParameters
           }
         ]}

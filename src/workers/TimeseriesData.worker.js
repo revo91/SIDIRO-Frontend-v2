@@ -1,4 +1,4 @@
-import { fetchTimeseries } from '../services/FetchTimeseriesAPI.service';
+import { fetchTimeseriesLastValue } from '../services/FetchTimeseriesAPI.service';
 /* eslint-disable */
 
 let interval;
@@ -8,8 +8,8 @@ self.addEventListener("message", message => {
   const { data } = message;
   //once instantly
   data.deviceData.forEach((device) => {
-    promises.push(fetchTimeseries(device.assetID, 1))
-    promises.push(fetchTimeseries(device.assetID, 15))
+    promises.push(fetchTimeseriesLastValue(device.assetID, 1))
+    promises.push(fetchTimeseriesLastValue(device.assetID, 15))
   })
   Promise.all(promises).then(res => {
     postMessage(res)
@@ -18,8 +18,8 @@ self.addEventListener("message", message => {
   interval = setInterval(() => {
     promises = []
     data.deviceData.forEach((device) => {
-      promises.push(fetchTimeseries(device.assetID, 1))
-      promises.push(fetchTimeseries(device.assetID, 15))
+      promises.push(fetchTimeseriesLastValue(device.assetID, 1))
+      promises.push(fetchTimeseriesLastValue(device.assetID, 15))
     })
     Promise.all(promises).then(res => {
       postMessage(res)

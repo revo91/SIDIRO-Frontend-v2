@@ -1,4 +1,4 @@
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { PieChartProps } from './PieChart.component';
 import { useTheme } from '@material-ui/core/styles';
@@ -54,7 +54,7 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, hor
   useEffect(() => {
     //instantiate chart with first given data
     if (chartInstance === null) {
-      setChartInstance(new Chart(chartContainer.current, chartConfig))
+      //setChartInstance(new Chart(chartContainer.current, chartConfig))
     }
   }, [chartInstance, chartConfig])
 

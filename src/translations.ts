@@ -40,7 +40,18 @@ export const resources = {
         title: "Elevation"
       },
       reportsPage: {
-        title: "Reports"
+        title: "Reports",
+        totalActivePowerConsumption: "Total Active Power consumption",
+        monthlyEnergyUsage: "Monthly Energy usage",
+        energyUsageProfile: "Energy usage profile",
+        powers15min: "Power demand",
+        infeedParameters: "Infeed parameters",
+        outgoingFeederParameters: "Feeder parameters",
+        chooseMonth: "Choose month",
+        exportToPDF: "PDF Export",
+        exportToCSV: "CSV Export",
+        activeEnergyUsage: "Active Energy usage",
+        groupName: "Group name"
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -91,6 +102,10 @@ export const resources = {
       tableWithSort: {
         labelRowsPerPage: "Rows per page",
         labelDisplayedRows: "of"
+      },
+      chart: {
+        timeAxisLabel: "Time",
+        valueAxisLabel: "Value"
       }
     }
   },
@@ -135,7 +150,18 @@ export const resources = {
         title: "Elewacja"
       },
       reportsPage: {
-        title: "Raporty"
+        title: "Raporty",
+        totalActivePowerConsumption: "Całościowe zużycie energii czynnej",
+        monthlyEnergyUsage: "Miesięczne zużycie energii",
+        energyUsageProfile: "Profil zużycia energii",
+        powers15min: "Moce 15-minutowe",
+        infeedParameters: "Parametry zasilania",
+        outgoingFeederParameters: "Parametry odbiorów",
+        chooseMonth: "Wybierz miesiąc",
+        exportToPDF: "Eksport PDF",
+        exportToCSV: "Eksport CSV",
+        activeEnergyUsage: "Zużycie energii czynnej",
+        groupName: "Nazwa grupy"
       },
       datePicker: {
         cancelButton: "Anuluj",
@@ -186,6 +212,10 @@ export const resources = {
       tableWithSort: {
         labelRowsPerPage: "Wierszy na stronę",
         labelDisplayedRows: "z"
+      },
+      chart: {
+        timeAxisLabel: "Czas",
+        valueAxisLabel: "Wartość"
       }
     }
   }

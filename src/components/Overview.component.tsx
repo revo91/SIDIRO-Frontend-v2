@@ -393,7 +393,7 @@ export const Overview = () => {
             powerFactor={powerFactorCalculator(systemTopologyData[endCoupling.assetID]?.Active_Power_Import, systemTopologyData[endCoupling.assetID]?.Reactive_Power_Import)}
             drawOut={endCoupling.type === DeviceTypes.drawOutCircuitBreaker}
             deviceType={endCoupling.type}
-            noTable={endCoupling.tableName === undefined}
+            noTable={true}
             tableName={endCoupling.tableName}
             tableAbove
             sectionName=''
@@ -407,7 +407,7 @@ export const Overview = () => {
   }
 
   const sumCurrent = (L1: number, L2: number, L3: number) => {
-    const result = parseFloat((L1 + L2 + L3).toFixed(2))
+    const result = parseFloat(Math.max(L1,L2,L3).toFixed(2))
     if (isNaN(result)) {
       return 0
     }
@@ -417,7 +417,7 @@ export const Overview = () => {
   }
 
   const checkVoltageApplied = (deviceID: string) => {
-    const voltage = Math.max(systemTopologyData[deviceID]?.Voltage_L1_N, systemTopologyData[deviceID]?.Voltage_L2_N, systemTopologyData[deviceID]?.Voltage_L3_N)
+    const voltage = Math.min(systemTopologyData[deviceID]?.Voltage_L1_N, systemTopologyData[deviceID]?.Voltage_L2_N, systemTopologyData[deviceID]?.Voltage_L3_N)
     return voltage > 0 ? true : false
   }
 

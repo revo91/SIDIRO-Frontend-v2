@@ -50,7 +50,7 @@ export const BarChart: React.FC<BarChartProps> = ({ data, chartTitle, horizontal
   useEffect(() => {
     //instantiate chart with first given data
     if (chartInstance === null) {
-      setChartInstance(new Chart(chartContainer.current, chartConfig))
+      //setChartInstance(new Chart(chartContainer.current, chartConfig))
     }
   }, [chartInstance, chartConfig])
 

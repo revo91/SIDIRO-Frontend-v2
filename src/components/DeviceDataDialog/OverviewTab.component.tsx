@@ -92,10 +92,6 @@ export const OverviewTab = () => {
   }
 
   useEffect(() => {
-    loadEventsForDevice()
-  }, [])
-
-  const loadEventsForDevice = () => {
     if (!events[switchboardAssetID]) {
       //no data - need to refresh events
       dispatch(setBackdropOpen(true))
@@ -113,7 +109,7 @@ export const OverviewTab = () => {
         dispatch(setBackdropOpen(false))
       })
     }
-  }
+  }, [dispatch, events, switchboardAssetID])
 
   const eventTable = (
     <div className={classes.masonryLayoutPanel}>
@@ -147,7 +143,7 @@ export const OverviewTab = () => {
       <UniversalTable
         columns={[t('deviceDataDialog.power'),
         <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
-          <IconButton aria-label="delete" size="small">
+          <IconButton aria-label="delete" size="small" onClick={() => dispatch(setUniversalTabsNameIndex('TransformerDeviceDetails', 4))}>
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
@@ -164,7 +160,7 @@ export const OverviewTab = () => {
       <UniversalTable
         columns={['THD I',
           <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
-            <IconButton aria-label="delete" size="small">
+            <IconButton aria-label="delete" size="small" onClick={() => dispatch(setUniversalTabsNameIndex('TransformerDeviceDetails', 6))}>
               <TimelineIcon />
             </IconButton>
           </Tooltip>]}
@@ -179,7 +175,7 @@ export const OverviewTab = () => {
       <UniversalTable
         columns={['THD U',
           <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
-            <IconButton aria-label="delete" size="small">
+            <IconButton aria-label="delete" size="small" onClick={() => dispatch(setUniversalTabsNameIndex('TransformerDeviceDetails', 5))}>
               <TimelineIcon />
             </IconButton>
           </Tooltip>]}
@@ -194,7 +190,7 @@ export const OverviewTab = () => {
       <UniversalTable
         columns={[t('deviceDataDialog.voltageLL'),
         <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
-          <IconButton aria-label="delete" size="small">
+          <IconButton aria-label="delete" size="small" onClick={() => dispatch(setUniversalTabsNameIndex('TransformerDeviceDetails', 2))}>
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
@@ -209,7 +205,7 @@ export const OverviewTab = () => {
       <UniversalTable
         columns={[t('deviceDataDialog.voltageLN'),
         <Tooltip title={t<string>('deviceDataDialog.showChartTooltip')} placement="left">
-          <IconButton aria-label="delete" size="small">
+          <IconButton aria-label="delete" size="small" onClick={() => dispatch(setUniversalTabsNameIndex('TransformerDeviceDetails', 1))}>
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}

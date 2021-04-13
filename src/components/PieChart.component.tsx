@@ -1,4 +1,4 @@
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 import { SiemensAccentYellow } from '../utilities/SiemensColors.utility';

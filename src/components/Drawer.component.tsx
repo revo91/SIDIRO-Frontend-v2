@@ -231,7 +231,7 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
         }
       }) //diagram loop end
     }) //diagrams loop end
-  }, [])
+  }, [dispatch, overview.diagrams])
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);

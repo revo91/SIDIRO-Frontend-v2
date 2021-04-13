@@ -80,7 +80,7 @@ const initialState: IDiagramStructure = {
               type: 'circuitBreaker',
               assetID: 'bd5af39bddc84a9a9be0957a75f67286',
               nextSwitchboardName: undefined
-            }
+            },
           ],
           coupling: {
             name: 'QT01',
@@ -98,7 +98,7 @@ const initialState: IDiagramStructure = {
               tableName: 'HVPP-1',
               type: 'circuitBreaker',
               assetID: 'f40c525703c84859ba3f708cc3d977d2',
-              nextSwitchboardName: 'HVPP-1'
+              nextSwitchboardName: 'HVPP-1',
             },
             {
               name: 'QT02',

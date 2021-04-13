@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { DatePicker } from "@material-ui/pickers";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -49,7 +49,7 @@ export const Events = () => {
   const dialogData = useSelector((state: RootState) => state.deviceDataDialogElevationDataSource);
   const dispatch = useDispatch();
 
-  const fetchEventsFromMS = () => {
+  const fetchEventsFromMS = useCallback(() => {
     overview.diagrams.forEach(diagram => {
       if (diagram.assetID && dateFrom && dateTo) {
         dispatch(setBackdropOpen(true))
@@ -61,13 +61,13 @@ export const Events = () => {
           else if (diagram.assetID) {
             dispatch(setEvents(diagram.assetID, []))
           }
-        }).catch(err=>{
+        }).catch(err => {
           console.log(err)
           dispatch(setBackdropOpen(false))
         })
       }
     })
-  }
+  }, [dateFrom, dateTo, dispatch, overview.diagrams])
 
   const setSeverityIcon = (severity: number) => {
     switch (severity) {
@@ -137,7 +137,7 @@ export const Events = () => {
 
   useEffect(() => {
     fetchEventsFromMS()
-  }, [dateFrom, dateTo])
+  }, [dateFrom, dateTo, fetchEventsFromMS])
 
   const tabPanel = initializeTabs()
 

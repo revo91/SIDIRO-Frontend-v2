@@ -4,7 +4,7 @@ import Chart from 'chart.js';
 export const useUpdateChartDatasets = (chartInstance: Chart | null,
   data: {
     labels?: Array<string>,
-    datasets: Array<{ label: string, backgroundColor: Array<string> | string, borderColor?: Array<string> | string, borderWidth?: number, data: Array<{t: number | Date, y: number}> | Array<number> }>
+    datasets: Array<{ label: string, backgroundColor: Array<string> | string, borderColor?: Array<string> | string, borderWidth?: number, data: Array<{x: number | Date, y: number}> | Array<number> }>
   }) => {
 
   useEffect(() => {

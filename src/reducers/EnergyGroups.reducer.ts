@@ -1,4 +1,4 @@
-import { SET_DEVICE_DATA_DIALOG_OPEN, SET_DEVICE_DATA_DIALOG_DATE_FROM } from '../actions/DeviceDataDialog.action';
+import { SET_DEVICE_DATA_DIALOG_OPEN } from '../actions/DeviceDataDialog.action';
 
 export interface IDeviceDataDialog {
   open: boolean,
@@ -10,11 +10,7 @@ export interface IDeviceDataDialog {
   switchboardAssetID: string
 }
 
-interface IDate extends IDeviceDataDialog {
-  dateFrom: Date
-}
-
-interface IDeviceDataDialogReducer extends IDate {
+interface IDeviceDataDialogReducer extends IDeviceDataDialog {
   type: string
 }
 
@@ -25,9 +21,7 @@ const initialState = {
   breakerName: '',
   sectionName: '',
   assetID: '',
-  switchboardAssetID: '',
-  // for charts
-  dateFrom: new Date()
+  switchboardAssetID: ''
 }
 
 export const DeviceDataDialogReducer = (state = initialState, action: IDeviceDataDialogReducer) => {
@@ -42,11 +36,6 @@ export const DeviceDataDialogReducer = (state = initialState, action: IDeviceDat
         sectionName: action.sectionName,
         assetID: action.assetID,
         switchboardAssetID: action.switchboardAssetID
-      }
-    case SET_DEVICE_DATA_DIALOG_DATE_FROM:
-      return {
-        ...state,
-        dateFrom: action.dateFrom
       }
     default:
       return state
