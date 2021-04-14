@@ -2,6 +2,7 @@ import React from 'react';
 import { compartmentHeight, reservedTopSpace, panelWidth, strokeWidth, useStyles } from '../Elevation.component';
 import { setDeviceDataDialogOpen } from '../../actions/DeviceDataDialog.action';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 interface ICompartmentSVG {
   x: number,
@@ -20,7 +21,8 @@ interface ICompartmentSVG {
   sectionName: string,
   breakerName: string,
   assetID: string,
-  switchboardAssetID: string
+  switchboardAssetID: string,
+  connectionState: number
 }
 
 export interface ICompartmentDevice {
@@ -29,9 +31,10 @@ export interface ICompartmentDevice {
   scale: number
 }
 
-export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns, name, nonInteractive, children, state, deviceName, deviceType, sectionName, breakerName, assetID, switchboardAssetID }) => {
+export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns, name, nonInteractive, children, state, deviceName, deviceType, sectionName, breakerName, assetID, switchboardAssetID, connectionState }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { t } = useTranslation()
   const width = panelWidth / columns - 2 * strokeWidth
   const height = span * compartmentHeight - 2 * strokeWidth
   return (
@@ -57,6 +60,20 @@ export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns,
       >
         {name}
       </text>
+      {/* no connection text */}
+      {connectionState !== 1 ?
+        <text
+          x={x}
+          y={y + reservedTopSpace + 3 * strokeWidth}
+          className={width <= height ? classes.noConnectionAlarmVertical : classes.noConnectionAlarmHorizontal}
+          transform={width <= height ?
+            `rotate(90, ${x + strokeWidth}, ${y + reservedTopSpace + 3 * strokeWidth})`
+            : undefined}
+        >
+          &nbsp;{`${t('svgCompartment.noConnection')}`}
+        </text>
+        : null
+      }
       {/* clickable rectangle */}
       {!nonInteractive ?
         <rect
@@ -65,7 +82,7 @@ export const CompartmentSVG: React.FC<ICompartmentSVG> = ({ x, y, span, columns,
           width={width}
           height={height}
           className={classes.clickableOverlay}
-          onClick={()=> {
+          onClick={() => {
             dispatch(setDeviceDataDialogOpen({
               open: true,
               deviceName: deviceName,

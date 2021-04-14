@@ -111,7 +111,19 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     transparent: {
       fill: 'none'
-    }
+    },
+    noConnectionAlarmHorizontal: {
+      fill: 'red',
+      textAnchor: 'start',
+      font: `bold ${panelWidth / 240}em sans-serif`,
+      dominantBaseline: 'hanging'
+    },
+    noConnectionAlarmVertical: {
+      fill: 'red',
+      textAnchor: 'start',
+      font: `bold ${panelWidth / 240}em sans-serif`,
+      dominantBaseline: 'ideographic'
+    },
   }));
 ///////////////////////////////////////////////////
 
@@ -218,6 +230,7 @@ export const Elevation = () => {
                           deviceType={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).deviceType : ''}
                           sectionName={column.assetID ? associateTypeWithDisplayData(dialogData[`${switchboard.name}-${column.assetID}`]).sectionName : ''}
                           switchboardAssetID={switchboard.assetID ? switchboard.assetID : ''}
+                          connectionState={checkConnectionState(column.assetID, column.nonInteractive)}
                         >
                           {renderCompartmentContent(column.type,
                             (panelIndex * panelWidth) + columnIndex * panelWidth / columns + (panelWidth / columns) / 2,
@@ -270,10 +283,19 @@ export const Elevation = () => {
     return decodeState(systemTopologyData[assetID]?.Breaker_State)
   }
 
+  const checkConnectionState = (assetID: string | false, nonInteractive: boolean) => {
+    if (assetID && systemTopologyData[assetID] && systemTopologyData[assetID].Connection_State && !nonInteractive) {
+      return systemTopologyData[assetID].Connection_State
+    }
+    else if (nonInteractive) {
+      return 1
+    }
+    return 0
+  }
+
   return (
     <React.Fragment>
       <Grid container spacing={1}>
-
         <Grid item xs={12}>
           <UniversalTabs
             name='overview'

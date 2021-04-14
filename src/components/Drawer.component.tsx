@@ -164,7 +164,6 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
                 deviceType: infeed.breaker.type,
                 sectionName: section.name
               })
-            //ids.push(infeed.breaker.assetID)
           }
         })
         section.breakers?.forEach((breaker: any) => {
@@ -176,7 +175,6 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
               deviceType: breaker.type,
               sectionName: section.name
             })
-          //ids.push(breaker.assetID)
         })
         if (section.coupling) {
           deviceData.push(
@@ -187,7 +185,6 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
               deviceType: section.coupling.type,
               sectionName: section.name
             })
-          //ids.push(section.coupling.assetID)
         }
       })
     })

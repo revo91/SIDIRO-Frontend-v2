@@ -15,6 +15,8 @@ import { BreakerDevice } from './DeviceDataDialog/BreakerDevice.component';
 import { TransformerDevice } from './DeviceDataDialog/TransformerDevice.component';
 import { DeviceTypes } from '../utilities/DeviceTypes.utility';
 import { useTranslation } from 'react-i18next';
+import Button from '@material-ui/core/Button';
+import { exportPDF } from '../utilities/ExportPDF.utility';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,6 +91,11 @@ export const DeviceDataDialog: React.FC = () => {
               `${t('deviceDataDialog.circuitBreaker')} ${breakerName}`
               : deviceName}
           </Typography>
+          <Button
+            color="inherit"
+            onClick={() => exportPDF()}
+          >
+            {t('deviceDataDialog.exportTitle')}</Button>
         </Toolbar>
       </AppBar>
       {showTabsAccordingToDeviceType()}

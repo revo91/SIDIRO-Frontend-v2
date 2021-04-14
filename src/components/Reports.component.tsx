@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
@@ -17,6 +17,9 @@ import { DatePicker } from "@material-ui/pickers";
 import { UniversalTable } from './UniversalTable.component';
 import Divider from '@material-ui/core/Divider';
 import { StackedBarChart } from './StackedBarChart.component';
+import { exportPDF } from '../utilities/ExportPDF.utility';
+import { useSelector } from 'react-redux';
+import { RootState } from '../reducers/Root.reducer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,35 +33,27 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const Reports = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [sampleData1, setSampleData1] = React.useState<Array<number>>([2478, 5267, 734, 784, 55])
   const [productionTotal, setProductionTotal] = React.useState<Array<number>>([100, 100, 100, 100, 100, 100])
   const [line37, setLine37] = React.useState<Array<number>>([100, 100, 100, 100, 100])
-  const [sampleTimeSeriesData, setSampleTimeSeriesData] = React.useState<Array<{ t: number | Date, y: number }>>([{ t: new Date(2021, 1, 1), y: 10 }, { t: new Date(2021, 1, 5), y: 10 }, { t: new Date(2021, 1, 9), y: 10 }])
   const [dateFrom, changeDateFrom] = React.useState<Date | null>(new Date(new Date().setMonth(new Date().getMonth())));
   const classes = useStyles()
   const [energyType, setEnergyType] = React.useState('0');
+  const reports = useSelector((state: RootState) => state.reports);
 
   const handleEnergyType = (event: React.ChangeEvent<{ value: unknown }>) => {
     setEnergyType(event.target.value as string);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let interval = setInterval(() => {
       setSampleData1(sampleData1.map(() => Math.round(Math.random() * 1000) / 10))
       setProductionTotal(productionTotal.map(() => Math.round(Math.random() * 1000) / 20))
       setLine37(line37.map(() => Math.round(Math.random() * 1000) / 40))
-
-
-      setSampleTimeSeriesData(sampleTimeSeriesData.map((data) => {
-        return {
-          t: data.t,
-          y: Math.round(Math.random() * 100) / 100
-        }
-      }))
     }, 10000)
     return () => clearInterval(interval)
-  }, [sampleData1, sampleTimeSeriesData, productionTotal, line37])
+  }, [sampleData1, productionTotal, line37])
 
   const energyConsumptionTab = (
     <Grid container spacing={2} >
@@ -79,9 +74,10 @@ export const Reports = () => {
           fullWidth
           variant="contained"
           color="primary"
+          onClick={() => exportPDF()}
         >
           {t('reportsPage.exportToPDF')}
-      </Button>
+        </Button>
       </Grid>
       <Grid item xs={12} md={2} lg={2} xl={1}>
         <Button
@@ -90,38 +86,43 @@ export const Reports = () => {
           color="primary"
         >
           {t('reportsPage.exportToCSV')}
-      </Button>
+        </Button>
       </Grid>
       <Grid item xs={12} className={classes.sectionMargin}>
         <Typography gutterBottom variant="h5">{t('reportsPage.totalActivePowerConsumption')}</Typography>
       </Grid>
-      <Grid item xs={12} md={5}>
-        <PieChart
-          chartTitle=""
-          data={{
-            labels: ["HVPP-4", "HVPP-2", "HVPP-3", "Samochody elektryczne"],
-            datasets: [
-              {
-                label: "",
-                backgroundColor: [SiemensColors.tealLight, SiemensColors.redDark, SiemensColors.redLight, SiemensColors.blueDark, SiemensColors.yellowDark],
-                data: sampleData1
-              }
-            ]
-          }}
-        />
+      {reports.groups ?
+        <React.Fragment>
+          <Grid item xs={12} md={5}>
+            <PieChart
+              chartTitle=""
+              data={{
+                labels: ["HVPP-4", "HVPP-2", "HVPP-3", "Samochody elektryczne", 'test'],
+                datasets: [
+                  {
+                    label: "",
+                    backgroundColor: [SiemensColors.tealLight, SiemensColors.redDark, SiemensColors.redLight, SiemensColors.blueDark, SiemensColors.yellowDark],
+                    data: sampleData1
+                  }
+                ]
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={7}>
+            <UniversalTable
+              columns={[t('reportsPage.groupName'), t('reportsPage.activeEnergyUsage')]}
+              rows={[['Produkcja', `${sampleData1[0]} kWh`], ['Magazyny', `${sampleData1[1]} kWh`], ['Biura', `${sampleData1[2]} kWh`], ['Ładowanie samochodów', `${sampleData1[3]} kWh`], ['Zużycie całkowite', `${sampleData1[0] + sampleData1[1] + sampleData1[2] + sampleData1[3]} kWh`]]}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+        </React.Fragment>
+        : null
+      }
 
-      </Grid>
-      <Grid item xs={12} md={7}>
-        <UniversalTable
-          columns={[t('reportsPage.groupName'), t('reportsPage.activeEnergyUsage')]}
-          rows={[['Produkcja', `${sampleData1[0]} kWh`], ['Magazyny', `${sampleData1[1]} kWh`], ['Biura', `${sampleData1[2]} kWh`], ['Ładowanie samochodów', `${sampleData1[3]} kWh`], ['Zużycie całkowite', `${sampleData1[0] + sampleData1[1] + sampleData1[2] + sampleData1[3]} kWh`]]}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Divider />
-      </Grid>
-      {/* NEXTLEVEL */}
-      <Grid item xs={12} className={classes.sectionMargin}>
+
+      {/* <Grid item xs={12} className={classes.sectionMargin}>
         <Typography gutterBottom variant="h5">Production total</Typography>
       </Grid>
       <Grid item xs={12} md={5}>
@@ -150,7 +151,7 @@ export const Reports = () => {
         <Divider />
       </Grid>
 
-      {/* NEXTLEVEL */}
+     
       <Grid item xs={12} className={classes.sectionMargin}>
         <Typography gutterBottom variant="h5">Line 37</Typography>
       </Grid>
@@ -178,7 +179,7 @@ export const Reports = () => {
       </Grid>
       <Grid item xs={12}>
         <Divider />
-      </Grid>
+      </Grid> */}
 
 
 
@@ -313,55 +314,55 @@ export const Reports = () => {
             // data[0] = labels[0] (data for first bar - 'Standing costs') | data[1] = labels[1] (data for second bar - 'Running costs')
             // put 0, if there is no data for the particular bar
             datasets: [{
-               label: 'Washing and cleaning',
-               data: [0, 8],
-               backgroundColor: '#22aa99'
+              label: 'Washing and cleaning',
+              data: [0, 8],
+              backgroundColor: '#22aa99'
             }, {
-               label: 'Traffic tickets',
-               data: [0, 2],
-               backgroundColor: '#994499'
+              label: 'Traffic tickets',
+              data: [0, 2],
+              backgroundColor: '#994499'
             }, {
-               label: 'Tolls',
-               data: [0, 1],
-               backgroundColor: '#316395'
+              label: 'Tolls',
+              data: [0, 1],
+              backgroundColor: '#316395'
             }, {
-               label: 'Parking',
-               data: [5, 2],
-               backgroundColor: '#b82e2e'
+              label: 'Parking',
+              data: [5, 2],
+              backgroundColor: '#b82e2e'
             }, {
-               label: 'Car tax',
-               data: [0, 1],
-               backgroundColor: '#66aa00'
+              label: 'Car tax',
+              data: [0, 1],
+              backgroundColor: '#66aa00'
             }, {
-               label: 'Repairs and improvements',
-               data: [0, 2],
-               backgroundColor: '#dd4477'
+              label: 'Repairs and improvements',
+              data: [0, 2],
+              backgroundColor: '#dd4477'
             }, {
-               label: 'Maintenance',
-               data: [6, 1],
-               backgroundColor: '#0099c6'
+              label: 'Maintenance',
+              data: [6, 1],
+              backgroundColor: '#0099c6'
             }, {
-               label: 'Inspection',
-               data: [0, 2],
-               backgroundColor: '#990099'
+              label: 'Inspection',
+              data: [0, 2],
+              backgroundColor: '#990099'
             }, {
-               label: 'Loan interest',
-               data: [0, 3],
-               backgroundColor: '#109618'
+              label: 'Loan interest',
+              data: [0, 3],
+              backgroundColor: '#109618'
             }, {
-               label: 'Depreciation of the vehicle',
-               data: [0, 2],
-               backgroundColor: '#109618'
+              label: 'Depreciation of the vehicle',
+              data: [0, 2],
+              backgroundColor: '#109618'
             }, {
-               label: 'Fuel',
-               data: [0, 1],
-               backgroundColor: '#dc3912'
+              label: 'Fuel',
+              data: [0, 1],
+              backgroundColor: '#dc3912'
             }, {
-               label: 'Insurance and Breakdown cover',
-               data: [4, 0],
-               backgroundColor: '#3366cc'
+              label: 'Insurance and Breakdown cover',
+              data: [4, 0],
+              backgroundColor: '#3366cc'
             }]
-         }}
+          }}
         />
       </Grid>
       <Grid item xs={12} style={{ marginBottom: '0px', marginTop: '30px' }}>

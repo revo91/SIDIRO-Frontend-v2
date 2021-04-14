@@ -97,7 +97,8 @@ export const resources = {
         activePowerExport: "Active power export",
         activePowerImport: "Active power import",
         reactivePowerExport: "Reactive power export",
-        reactivePowerImport: "Reactive power import"
+        reactivePowerImport: "Reactive power import",
+        exportTitle: "Export"
       },
       tableWithSort: {
         labelRowsPerPage: "Rows per page",
@@ -106,6 +107,9 @@ export const resources = {
       chart: {
         timeAxisLabel: "Time",
         valueAxisLabel: "Value"
+      },
+      svgCompartment: {
+        noConnection: 'No conn.'
       }
     }
   },
@@ -207,7 +211,8 @@ export const resources = {
         activePowerExport: "Moc czynna oddana do sieci",
         activePowerImport: "Moc czynna pobrana z sieci",
         reactivePowerExport: "Moc bierna pojemnościowa",
-        reactivePowerImport: "Moc bierna indukcyjna"
+        reactivePowerImport: "Moc bierna indukcyjna",
+        exportTitle: "Eksportuj"
       },
       tableWithSort: {
         labelRowsPerPage: "Wierszy na stronę",
@@ -216,6 +221,9 @@ export const resources = {
       chart: {
         timeAxisLabel: "Czas",
         valueAxisLabel: "Wartość"
+      },
+      svgCompartment: {
+        noConnection: 'Brak poł.'
       }
     }
   }
