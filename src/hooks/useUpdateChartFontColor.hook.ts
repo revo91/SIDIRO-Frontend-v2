@@ -26,7 +26,7 @@ export const useUpdateChartFontColor = (chartInstance: any | null, color: string
     }
     if (chartInstance?.options?.plugins?.legend?.title) {
       chartInstance.options.plugins.legend.title = {
-        ...chartInstance.options.title,
+        ...chartInstance.options.plugins.legend.title,
         color: theme.palette.type === 'dark' ? color : '#666',
       }
     }

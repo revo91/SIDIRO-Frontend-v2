@@ -10,26 +10,45 @@ export interface PieChartProps {
     labels?: Array<string>,
     datasets: Array<{ label: string, backgroundColor: Array<string>, borderColor?: Array<string>, borderWidth?: number, data: Array<number> }>
   },
-  chartTitle?: string
+  chartTitle?: string,
+  onDataClick(dataIndex: number): void
 }
 
-export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle }) => {
+export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClick }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
-  useUpdateChartFontColor(chartInstance, SiemensAccentYellow.light6);
+  useUpdateChartFontColor(chartInstance, '#fff');
   useUpdateChartDatasets(chartInstance, data)
 
   const chartConfig = useMemo(() => {
+    const handleClickDataPortion = (dataSliceIndex: number) => {
+      onDataClick(dataSliceIndex)
+    }
+
     return {
       type: 'pie',
       data,
       options: {
+        plugins: {
+          legend: {
+            labels: {
+              // This more specific font property overrides the global property
+              font: {
+                fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+                size: 14
+              }
+            }
+          }
+        },
         legend: {
           labels: {
             fontColor: theme.palette.text.primary,
-            fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-            fontSize: 12
+          }
+        },
+        'onClick': function (evt: any, item: any) {
+          if (item && item[0]) {
+            handleClickDataPortion(item[0].index)
           }
         },
         title: {
@@ -41,7 +60,7 @@ export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle }) => {
         aspectRatio: 1
       }
     }
-  }, [data, chartTitle, theme.palette.type, theme.palette.text.primary]);
+  }, [data, chartTitle, theme.palette.type, theme.palette.text.primary, onDataClick]);
 
   useEffect(() => {
     if (chartInstance === null) {

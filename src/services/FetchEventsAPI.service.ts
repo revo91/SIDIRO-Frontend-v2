@@ -1,17 +1,5 @@
-const API_URL = "/apiEvents";
-
 export const fetchEvents = async (assetID: string, fromDate: string, toDate: string) => {
-  const response = await fetch(`${API_URL}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      asset: assetID,
-      fromDate,
-      toDate
-    })
-  })
+  const response = await fetch(`/api/eventmanagement/v3/events?size=500&page=0&filter={"timestamp":{"between":"[${fromDate},${toDate})"},"entityId":"${assetID}","typeId":"com.siemens.mindsphere.eventmgmt.event.type.MindSphereStandardEvent"}`)
   const data = await response.json()
   const dataWithCustomFields = {
     ...data,

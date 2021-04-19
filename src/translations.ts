@@ -41,7 +41,7 @@ export const resources = {
       },
       reportsPage: {
         title: "Reports",
-        totalActivePowerConsumption: "Total Active Power consumption",
+        totalActiveEnergyConsumption: "Total Active Energy consumption",
         monthlyEnergyUsage: "Monthly Energy usage",
         energyUsageProfile: "Energy usage profile",
         powers15min: "Power demand",
@@ -51,7 +51,8 @@ export const resources = {
         exportToPDF: "PDF Export",
         exportToCSV: "CSV Export",
         activeEnergyUsage: "Active Energy usage",
-        groupName: "Group name"
+        groupName: "Group name",
+        totalValue: "Total"
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -155,7 +156,7 @@ export const resources = {
       },
       reportsPage: {
         title: "Raporty",
-        totalActivePowerConsumption: "Całościowe zużycie energii czynnej",
+        totalActiveEnergyConsumption: "Całościowe zużycie energii czynnej",
         monthlyEnergyUsage: "Miesięczne zużycie energii",
         energyUsageProfile: "Profil zużycia energii",
         powers15min: "Moce 15-minutowe",
@@ -165,7 +166,8 @@ export const resources = {
         exportToPDF: "Eksport PDF",
         exportToCSV: "Eksport CSV",
         activeEnergyUsage: "Zużycie energii czynnej",
-        groupName: "Nazwa grupy"
+        groupName: "Nazwa grupy",
+        totalValue: "Razem"
       },
       datePicker: {
         cancelButton: "Anuluj",

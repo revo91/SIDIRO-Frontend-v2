@@ -16,6 +16,7 @@ export const useUpdateChartDatasets = (chartInstance: Chart | null,
           chartInstance.data.datasets[i].data = dataset.data
         }
       })
+      chartInstance.data.labels = data.labels;
       chartInstance.update()
     }
   }, [chartInstance, data])
