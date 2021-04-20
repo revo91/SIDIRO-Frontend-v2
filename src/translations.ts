@@ -52,7 +52,13 @@ export const resources = {
         exportToCSV: "CSV Export",
         activeEnergyUsage: "Active Energy usage",
         groupName: "Group name",
-        totalValue: "Total"
+        totalValue: "Total",
+        activeEnergyImport: "Active energy",
+        reactiveEnergyExport: "Reactive energy export",
+        reactiveEnergyImport: "Reactive energy import",
+        totalActiveEnergyImport: "Total Active energy import",
+        totalReactiveEnergyImport: "Total Reactive energy import",
+        totalReactiveEnergyExport: "Total Reactive energy export"
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -167,7 +173,13 @@ export const resources = {
         exportToCSV: "Eksport CSV",
         activeEnergyUsage: "Zużycie energii czynnej",
         groupName: "Nazwa grupy",
-        totalValue: "Razem"
+        totalValue: "Razem",
+        activeEnergyImport: "Energia czynna",
+        reactiveEnergyExport: "Energia bierna pojemnościowa",
+        reactiveEnergyImport: "Energia bierna indukcyjna",
+        totalActiveEnergyImport: "Całościowe zużycie energii czynnej",
+        totalReactiveEnergyImport: "Całościowe zużycie energii biernej indukcyjnej",
+        totalReactiveEnergyExport: "Całościowe oddanie energii biernej pojemnościowej"
       },
       datePicker: {
         cancelButton: "Anuluj",

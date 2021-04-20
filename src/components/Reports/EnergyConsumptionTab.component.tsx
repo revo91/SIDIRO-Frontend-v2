@@ -3,8 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import { DatePicker } from "@material-ui/pickers";
 import { exportPDF } from '../../utilities/ExportPDF.utility';
 import Button from '@material-ui/core/Button';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { SiemensColors } from '../../utilities/SiemensColors.utility';
+import { decideDataColor } from '../../utilities/SiemensColors.utility';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
@@ -14,29 +13,34 @@ import { PieChart } from '../PieChart.component';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { fetchTimeseriesAggregates } from '../../services/FetchTimeseriesAggregatesAPI.service';
-import { setLevel1, setLevel2, setLevel3, setLevel2DataSource } from '../../actions/Reports/EnergyConsumptionTab.action';
 import { setBackdropOpen } from '../../actions/Backdrop.action';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    select: {
-      width: '100%'
-    },
-    sectionMargin: {
-      marginTop: theme.spacing(3)
-    }
-  }),
-);
+import { setReportsDate } from '../../actions/Reports/CommonReports.action';
+import { getUTCDate } from '../../utilities/GetUTCDate.utility';
+import { useStyles } from '../Reports.component';
 
 export const EnergyConsumptionTab = () => {
-  const [dateFrom, changeDateFrom] = useState<Date | null>(new Date(new Date().setMonth(new Date().getMonth())));
-  const [assetsNames, setAssetsNames] = useState<{ [key: string]: any }>()
   const [assetsData, setAssetsData] = useState<{ [key: string]: any }>()
   const reports = useSelector((state: RootState) => state.reports);
-  const level1 = useSelector((state: RootState) => state.energyConsumptionTab.level1);
-  const level2 = useSelector((state: RootState) => state.energyConsumptionTab.level2);
-  const level3 = useSelector((state: RootState) => state.energyConsumptionTab.level3);
-  const level2DataSource = useSelector((state: RootState) => state.energyConsumptionTab.level2DataSource);
+  const [level1, setLevel1] = useState<{
+    title: string | null,
+    labels: Array<string> | null
+    values: Array<number> | null
+  }>()
+  const [level2, setLevel2] = useState<{
+    title: string | null,
+    labels: Array<string> | null
+    values: Array<number> | null,
+    groupIndex?: number
+  }>()
+  const [level3, setLevel3] = useState<{
+    title: string | null,
+    labels: Array<string> | null
+    values: Array<number> | null
+  }>()
+  const [level2DataSource, setLevel2DataSource] = useState<any>()
+  const assetsNames = useSelector((state: RootState) => state.commonReports.assets);
+  const dateFrom = useSelector((state: RootState) => state.commonReports.dateFrom);
+  const dateTo = useSelector((state: RootState) => state.commonReports.dateTo);
   const classes = useStyles()
   const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
@@ -51,7 +55,9 @@ export const EnergyConsumptionTab = () => {
 
   useEffect(() => {
     if (assetsNames && Object.keys(assetsNames).length > 0) {
-      const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset))
+      const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'month', dateFrom, dateTo))
+      setLevel2({ title: null, labels: null, values: null })
+      setLevel3({ title: null, labels: null, values: null })
       dispatch(setBackdropOpen(true))
       Promise.all(promises).then(res => {
         let params = {}
@@ -65,58 +71,34 @@ export const EnergyConsumptionTab = () => {
         dispatch(setBackdropOpen(false))
       })
     }
-  }, [assetsNames, setAssetsData, dispatch])
+  }, [assetsNames, setAssetsData, dispatch, dateFrom, dateTo])
 
   useEffect(() => {
-    const gatherAssetIDs = (group: IGroupStructure, assetObj?: any): any => {
-      let assetsObject: any = assetObj || {}
-      if (group.subgroups) {
-        group.subgroups.forEach(subgroup => gatherAssetIDs(subgroup, assetsObject))
-      }
-      if (group.assets) {
-        group.assets.forEach(asset => {
-          Object.defineProperty(assetsObject, asset.assetID, {
-            value: asset,
-            writable: true,
-            enumerable: true
-          });
-        })
-      }
-      return assetsObject
-    }
-
-    let assetsObject: { [key: string]: any } = {}
-    reports.groups.forEach((group) => {
-      const result = gatherAssetIDs(group)
-      assetsObject = { ...assetsObject, ...result }
-    })
-    setAssetsNames(assetsObject)
-  }, [setAssetsNames, reports.groups])
-
-  useEffect(()=>{
-    return ()=> {
+    //cleanup
+    return () => {
       setLevel1({ title: null, labels: null, values: null })
       setLevel2({ title: null, labels: null, values: null })
       setLevel3({ title: null, labels: null, values: null })
     }
-  },[])
+  }, [])
+
 
   const chooseByLanguage = useCallback((sentenceEN: string, sentencePL: string) => {
     return i18n.language === 'pl' ? sentencePL : sentenceEN
-  },[i18n.language])
+  }, [i18n.language])
 
   const calculateActiveEnergyImportSingleAsset = useCallback((asset: IGroupElementStructure) => {
     if (assetsDataRef.current && assetsDataRef.current[asset.assetID] && assetsDataRef.current[asset.assetID].Active_Energy_Import) {
       return (assetsDataRef.current[asset.assetID].Active_Energy_Import.lastvalue - assetsDataRef.current[asset.assetID].Active_Energy_Import.firstvalue) / 1000
     }
     return 0
-  },[])
+  }, [])
 
   const calculateAggregatedActiveEnergyImport = useCallback((assetIDs: Array<string>) => {
     if (assetsDataRef.current) {
       const filtered = assetIDs.filter(assetID => assetsDataRef.current[assetID] && assetsDataRef.current[assetID].Active_Energy_Import)
       const calculatedEnergy = filtered.map(assetID => assetsDataRef.current[assetID].Active_Energy_Import.lastvalue - assetsDataRef.current[assetID].Active_Energy_Import.firstvalue)
-      return calculatedEnergy.reduce((a, b) => a + b) / 1000
+      return calculatedEnergy.length !== 0 ? calculatedEnergy.reduce((a, b) => a + b) / 1000 : 0
     }
     else {
       return 0
@@ -150,17 +132,17 @@ export const EnergyConsumptionTab = () => {
       const labels = group.subgroups.map(subgroup => chooseByLanguage(subgroup.enName, subgroup.plName))
       switch (level) {
         case 2:
-          dispatch(setLevel2({ title, labels, values, groupIndex }))
-          dispatch(setLevel3({ title: null, labels: null, values: null }))
+          setLevel2({ title, labels, values, groupIndex })
+          setLevel3({ title: null, labels: null, values: null })
           break;
         case 3:
-          dispatch(setLevel3({ title, labels, values }))
+          setLevel3({ title, labels, values })
           break;
         default:
           return null;
       }
     }
-  },[dispatch, calculateAggregatedActiveEnergyImport, chooseByLanguage, getGroupOfGroupsAssetIDs])
+  }, [calculateAggregatedActiveEnergyImport, chooseByLanguage, getGroupOfGroupsAssetIDs])
 
   const createEndAssetsChart = useCallback((group: IGroupStructure | undefined, groupIndex: number, level: number) => {
     if (group?.assets) {
@@ -170,21 +152,21 @@ export const EnergyConsumptionTab = () => {
       const labels = group.assets?.map(asset => asset.feederName)
       switch (level) {
         case 2:
-          dispatch(setLevel2({ title, labels, values, groupIndex: undefined }))
-          dispatch(setLevel3({ title: null, labels: null, values: null }))
+          setLevel2({ title, labels, values, groupIndex: undefined })
+          setLevel3({ title: null, labels: null, values: null })
           break;
         case 3:
-          dispatch(setLevel3({ title, labels, values }))
+          setLevel3({ title, labels, values })
           break;
         default:
           return null;
       }
     }
-  },[calculateActiveEnergyImportSingleAsset, dispatch, chooseByLanguage])
+  }, [calculateActiveEnergyImportSingleAsset, chooseByLanguage])
 
   const createNextLevelChart = useCallback((dataIndex: number, originLevel: number) => {
     if (originLevel === 1) {
-      dispatch(setLevel2DataSource(reports.groups[dataIndex]))
+      setLevel2DataSource(reports.groups[dataIndex])
       if (reports.groups[dataIndex].assets) {
         createEndAssetsChart(reports.groups[dataIndex], dataIndex, originLevel + 1)
       }
@@ -202,26 +184,24 @@ export const EnergyConsumptionTab = () => {
         }
       }
     }
-  }, [createEndAssetsChart, createSubgroupsChart, reports.groups, dispatch])
-
-  
+  }, [createEndAssetsChart, createSubgroupsChart, reports.groups])
 
   useEffect(() => {
     if (assetsDataRef.current && assetsNamesRef.current) {
       //instantiate first chart 
       const values = reports.groups.map(group => calculateAggregatedActiveEnergyImport(getGroupOfGroupsAssetIDs(group)))
       const labels = reports.groups.map(group => chooseByLanguage(group.enName, group.plName))
-      dispatch(setLevel1({
+      setLevel1({
         title: t('reportsPage.totalActiveEnergyConsumption'),
         labels: labels,
         values: values,
-      }))
+      })
     }
-  }, [assetsData, calculateAggregatedActiveEnergyImport, getGroupOfGroupsAssetIDs, i18n.language, reports.groups, t, dispatch, chooseByLanguage])
+  }, [assetsData, calculateAggregatedActiveEnergyImport, getGroupOfGroupsAssetIDs, i18n.language, reports.groups, t, chooseByLanguage])
 
   const createChart = (title: string, labels: Array<string>, values: Array<number>, originLevel: number) => {
     const tableLabels = labels.concat(t('reportsPage.totalValue'))
-    const tableValues = values.concat(values.reduce((a, b) => a + b))
+    const tableValues = values.concat(values.reduce((a, b) => parseFloat((a + b).toFixed(3))))
     return (
       <React.Fragment>
         <Grid item xs={12} className={classes.sectionMargin}>
@@ -236,7 +216,7 @@ export const EnergyConsumptionTab = () => {
               datasets: [
                 {
                   label: "",
-                  backgroundColor: [SiemensColors.tealLight, SiemensColors.redDark, SiemensColors.redLight, SiemensColors.blueDark, SiemensColors.yellowDark],
+                  backgroundColor: tableLabels.map((label, index) => decideDataColor(index)),
                   data: values
                 }
               ]
@@ -264,7 +244,7 @@ export const EnergyConsumptionTab = () => {
           autoOk
           label={t('reportsPage.chooseMonth')}
           value={dateFrom}
-          onChange={changeDateFrom}
+          onChange={(date) => date ? dispatch(setReportsDate(getUTCDate(date).startOfMonth, getUTCDate(date).endOfMonth)) : null}
           fullWidth
           views={['month']}
           format="MM/yyyy"
@@ -289,13 +269,13 @@ export const EnergyConsumptionTab = () => {
           {t('reportsPage.exportToCSV')}
         </Button>
       </Grid>
-      {level1.title && level1.labels && level1.values ?
+      {level1 && level1.title && level1.labels && level1.values ?
         createChart(level1.title, level1.labels, level1.values, 1)
         : null}
-      {level2.title && level2.labels && level2.values ?
+      {level2 && level2.title && level2.labels && level2.values ?
         createChart(level2.title, level2.labels, level2.values, 2)
         : null}
-      {level3.title && level3.labels && level3.values ?
+      {level3 && level3.title && level3.labels && level3.values ?
         createChart(level3.title, level3.labels, level3.values, 3)
         : null}
     </Grid>

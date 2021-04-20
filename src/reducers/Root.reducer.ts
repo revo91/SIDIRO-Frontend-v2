@@ -9,7 +9,7 @@ import { SystemTopologyData } from './SystemTopologyData.reducer';
 import { DeviceDataDialogElevationDataSource } from './DeviceDataDialogElevationDataSource.reducer';
 import { EventsReducer } from './Events.reducer';
 import { ReportsReducer } from './Reports.reducer';
-import { EnergyConsumptionTabReducer } from './Reports/EnergyConsumptionTab.reducer';
+import { CommonReportsReducer } from './Reports/CommonReports.reducer';
 
 export const rootReducer = combineReducers({
   universalTabs: UniversalTabsReducer,
@@ -22,7 +22,7 @@ export const rootReducer = combineReducers({
   systemTopologyData: SystemTopologyData,
   events: EventsReducer,
   reports: ReportsReducer,
-  energyConsumptionTab: EnergyConsumptionTabReducer
+  commonReports: CommonReportsReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>

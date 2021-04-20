@@ -1,9 +1,15 @@
-export const fetchTimeseriesAggregates = async (assetID: string) => {
-  const response = await fetch(`/api/iottsaggregates/v3/aggregates/${assetID}/DATA_1_MIN?from=2021-03-31T22:00:00.000Z&to=2021-04-30T22:00:00.000Z&intervalUnit=month&intervalValue=1`)
+export const fetchTimeseriesAggregates = async (assetID: string, intervalUnit: string, dateFrom: string, dateTo: string) => {
+  const response = await fetch(`/api/iottsaggregates/v3/aggregates/${assetID}/DATA_1_MIN?from=${dateFrom}&to=${dateTo}&intervalUnit=${intervalUnit}&intervalValue=1`)
   const data = await response.json()
-  const dataWithCustomFields = {
+  const dataWithCustomFields = intervalUnit === 'month' ? {
     ...data[0],
     assetID
   }
+    : {
+      ...data,
+      assetID
+    }
   return dataWithCustomFields
 }
+
+//from=2021-03-31T22:00:00.000Z&to=2021-04-30T22:00:00.000Z

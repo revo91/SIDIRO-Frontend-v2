@@ -1,10 +1,8 @@
 import Chart from 'chart.js/auto';
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { PieChartProps } from './PieChart.component';
 import { useTheme } from '@material-ui/core/styles';
-import { SiemensAccentYellow } from '../utilities/SiemensColors.utility';
 import { useUpdateChartFontColor } from '../hooks/useUpdateChartFontColor.hook';
-import { useUpdateChartDatasets } from '../hooks/useUpdateChartDatasets.hook';
+import { useUpdateStackedChartDatasets } from '../hooks/useUpdateStackedChartDatasets.hook';
 
 interface BarChartProps {
   data: {
@@ -12,51 +10,67 @@ interface BarChartProps {
     datasets: Array<{ label: string, backgroundColor: string, borderColor?: Array<string>, borderWidth?: number, data: Array<number> }>
   },
   chartTitle?: string,
-  horizontal?: boolean
 }
 
-export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, horizontal }) => {
+export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
-  useUpdateChartFontColor(chartInstance, SiemensAccentYellow.light6);
-  useUpdateChartDatasets(chartInstance, data)
+  useUpdateChartFontColor(chartInstance, '#fff');
+  useUpdateStackedChartDatasets(chartInstance, data)
 
   const chartConfig = useMemo(() => {
     return {
-      type: horizontal ? 'horizontalBar' : 'bar',
+      type: 'bar',
       data,
       options: {
-        scales: {
-          yAxes: [{
-            stacked: true,
-            ticks: {
-              fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
-            }
-          }],
-          xAxes: [{
-            stacked: true,
-            ticks: {
-              fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666'
-            }
-          }]
+        aspectRatio: 2.5,
+        interaction: {
+          intersect: false,
+          mode: 'point',
         },
-        title: {
-          display: chartTitle ? true : false,
-          text: chartTitle ? chartTitle : '',
-          fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666',
-          fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+                size: 14
+              }
+            }
+          },
+          title: {
+            display: chartTitle ? true : false,
+            text: chartTitle ? chartTitle : ''
+          },
+        },
+        'onClick': function (evt: any, item: any) {
+          if (item && item[0]) {
+            console.log(item)
+          }
+        },
+        legend: {
+          labels: {
+            fontColor: theme.palette.text.primary,
+          }
+        },
+        responsive: true,
+        scales: {
+          x: {
+            stacked: true,
+          },
+          y: {
+            stacked: true
+          }
         }
       }
     }
-  }, [data, chartTitle, horizontal, theme.palette.type]);
+  }, [data, chartTitle, theme.palette.text.primary]);
 
   useEffect(() => {
-    //instantiate chart with first given data
     if (chartInstance === null) {
-      //setChartInstance(new Chart(chartContainer.current, chartConfig))
+      setChartInstance(new Chart(chartContainer.current, chartConfig))
     }
-  }, [chartInstance, chartConfig])
+  }, [data, chartInstance, chartTitle, chartConfig])
 
   return (
     <React.Fragment>

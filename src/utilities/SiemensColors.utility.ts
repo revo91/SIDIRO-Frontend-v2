@@ -98,3 +98,48 @@ export enum SiemensAccentGreen {
   light5 = '#e6e65f',
   light6 = '#f0f08c'
 }
+
+export const decideDataColor = (index: number) => {
+  switch (index) {
+    case 0: return SiemensAccentTeal.light2
+    case 1: return SiemensAccentYellow.light2
+    case 2: return SiemensAccentGreen.light2
+    case 3: return SiemensAccentRed.light2
+    case 4: return SiemensAccentBlue.light2
+    case 5: return SiemensAccentTeal.light4
+    case 6: return SiemensAccentYellow.light4
+    case 7: return SiemensAccentGreen.light4
+    case 8: return SiemensAccentRed.light4
+    case 9: return SiemensAccentBlue.light4
+    case 10: return SiemensAccentTeal.light6
+    case 11: return SiemensAccentYellow.light6
+    case 12: return SiemensAccentGreen.light6
+    case 13: return SiemensAccentRed.light6
+    case 14: return SiemensAccentBlue.light6
+    case 15: return SiemensAccentTeal.dark2
+    case 16: return SiemensAccentYellow.dark2
+    case 17: return SiemensAccentGreen.dark2
+    case 18: return SiemensAccentBlue.dark2
+    case 20: return SiemensAccentTeal.light3
+    case 21: return SiemensAccentYellow.light3
+    case 22: return SiemensAccentGreen.light3
+    case 23: return SiemensAccentRed.light3 
+    case 24: return SiemensAccentBlue.light3
+    case 25: return SiemensAccentTeal.light5 
+    case 26: return SiemensAccentYellow.light5 
+    case 27: return SiemensAccentGreen.light5 
+    case 28: return SiemensAccentRed.light5
+    case 29: return SiemensAccentBlue.light5 
+    case 30: return SiemensAccentTeal.dark1 
+    case 31: return SiemensAccentYellow.dark1 
+    case 32: return SiemensAccentGreen.dark1 
+    case 33: return SiemensAccentRed.dark1 
+    case 34: return SiemensAccentBlue.dark1
+    case 35: return SiemensAccentTeal.dark3 
+    case 36: return SiemensAccentYellow.dark3 
+    case 37: return SiemensAccentGreen.dark3
+    case 38: return SiemensAccentRed.dark3 
+    case 39: return SiemensAccentBlue.dark3
+    default: return SiemensAccentRed.dark1
+  }
+}
