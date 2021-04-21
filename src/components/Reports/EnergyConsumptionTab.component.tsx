@@ -56,8 +56,8 @@ export const EnergyConsumptionTab = () => {
   useEffect(() => {
     if (assetsNames && Object.keys(assetsNames).length > 0) {
       const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'month', dateFrom, dateTo))
-      setLevel2({ title: null, labels: null, values: null })
-      setLevel3({ title: null, labels: null, values: null })
+      setLevel2(undefined)
+      setLevel3(undefined)
       dispatch(setBackdropOpen(true))
       Promise.all(promises).then(res => {
         let params = {}
@@ -76,12 +76,17 @@ export const EnergyConsumptionTab = () => {
   useEffect(() => {
     //cleanup
     return () => {
-      setLevel1({ title: null, labels: null, values: null })
-      setLevel2({ title: null, labels: null, values: null })
-      setLevel3({ title: null, labels: null, values: null })
+      setLevel1(undefined)
+      setLevel2(undefined)
+      setLevel3(undefined)
     }
   }, [])
 
+  const handleDateChange = (date: Date) => {
+    dispatch(setReportsDate(getUTCDate(date).startOfMonth, getUTCDate(date).endOfMonth))
+    setLevel2(undefined)
+    setLevel3(undefined)
+  }
 
   const chooseByLanguage = useCallback((sentenceEN: string, sentencePL: string) => {
     return i18n.language === 'pl' ? sentencePL : sentenceEN
@@ -133,7 +138,7 @@ export const EnergyConsumptionTab = () => {
       switch (level) {
         case 2:
           setLevel2({ title, labels, values, groupIndex })
-          setLevel3({ title: null, labels: null, values: null })
+          setLevel3(undefined)
           break;
         case 3:
           setLevel3({ title, labels, values })
@@ -153,7 +158,7 @@ export const EnergyConsumptionTab = () => {
       switch (level) {
         case 2:
           setLevel2({ title, labels, values, groupIndex: undefined })
-          setLevel3({ title: null, labels: null, values: null })
+          setLevel3(undefined)
           break;
         case 3:
           setLevel3({ title, labels, values })
@@ -192,12 +197,12 @@ export const EnergyConsumptionTab = () => {
       const values = reports.groups.map(group => calculateAggregatedActiveEnergyImport(getGroupOfGroupsAssetIDs(group)))
       const labels = reports.groups.map(group => chooseByLanguage(group.enName, group.plName))
       setLevel1({
-        title: t('reportsPage.totalActiveEnergyConsumption'),
+        title: t('reportsPage.totalActiveEnergyImport'),
         labels: labels,
         values: values,
       })
     }
-  }, [assetsData, calculateAggregatedActiveEnergyImport, getGroupOfGroupsAssetIDs, i18n.language, reports.groups, t, chooseByLanguage])
+  }, [assetsData, calculateAggregatedActiveEnergyImport, getGroupOfGroupsAssetIDs, reports.groups, t, chooseByLanguage])
 
   const createChart = (title: string, labels: Array<string>, values: Array<number>, originLevel: number) => {
     const tableLabels = labels.concat(t('reportsPage.totalValue'))
@@ -244,7 +249,7 @@ export const EnergyConsumptionTab = () => {
           autoOk
           label={t('reportsPage.chooseMonth')}
           value={dateFrom}
-          onChange={(date) => date ? dispatch(setReportsDate(getUTCDate(date).startOfMonth, getUTCDate(date).endOfMonth)) : null}
+          onChange={(date) => date ? handleDateChange(date) : null}
           fullWidth
           views={['month']}
           format="MM/yyyy"
@@ -273,6 +278,7 @@ export const EnergyConsumptionTab = () => {
         createChart(level1.title, level1.labels, level1.values, 1)
         : null}
       {level2 && level2.title && level2.labels && level2.values ?
+
         createChart(level2.title, level2.labels, level2.values, 2)
         : null}
       {level3 && level3.title && level3.labels && level3.values ?

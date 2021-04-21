@@ -10,16 +10,23 @@ interface BarChartProps {
     datasets: Array<{ label: string, backgroundColor: string, borderColor?: Array<string>, borderWidth?: number, data: Array<number> }>
   },
   chartTitle?: string,
+  yAxisUnit?: string,
+  yAxisName?: string,
+  onDataClick(dataIndex: number): void
 }
 
-export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle }) => {
+export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAxisUnit, yAxisName, onDataClick }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
   useUpdateChartFontColor(chartInstance, '#fff');
-  useUpdateStackedChartDatasets(chartInstance, data)
+  useUpdateStackedChartDatasets(chartInstance, data, yAxisName)
 
   const chartConfig = useMemo(() => {
+    const handleClickDataPortion = (dataSliceIndex: number) => {
+      onDataClick(dataSliceIndex)
+    }
+
     return {
       type: 'bar',
       data,
@@ -38,14 +45,32 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle }) =
               }
             }
           },
+          tooltip: {
+            callbacks: {
+              // label: function (context: any) {
+              //   let label = context.dataset.label || '';
+              //   if (label) {
+              //     label += ': ';
+              //   }
+              //   if (context.parsed.y !== null) {
+              //     label += context.parsed.y
+              //   }
+              //   if (label && yAxisUnit) {
+              //     label += ` ${yAxisUnit}`;
+              //   }
+              //   return label;
+              // }
+            }
+          },
           title: {
             display: chartTitle ? true : false,
             text: chartTitle ? chartTitle : ''
           },
+
         },
         'onClick': function (evt: any, item: any) {
           if (item && item[0]) {
-            console.log(item)
+            handleClickDataPortion(item[0].datasetIndex)
           }
         },
         legend: {
@@ -59,12 +84,17 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle }) =
             stacked: true,
           },
           y: {
-            stacked: true
+            stacked: true,
+            title: {
+              text: yAxisName ? yAxisName : '',
+              display: yAxisName ? true : false,
+              color: theme.palette.text.primary
+            }
           }
         }
       }
     }
-  }, [data, chartTitle, theme.palette.text.primary]);
+  }, [data, chartTitle, theme.palette.text.primary, yAxisName, onDataClick]);
 
   useEffect(() => {
     if (chartInstance === null) {

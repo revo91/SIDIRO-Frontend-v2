@@ -108,11 +108,6 @@ export const Reports = () => {
 
   return (
     <React.Fragment>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Typography variant='h2' gutterBottom>{t('reportsPage.title')}</Typography>
-        </Grid>
-      </Grid>
       <UniversalTabs
         name='Reports'
         tabs={[

@@ -41,7 +41,6 @@ export const resources = {
       },
       reportsPage: {
         title: "Reports",
-        totalActiveEnergyConsumption: "Total Active Energy consumption",
         monthlyEnergyUsage: "Monthly Energy usage",
         energyUsageProfile: "Energy usage profile",
         powers15min: "Power demand",
@@ -56,9 +55,9 @@ export const resources = {
         activeEnergyImport: "Active energy",
         reactiveEnergyExport: "Reactive energy export",
         reactiveEnergyImport: "Reactive energy import",
-        totalActiveEnergyImport: "Total Active energy import",
-        totalReactiveEnergyImport: "Total Reactive energy import",
-        totalReactiveEnergyExport: "Total Reactive energy export"
+        totalActiveEnergyImport: "Total Active energy import [kWh]",
+        totalReactiveEnergyImport: "Total Reactive energy import [kvar]",
+        totalReactiveEnergyExport: "Total Reactive energy export [kvar]"
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -162,7 +161,6 @@ export const resources = {
       },
       reportsPage: {
         title: "Raporty",
-        totalActiveEnergyConsumption: "Całościowe zużycie energii czynnej",
         monthlyEnergyUsage: "Miesięczne zużycie energii",
         energyUsageProfile: "Profil zużycia energii",
         powers15min: "Moce 15-minutowe",
@@ -177,9 +175,9 @@ export const resources = {
         activeEnergyImport: "Energia czynna",
         reactiveEnergyExport: "Energia bierna pojemnościowa",
         reactiveEnergyImport: "Energia bierna indukcyjna",
-        totalActiveEnergyImport: "Całościowe zużycie energii czynnej",
-        totalReactiveEnergyImport: "Całościowe zużycie energii biernej indukcyjnej",
-        totalReactiveEnergyExport: "Całościowe oddanie energii biernej pojemnościowej"
+        totalActiveEnergyImport: "Całościowe zużycie energii czynnej [kWh]",
+        totalReactiveEnergyImport: "Całościowe zużycie energii biernej indukcyjnej [kvar]",
+        totalReactiveEnergyExport: "Całościowe oddanie energii biernej pojemnościowej [kvar]"
       },
       datePicker: {
         cancelButton: "Anuluj",
