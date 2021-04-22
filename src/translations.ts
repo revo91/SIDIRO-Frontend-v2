@@ -57,7 +57,18 @@ export const resources = {
         reactiveEnergyImport: "Reactive energy import",
         totalActiveEnergyImport: "Total Active energy import [kWh]",
         totalReactiveEnergyImport: "Total Reactive energy import [kvar]",
-        totalReactiveEnergyExport: "Total Reactive energy export [kvar]"
+        totalReactiveEnergyExport: "Total Reactive energy export [kvar]",
+        averageActivePower15Min: "Average active power 15-min",
+        alarmThreshold: "Alarm threshold",
+        warningThreshold: "Warning threshold",
+        powerExceedings: "Power exceedings",
+        tableColumnTime: "Time",
+        tableColumnPower: "Power [kW]",
+        tableColumnExceeding: "Exceeding [kW]",
+        tableColumnAlarmWarning: "Alarm/warning",
+        alarm: "Alarm",
+        warning: "Warning",
+        outfeedAverageActivePower: "Outgoing feeder average active power 15-min"
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -177,7 +188,18 @@ export const resources = {
         reactiveEnergyImport: "Energia bierna indukcyjna",
         totalActiveEnergyImport: "Całościowe zużycie energii czynnej [kWh]",
         totalReactiveEnergyImport: "Całościowe zużycie energii biernej indukcyjnej [kvar]",
-        totalReactiveEnergyExport: "Całościowe oddanie energii biernej pojemnościowej [kvar]"
+        totalReactiveEnergyExport: "Całościowe oddanie energii biernej pojemnościowej [kvar]",
+        averageActivePower15Min: "Przebieg średniej mocy 15-minutowej",
+        alarmThreshold: "Granica alarmu",
+        warningThreshold: "Granica ostrzeżenia",
+        powerExceedings: "Przekroczenia mocy",
+        tableColumnTime: "Czas",
+        tableColumnPower: "Moc [kW]",
+        tableColumnExceeding: "Przekroczenie [kW]",
+        tableColumnAlarmWarning: "Alarm/ostrzeżenie",
+        alarm: "Alarm",
+        warning: "Ostrzeżenie",
+        outfeedAverageActivePower: "Przebieg średniej mocy 15-minutowej odbiorów"
       },
       datePicker: {
         cancelButton: "Anuluj",

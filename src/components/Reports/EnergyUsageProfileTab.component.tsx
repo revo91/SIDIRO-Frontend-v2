@@ -130,9 +130,13 @@ export const EnergyUsageProfile = () => {
     return array
   }, [])
 
+  useEffect(()=>{
+    console.log(level1)
+  },[level1])
+
   useEffect(() => {
     if (assetsNames && Object.keys(assetsNames).length > 0) {
-      const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'day', dateFrom, dateTo))
+      const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'DATA_1_MIN', 'day', 1, dateFrom, dateTo))
       dispatch(setBackdropOpen(true))
       Promise.all(promises).then(res => {
         let params = {}

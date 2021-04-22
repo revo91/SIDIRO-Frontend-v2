@@ -55,7 +55,7 @@ export const EnergyConsumptionTab = () => {
 
   useEffect(() => {
     if (assetsNames && Object.keys(assetsNames).length > 0) {
-      const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'month', dateFrom, dateTo))
+      const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'DATA_1_MIN', 'month', 1, dateFrom, dateTo))
       setLevel2(undefined)
       setLevel3(undefined)
       dispatch(setBackdropOpen(true))

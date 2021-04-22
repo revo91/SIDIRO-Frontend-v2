@@ -16,6 +16,7 @@ interface LineChartProps {
       borderColor: string,
       lineTension: number,
       fill: boolean,
+      borderDash?: Array<number>,
       data: Array<{
         x: number | Date,
         y: number
@@ -23,23 +24,25 @@ interface LineChartProps {
       pointRadius?: number
     }>
   },
+  timeInterval?: string,
   chartTitle?: string,
-  minTime?: Date | number,
-  maxTime?: Date | number
+  xAxisTitle?: string,
+  yAxisTitle?: string,
+  yAxisUnit?: string
 }
 
-export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, minTime, maxTime }) => {
+export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTitle, yAxisTitle, timeInterval, yAxisUnit }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<any>(null);
   const theme = useTheme();
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   useUpdateChartFontColor(chartInstance, '#fff');
-  useUpdateChartDatasets(chartInstance, data)
+  useUpdateChartDatasets(chartInstance, data, i18n.language, yAxisTitle, xAxisTitle)
 
-  const typee: ChartType = 'line'
+  const chartType: ChartType = 'line'
   const chartConfig = useMemo(() => {
     return {
-      type: typee,
+      type: chartType,
       data,
       options: {
         responsive: true,
@@ -59,38 +62,56 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, minTime,
             labels: {
               color: Chart.defaults.color
             }
-          }
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context: any) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y
+                }
+                if (label && yAxisUnit) {
+                  label += ` ${yAxisUnit}`;
+                }
+                return label;
+              }
+            }
+          },
         },
         scales: {
           x: {
             type: 'time',
             title: {
               display: true,
-              text: t('chart.timeAxisLabel')
+              text: xAxisTitle ? xAxisTitle : ''
             },
             ticks: {
-              color: Chart.defaults.color
+              color: Chart.defaults.color,
+
             },
             time: {
               displayFormats: {
                 millisecond: 'HH:mm:ss.SSS',
                 second: 'HH:mm:ss',
                 minute: 'HH:mm',
-                hour: 'HH'
+                hour: 'HH',
               },
-              tooltipFormat: 'PPpp'
+              tooltipFormat: 'PPpp',
+              unit: timeInterval? timeInterval : false
             },
             adapters: {
               date: {
                 locale: i18n.language === 'pl' ? pl : enUS,
-
               }
             }
           },
           y: {
             title: {
               display: true,
-              text: t('chart.valueAxisLabel')
+              text: yAxisTitle ? yAxisTitle : ''
             },
             ticks: {
               color: Chart.defaults.color
@@ -99,7 +120,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, minTime,
         },
       },
     }
-  }, [data, chartTitle, theme.palette.text.primary, i18n.language, t]);
+  }, [data, chartTitle, theme.palette.text.primary, i18n.language, xAxisTitle, yAxisTitle, yAxisUnit, timeInterval]);
 
 
 

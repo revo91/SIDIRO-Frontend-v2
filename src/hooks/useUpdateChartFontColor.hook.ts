@@ -25,6 +25,10 @@ export const useUpdateChartFontColor = (chartInstance: any | null, color: string
         ticks: {
           ...chartInstance.options.scales.x.ticks,
           color: theme.palette.type === 'dark' ? color : '#666'
+        },
+        title: {
+          ...chartInstance.options.scales.x.title,
+          color: theme.palette.type === 'dark' ? color : '#666',
         }
       }
     }
@@ -40,6 +44,8 @@ export const useUpdateChartFontColor = (chartInstance: any | null, color: string
         color: theme.palette.type === 'dark' ? color : '#666',
       }
     }
+
+    
 
   }, [theme, chartInstance?.options, color])
 }

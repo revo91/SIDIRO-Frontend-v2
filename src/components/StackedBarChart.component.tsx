@@ -12,7 +12,7 @@ interface BarChartProps {
   chartTitle?: string,
   yAxisUnit?: string,
   yAxisName?: string,
-  onDataClick(dataIndex: number): void
+  onDataClick?(dataIndex: number): void
 }
 
 export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAxisUnit, yAxisName, onDataClick }) => {
@@ -24,7 +24,9 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAx
 
   const chartConfig = useMemo(() => {
     const handleClickDataPortion = (dataSliceIndex: number) => {
-      onDataClick(dataSliceIndex)
+      if(onDataClick) {
+        onDataClick(dataSliceIndex)
+      }
     }
 
     return {
@@ -47,19 +49,19 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAx
           },
           tooltip: {
             callbacks: {
-              // label: function (context: any) {
-              //   let label = context.dataset.label || '';
-              //   if (label) {
-              //     label += ': ';
-              //   }
-              //   if (context.parsed.y !== null) {
-              //     label += context.parsed.y
-              //   }
-              //   if (label && yAxisUnit) {
-              //     label += ` ${yAxisUnit}`;
-              //   }
-              //   return label;
-              // }
+              label: function (context: any) {
+                let label = context.dataset.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed.y
+                }
+                if (label && yAxisUnit) {
+                  label += ` ${yAxisUnit}`;
+                }
+                return label;
+              }
             }
           },
           title: {
@@ -94,7 +96,7 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAx
         }
       }
     }
-  }, [data, chartTitle, theme.palette.text.primary, yAxisName, onDataClick]);
+  }, [data, chartTitle, theme.palette.text.primary, yAxisName, onDataClick, yAxisUnit]);
 
   useEffect(() => {
     if (chartInstance === null) {

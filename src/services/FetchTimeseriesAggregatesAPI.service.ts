@@ -1,5 +1,5 @@
-export const fetchTimeseriesAggregates = async (assetID: string, intervalUnit: string, dateFrom: string, dateTo: string) => {
-  const response = await fetch(`/api/iottsaggregates/v3/aggregates/${assetID}/DATA_1_MIN?from=${dateFrom}&to=${dateTo}&intervalUnit=${intervalUnit}&intervalValue=1`)
+export const fetchTimeseriesAggregates = async (assetID: string, aspectName: string, intervalUnit: string, intervalValue: number, dateFrom: string, dateTo: string) => {
+  const response = await fetch(`/api/iottsaggregates/v3/aggregates/${assetID}/${aspectName}?from=${dateFrom}&to=${dateTo}&intervalUnit=${intervalUnit}&intervalValue=${intervalValue}`)
   const data = await response.json()
   const dataWithCustomFields = intervalUnit === 'month' ? {
     ...data[0],

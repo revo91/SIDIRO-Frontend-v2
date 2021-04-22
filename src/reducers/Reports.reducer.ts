@@ -34,28 +34,28 @@ const initialState: IGroupsStructure = {
         plName: 'Linia produkcyjna L34',
         enName: 'Production line L34',
         assets: [{
-          feederName: 'RT-1A-1',
-          feederDescription: 'Casting',
+          feederName: 'Casting - RT-1A-1',
+          feederDescription: 'Casting - RT-1A-1',
           assetID: 'bc5ae158e8934c38aff4f52a6b07ecdf'
         },
         {
-          feederName: 'RT-1B-1',
-          feederDescription: 'Winding',
+          feederName: 'Winding - RT-1B-1',
+          feederDescription: 'Winding - RT-1B-1',
           assetID: 'bc4a33865d59406e83f142ff1035f1a6'
         },
         {
-          feederName: 'RT-2-1',
-          feederDescription: 'Mixing L34&L35',
+          feederName: 'Mixing L34&L35 - RT-2-1',
+          feederDescription: 'Mixing L34&L35 - RT-2-1',
           assetID: 'c92acf6b6b0f452bb4cb88011ec4dba6'
         },
         {
-          feederName: 'Blender RB34',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - Blender RB34',
+          feederDescription: 'Falownik - Blender RB34',
           assetID: 'cb659c511ab34ff5bf5927380ad19e0a'
         },
         {
-          feederName: 'MIXER ZTM34',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - MIXER ZTM34',
+          feederDescription: 'Falownik - MIXER ZTM34',
           assetID: '1fd7c385632747ea9735256ebbbdb921'
         }]
       },
@@ -64,28 +64,28 @@ const initialState: IGroupsStructure = {
         plName: 'Linia produkcyjna L35',
         enName: 'Production line L35',
         assets: [{
-          feederName: 'RT-1A-2',
-          feederDescription: 'Casting',
+          feederName: 'Casting - RT-1A-2',
+          feederDescription: 'Casting - RT-1A-2',
           assetID: '2615561162614fe19f7e6bd788b6f241'
         },
         {
-          feederName: 'RT-1B-2',
-          feederDescription: 'Winding',
+          feederName: 'Winding - RT-1B-2',
+          feederDescription: 'Winding - RT-1B-2',
           assetID: '00e42c7810c844d4a1b39eb6da4274f1'
         },
         {
-          feederName: 'RT-2-1',
-          feederDescription: 'Mixing L34&L35',
+          feederName: 'Mixing L34&L35 - RT-2-1',
+          feederDescription: 'Mixing L34&L35 - RT-2-1',
           assetID: '52906d2ea93d4af098233d1434df327e'
         },
         {
-          feederName: 'Blender RB35',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - Blender RB35',
+          feederDescription: 'Falownik - Blender RB35',
           assetID: 'c0cea6c7ea4b4e7088b6433863e4e467'
         },
         {
-          feederName: 'MIXER ZTM35',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - MIXER ZTM35',
+          feederDescription: 'Falownik - MIXER ZTM35',
           assetID: '3af0f2f394f84713ac08baafbbdef459'
         }]
       },
@@ -94,28 +94,28 @@ const initialState: IGroupsStructure = {
         plName: 'Linia produkcyjna L36',
         enName: 'Production line L36',
         assets: [{
-          feederName: 'RT-1C-1',
-          feederDescription: 'Casting',
+          feederName: 'Casting - RT-1C-1',
+          feederDescription: 'Casting - RT-1C-1',
           assetID: '0ce676a0fe1f4da89d354662d734343a'
         },
         {
-          feederName: 'RT-1D-1',
-          feederDescription: 'Winding',
+          feederName: 'Winding - RT-1D-1',
+          feederDescription: 'Winding - RT-1D-1',
           assetID: '8968bd1b87ad463bb4b7e235a518f14d'
         },
         {
-          feederName: 'RT-2-2',
-          feederDescription: 'Mixing L36&L37',
+          feederName: 'Mixing L36&L37 - RT-2-2',
+          feederDescription: 'Mixing L36&L37 - RT-2-2',
           assetID: '7e77bd333f39408fa69306ef63770cc7'
         },
         {
-          feederName: 'Blender RB36',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - Blender RB36',
+          feederDescription: 'Falownik - Blender RB36',
           assetID: 'ad762349da8a4e0faf1a7c16d23fe2a5'
         },
         {
-          feederName: 'MIXER ZTM36',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - MIXER ZTM36',
+          feederDescription: 'Falownik - MIXER ZTM36',
           assetID: '86f91ddf6fd5457c874f561d9641c54f'
         }]
       },
@@ -124,28 +124,28 @@ const initialState: IGroupsStructure = {
         plName: 'Linia produkcyjna L37',
         enName: 'Production line L37',
         assets: [{
-          feederName: 'RT-1C-2',
-          feederDescription: 'Casting',
+          feederName: 'Casting - RT-1C-2',
+          feederDescription: 'Casting - RT-1C-2',
           assetID: 'a2545aa2e8894067b730830d323a1c9c'
         },
         {
-          feederName: 'RT-1D-2',
-          feederDescription: 'Winding',
+          feederName: 'Winding - RT-1D-2',
+          feederDescription: 'Winding - RT-1D-2',
           assetID: '32666fa87cfe4cb3b3cb14056fd4a8e8'
         },
         {
-          feederName: 'RT-2-2',
-          feederDescription: 'Mixing L36&L37',
+          feederName: 'Mixing L36&L37 - RT-2-2',
+          feederDescription: 'Mixing L36&L37 - RT-2-2',
           assetID: '2288d1cb41d048dcbb50f7c75ad1a858'
         },
         {
-          feederName: 'Blender RB37',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - Blender RB37',
+          feederDescription: 'Falownik - Blender RB37',
           assetID: '2869823e0aa242f8b70df7e990bd3c3e'
         },
         {
-          feederName: 'MIXER ZTM37',
-          feederDescription: 'Falownik',
+          feederName: 'Falownik - MIXER ZTM37',
+          feederDescription: 'Falownik - MIXER ZTM37',
           assetID: 'e156f91288d44696891462f693551588'
         }]
       },
@@ -154,23 +154,23 @@ const initialState: IGroupsStructure = {
         plName: 'Stacja budynkowa dla linii produkcyjnych',
         enName: 'Building installation for production lines',
         assets: [{
-          feederName: 'RP1',
+          feederName: 'RP1 - QP01',
           feederDescription: 'Rozdzielnica produkcja L34 & L35',
           assetID: '40ffdbf4ecc14f3eb645c9cb675a9030'
         },
         {
-          feederName: 'RP2',
+          feederName: 'RP2 - QP02',
           feederDescription: 'Rozdzielnica produkcja L36 & L37',
           assetID: '17507f5b44c74398892c7021a9bd3c66'
         },
         {
-          feederName: 'RP3',
+          feederName: 'RP3 - QP03',
           feederDescription: 'Rozdzielnica produkcja MIXING ROOM',
           assetID: '45665da871dd4538886ff5b9f63b352a'
         },
         {
-          feederName: 'Rezerwa',
-          feederDescription: 'Rezerwa',
+          feederName: 'Rezerwa - QP04',
+          feederDescription: 'Rezerwa - QP04',
           assetID: '3afe9aaaf4b8426a8d547b73116c0ef6'
         }]
       },
@@ -179,22 +179,22 @@ const initialState: IGroupsStructure = {
         plName: 'Ogrzewanie, chłodzenie, sprężone powietrze',
         enName: 'Heating, Cooling, Compressed Air',
         assets: [{
-          feederName: 'HVPP-4',
-          feederDescription: 'Kompresory',
+          feederName: 'Kompresory - HVPP-4',
+          feederDescription: 'Kompresory - HVPP-4',
           assetID: '683b67da12ee48f3bfd0511a0d0bb223'
         },
         {
-          feederName: 'FD-400A',
-          feederDescription: 'Wieża chłodnica',
+          feederName: 'Wieża chłodnica - FD-400A',
+          feederDescription: 'Wieża chłodnica - FD-400A',
           assetID: '7d8a11f8818e4cbdb11f88d2c416013b'
         },
         {
-          feederName: 'RPOM',
-          feederDescription: 'Pompownia wody',
+          feederName: 'Pompownia wody - RPOM',
+          feederDescription: 'Pompownia wody - RPOM',
           assetID: 'c25b12cad8614e5e8e6b14a563ba93da'
         },
         {
-          feederName: 'RK',
+          feederName: 'Kotłownia - RK',
           feederDescription: 'Kotłownia',
           assetID: '4d164cd6f766448ea82f9350745b01ca'
         }]
@@ -205,23 +205,23 @@ const initialState: IGroupsStructure = {
       plName: 'Magazyny',
       enName: 'Warehouse',
       assets: [{
-        feederName: 'RM1',
-        feederDescription: 'Rozdzielnica magazyn 29-40/A-B1',
+        feederName: 'Rozdzielnica magazyn 29-40/A-B1 - RM1',
+        feederDescription: 'Rozdzielnica magazyn 29-40/A-B1 - RM1',
         assetID: 'b2e4cfa16be7497f8db1a07040e37c17'
       },
       {
-        feederName: 'RM2',
-        feederDescription: 'Rozdzielnica magazyn 29-40/B1-D',
+        feederName: 'Rozdzielnica magazyn 29-40/B1-D - RM2',
+        feederDescription: 'Rozdzielnica magazyn 29-40/B1-D - RM2',
         assetID: '1a8fc42c62c149e9ad2ae68357879097'
       },
       {
-        feederName: 'RM3',
-        feederDescription: 'Rozdzielnica magazyn 13-29/A-D',
+        feederName: 'Rozdzielnica magazyn 13-29/A-D - RM3',
+        feederDescription: 'Rozdzielnica magazyn 13-29/A-D - RM3',
         assetID: 'ec450582d4c84600ac0da086bca3802d'
       },
       {
-        feederName: 'RM4',
-        feederDescription: 'Rozdzielnica magazyn 1-13/A-D',
+        feederName: 'Rozdzielnica magazyn 1-13/A-D - RM4',
+        feederDescription: 'Rozdzielnica magazyn 1-13/A-D - RM4',
         assetID: 'bd21a78f5ae449a7a1f414e9591ad42e'
       }]
     },
@@ -230,23 +230,23 @@ const initialState: IGroupsStructure = {
       plName: 'Biura',
       enName: 'Offices',
       assets: [{
-        feederName: 'RSER',
+        feederName: 'RSER - QB01',
         feederDescription: 'Serwerownia',
         assetID: '699277409d0440ff94672a3dc95ff6d2'
       },
       {
-        feederName: 'RB0',
+        feederName: 'RB0 - QB02',
         feederDescription: 'Biurowiec parter',
         assetID: 'a091a640fcf04c2498a297e3e0d4204f'
       },
       {
-        feederName: 'RB1',
+        feederName: 'RB1 - QB03',
         feederDescription: 'Biurowiec piętro',
         assetID: '23f2d3d5dd0844fea6c5395425d036f5'
       },
       {
-        feederName: 'Rezerwa',
-        feederDescription: 'Rezerwa',
+        feederName: 'Rezerwa - QB04',
+        feederDescription: 'Rezerwa - QB04',
         assetID: 'e406f47cf36046e2b5086c2ea49b1f42'
       }]
     },

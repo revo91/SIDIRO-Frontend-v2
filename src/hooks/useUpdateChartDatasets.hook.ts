@@ -1,23 +1,42 @@
 import { useEffect } from 'react';
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
+import 'chartjs-adapter-date-fns';
+import { pl, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next';
 
 export const useUpdateChartDatasets = (chartInstance: Chart | null,
   data: {
     labels?: Array<string>,
-    datasets: Array<{ label: string, backgroundColor: Array<string> | string, borderColor?: Array<string> | string, borderWidth?: number, data: Array<{x: number | Date, y: number}> | Array<number> }>
-  }) => {
+    datasets: Array<{ label: string, backgroundColor: Array<string> | string, borderColor?: Array<string> | string, borderWidth?: number, data: Array<{ x: number | Date, y: number }> | Array<number> }>
+  },
+  locale?: string,
+  yAxisTitle?: string,
+  xAxisTitle?: string) => {
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     //update in case of datasets change
-    if (chartInstance && chartInstance.data && chartInstance.data.datasets) {
-      //replace datasets data one by one
-      data.datasets.forEach((dataset, i) => {
-        if (chartInstance.data.datasets && chartInstance.data.datasets[i] !== undefined) {
-          chartInstance.data.datasets[i].data = dataset.data
-        }
-      })
-      chartInstance.data.labels = data.labels;
+    if (chartInstance) {
+      if (chartInstance.data && chartInstance.data.datasets) {
+        //replace datasets data one by one
+        data.datasets.forEach((dataset, i) => {
+          if (chartInstance.data.datasets && chartInstance.data.datasets[i] !== undefined) {
+            chartInstance.data.datasets[i].data = dataset.data
+            chartInstance.data.datasets[i].label = dataset.label
+          }
+        })
+        chartInstance.data.labels = data.labels;
+      }
+      if (chartInstance?.options?.scales?.x?.adapters?.date?.locale && locale) {
+        chartInstance.options.scales.x.adapters.date.locale = i18n.language === 'pl' ? pl : enUS
+      }
+      if (chartInstance?.options?.scales?.x?.title && xAxisTitle) {
+        chartInstance.options.scales.x.title.text = xAxisTitle
+      }
+      if (chartInstance?.options?.scales?.y?.title && yAxisTitle) {
+        chartInstance.options.scales.y.title.text = yAxisTitle
+      }
       chartInstance.update()
     }
-  }, [chartInstance, data])
+  }, [chartInstance, data, i18n.language, locale, yAxisTitle, xAxisTitle])
 }
