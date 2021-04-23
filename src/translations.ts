@@ -68,7 +68,8 @@ export const resources = {
         tableColumnAlarmWarning: "Alarm/warning",
         alarm: "Alarm",
         warning: "Warning",
-        outfeedAverageActivePower: "Outgoing feeder average active power 15-min"
+        outfeedAverageActivePower: "Outgoing feeder average active power 15-min",
+        othersDataTitle: "Other"
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -199,7 +200,8 @@ export const resources = {
         tableColumnAlarmWarning: "Alarm/ostrzeżenie",
         alarm: "Alarm",
         warning: "Ostrzeżenie",
-        outfeedAverageActivePower: "Przebieg średniej mocy 15-minutowej odbiorów"
+        outfeedAverageActivePower: "Przebieg średniej mocy 15-minutowej odbiorów",
+        othersDataTitle: "Pozostałe"
       },
       datePicker: {
         cancelButton: "Anuluj",

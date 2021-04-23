@@ -129,11 +129,7 @@ export const EnergyUsageProfile = () => {
     }
     return array
   }, [])
-
-  useEffect(()=>{
-    console.log(level1)
-  },[level1])
-
+  
   useEffect(() => {
     if (assetsNames && Object.keys(assetsNames).length > 0) {
       const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'DATA_1_MIN', 'day', 1, dateFrom, dateTo))
@@ -143,7 +139,7 @@ export const EnergyUsageProfile = () => {
         res.forEach(asset => {
           params = {
             ...params,
-            [asset.assetID]: asset
+            [asset.assetID]: asset.data
           }
         })
         setAssetsData(params)
@@ -184,7 +180,6 @@ export const EnergyUsageProfile = () => {
   const calculateActiveEnergyImportSingleAsset = useCallback((valueType: string, asset: IGroupElementStructure) => {
     if (assetsDataRef.current && assetsDataRef.current[asset.assetID]) {
       const values: Array<any> = Object.values(assetsDataRef.current[asset.assetID])
-      values.pop()
       return values.map((dailyValues: any) => {
         if (dailyValues.Active_Energy_Import !== undefined) {
           switch (valueType) {

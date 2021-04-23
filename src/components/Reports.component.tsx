@@ -9,6 +9,7 @@ import { setAssetsReportsData } from '../actions/Reports/CommonReports.action';
 import { RootState } from '../reducers/Root.reducer';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { PowerDemandTab } from './Reports/PowerDemandTab.component';
+import { InfeedParametersTab } from './Reports/InfeedParametersTab.component';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,7 +72,7 @@ export const Reports = () => {
           },
           {
             label: t('reportsPage.infeedParameters'),
-            content: <p>Supply parameters tab content</p>
+            content: <InfeedParametersTab/>
           },
           {
             label: t('reportsPage.outgoingFeederParameters'),

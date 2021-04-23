@@ -17,11 +17,21 @@ import Typography from '@material-ui/core/Typography';
 import { setBackdropOpen } from '../../actions/Backdrop.action';
 import { StackedBarChart } from '../StackedBarChart.component';
 import { parseISO, format } from 'date-fns';
+import { fetchTimeseriesAggregates } from '../../services/FetchTimeseriesAggregatesAPI.service';
 
 interface IActivePowerImport {
   Active_Power_Import: number
-  Active_Power_Import_qc: number
   _time: string
+}
+
+interface IActivePowerImportAggregate {
+  data: Array<{
+    Active_Power_Import?: {
+      lastvalue: number
+    },
+    starttime: string
+  }>
+  assetID: string
 }
 
 export const PowerDemandTab = () => {
@@ -30,6 +40,7 @@ export const PowerDemandTab = () => {
   const [infeedPowerDemandExceedings, setInfeedPowerDemandExceedings] = useState<Array<Array<number | string | Date>>>()
   const [warningLine, setWarningLine] = useState<Array<{ x: number, y: number }>>()
   const [alarmLine, setAlarmLine] = useState<Array<{ x: number, y: number }>>()
+  // const [outfeedChartElements, setOutfeedChartElements] = useState<{infeedValues: }>
   const [outfeedChartData, setOutfeedChartData] = useState<{
     xAxisLabels: Array<string> | null, //[...every 15min intervals of a day]
     datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }>
@@ -111,33 +122,68 @@ export const PowerDemandTab = () => {
 
   useEffect(() => {
     //generate outfeeds chart
-    if (Object.keys(assetsNames).length > 0 && powerDemandAssets.outfeeds && powerDemandAssets.outfeeds.length > 0) {
-      const promises = powerDemandAssets.outfeeds.map(outfeed => {
-        return fetchTimeseriesInterval(outfeed, 15, getUTCDate(outfeedsDate).startOfDay, getUTCDate(outfeedsDate).endOfDay, 'Active_Power_Import')
+    if (Object.keys(assetsNames).length > 0 && powerDemandAssets.outfeeds && powerDemandAssets.outfeeds.length > 0 && infeedPowerDemandChartData && powerDemandAssets.infeeds) {
+      const promisesOutfeeds = powerDemandAssets.outfeeds.map(outfeed => {
+        return fetchTimeseriesAggregates(outfeed, 'DATA_15_MIN', 'minute', 15, getUTCDate(outfeedsDate).startOfDay, getUTCDate(outfeedsDate).endOfDay)
       })
+      const promisesInfeeds = powerDemandAssets.infeeds.map(infeed => {
+        return fetchTimeseriesAggregates(infeed, 'DATA_15_MIN', 'minute', 15, getUTCDate(outfeedsDate).startOfDay, getUTCDate(outfeedsDate).endOfDay)
+      })
+      const promises = promisesOutfeeds.concat(promisesInfeeds)
       Promise.all(promises).then(res => {
         if (res.length > 0) {
+          const infeedsPart = res.slice(-promisesInfeeds.length)
+          res.length = res.length - infeedsPart.length
+          const outfeedsPart = res;
+
           let xAxisLabels: Array<string> = []
-          const datasets = res.map((outfeeds: Array<IActivePowerImport>, outfeedGroupIndex: number) => {
-            if (outfeeds.length > xAxisLabels.length) {
-              xAxisLabels = []
-            }
+          let respectiveDatasetsActivePowers: Array<Array<number>> = []
+          const datasetsOutfeeds = outfeedsPart.map((outfeeds: IActivePowerImportAggregate, outfeedGroupIndex: number) => {
+            const data = outfeeds.data.map((outfeed) => {
+              const formattedDate = `${format(parseISO(outfeed.starttime), 'HH:mm')}`
+              if (xAxisLabels.indexOf(formattedDate) === -1) {
+                xAxisLabels.push(formattedDate)
+              }
+              if (outfeed.Active_Power_Import) {
+                return outfeed.Active_Power_Import.lastvalue / 1000
+              }
+              else {
+                return 0
+              }
+            })
+            respectiveDatasetsActivePowers.push(data)
             return {
               label: powerDemandAssets.outfeeds ? assetsNames[powerDemandAssets.outfeeds[outfeedGroupIndex]].feederName : '',
-              data: outfeeds.map((outfeed: IActivePowerImport) => {
-                if (outfeeds.length > xAxisLabels.length) {
-                  xAxisLabels.push(`${format(parseISO(outfeed._time), 'HH:mm')}`)
-                }
-                return outfeed.Active_Power_Import / 1000
-              }),
+              data: data,
               backgroundColor: decideDataColor(outfeedGroupIndex)
             }
           })
+          const datasetsInfeeds = infeedsPart.map((infeeds: IActivePowerImportAggregate) => {
+            const data = infeeds.data.map((infeed) => {
+              if (infeed.Active_Power_Import) {
+                return infeed.Active_Power_Import.lastvalue / 1000
+              }
+              else {
+                return 0
+              }
+            })
+            const outfeedsSum = respectiveDatasetsActivePowers.reduce((r, a) => a.map((b, i) => {
+              return ((r[i] || 0)) + b
+            }), [])
+            const restPower = data.map((singleVal, index) => parseFloat((singleVal - outfeedsSum[index]).toFixed(3)))
+            return {
+              label: t('reportsPage.othersDataTitle'),
+              data: restPower,
+              backgroundColor: decideDataColor(datasetsOutfeeds.length + 1)
+            }
+          })
+
+          const datasets = datasetsOutfeeds.concat(datasetsInfeeds)
           setOutfeedChartData({ xAxisLabels, datasets })
         }
       })
     }
-  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds])
+  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds, infeedPowerDemandChartData, powerDemandAssets.infeeds, t])
 
   const handleDateChange = (date: Date) => {
     dispatch(setReportsDate(getUTCDate(date).startOfMonth, getUTCDate(date).endOfMonth))

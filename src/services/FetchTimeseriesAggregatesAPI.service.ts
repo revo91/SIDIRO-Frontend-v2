@@ -6,7 +6,7 @@ export const fetchTimeseriesAggregates = async (assetID: string, aspectName: str
     assetID
   }
     : {
-      ...data,
+      data,
       assetID
     }
   return dataWithCustomFields
