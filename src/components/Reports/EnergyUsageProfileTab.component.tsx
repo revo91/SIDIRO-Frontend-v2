@@ -20,6 +20,7 @@ import { setReportsDate } from '../../actions/Reports/CommonReports.action';
 import { parseISO, format } from 'date-fns';
 import { useStyles } from '../Reports.component';
 import Divider from '@material-ui/core/Divider';
+import { exportPDF } from '../../utilities/ExportPDF.utility';
 
 export const EnergyUsageProfile = () => {
   const { t, i18n } = useTranslation();
@@ -344,11 +345,11 @@ export const EnergyUsageProfile = () => {
         </Grid>
         <Grid item xs={12} md={3} lg={3}>
           <FormControl className={classes.select}>
-            <InputLabel id="breaker-select-label">Energia</InputLabel>
+            <InputLabel id="energy-select-label">{t('reportsPage.energyChoice')}</InputLabel>
             <Select
               fullWidth
-              labelId="breaker-select-label"
-              id="breaker-select"
+              labelId="energy-select-label"
+              id="energy-select"
               value={energyType}
               onChange={handleEnergyType}
             >
@@ -363,6 +364,7 @@ export const EnergyUsageProfile = () => {
             fullWidth
             variant="contained"
             color="primary"
+            onClick={() => exportPDF()}
           >
             {t('reportsPage.exportToPDF')}
           </Button>

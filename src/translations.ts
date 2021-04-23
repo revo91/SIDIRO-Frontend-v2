@@ -69,7 +69,16 @@ export const resources = {
         alarm: "Alarm",
         warning: "Warning",
         outfeedAverageActivePower: "Outgoing feeder average active power 15-min",
-        othersDataTitle: "Other"
+        othersDataTitle: "Other",
+        transformerChoice: "Choose transformer",
+        energyChoice: "Energy",
+        genericParameterTitle: "Parameter",
+        averageValue: "Average value",
+        maxValue: "Max value",
+        minValue: "Min value",
+        currentParametersTitle: "Current parameters",
+        voltageParametersTitle: "Voltage parameters",
+        powerSupplyFrom: "Power supply from:"
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -201,7 +210,16 @@ export const resources = {
         alarm: "Alarm",
         warning: "Ostrzeżenie",
         outfeedAverageActivePower: "Przebieg średniej mocy 15-minutowej odbiorów",
-        othersDataTitle: "Pozostałe"
+        othersDataTitle: "Pozostałe",
+        transformerChoice: "Wybierz transformator",
+        energyChoice: "Energia",
+        genericParameterTitle: "Parametr",
+        averageValue: "Wartość średnia",
+        maxValue: "Wartość maksymalna",
+        minValue: "Wartość minimalna",
+        currentParametersTitle: "Parametry prądu",
+        voltageParametersTitle: "Parametry napięcia",
+        powerSupplyFrom: "Zasilanie z:"
       },
       datePicker: {
         cancelButton: "Anuluj",

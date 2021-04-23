@@ -18,6 +18,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     sectionMargin: {
       marginTop: theme.spacing(3)
+    },
+    smallerFont: {
+      fontSize: '11px'
     }
   }),
 );
