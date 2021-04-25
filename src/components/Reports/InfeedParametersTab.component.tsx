@@ -17,6 +17,10 @@ import { fetchTimeseriesAggregates } from '../../services/FetchTimeseriesAggrega
 import { UniversalTable } from '../UniversalTable.component';
 import { parseISO, format } from 'date-fns';
 import Typography from '@material-ui/core/Typography';
+import { LineChart } from '../LineChart.component';
+import { powerFactorCalculator } from '../../utilities/PowerFactorCalculator.utility';
+import { decideDataColor } from '../../utilities/SiemensColors.utility';
+import { setBackdropOpen } from '../../actions/Backdrop.action';
 
 interface IAggregatedParameterValues {
   maxtime: string
@@ -42,7 +46,17 @@ interface ITransformerAggregatedValues {
   Voltage_L2_L3: IAggregatedParameterValues
   Voltage_L2_N: IAggregatedParameterValues
   Voltage_L3_L1: IAggregatedParameterValues
-  Voltage_L3_N: IAggregatedParameterValues
+  Voltage_L3_N: IAggregatedParameterValues,
+  starttime: string
+}
+
+interface ITransformer15MinAggregatedValues {
+  Active_Power_Export: IAggregatedParameterValues
+  Active_Power_Import: IAggregatedParameterValues
+  Reactive_Power_Export: IAggregatedParameterValues
+  Reactive_Power_Import: IAggregatedParameterValues
+  endtime: string
+  starttime: string
 }
 
 export const InfeedParametersTab = () => {
@@ -62,14 +76,52 @@ export const InfeedParametersTab = () => {
   const dateFrom = useSelector((state: RootState) => state.commonReports.dateFrom);
   const dateTo = useSelector((state: RootState) => state.commonReports.dateTo);
   const overview = useSelector((state: RootState) => state.overview);
+  const assetsNames = useSelector((state: RootState) => state.commonReports.assets);
   const [transformerAggregatedData, setTransformerAggregatedData] = useState<ITransformerAggregatedValues>()
   const [transformerVoltageTableData, setTransformerVoltageTableData] = useState<{ rows: Array<Array<number | string | React.ReactNode>>, columns: Array<string> }>()
   const [transformerCurrentTableData, setTransformerCurrentTableData] = useState<{ rows: Array<Array<number | string | React.ReactNode>>, columns: Array<string> }>()
+  const [monthly15minData, setMonthly15minData] = useState<Array<ITransformer15MinAggregatedValues>>()
+  const [monthly1minData, setMonthly1minData] = useState<Array<ITransformerAggregatedValues>>()
+  const [powerFactorChartData, setPowerFactorChartData] = useState<{ importPFData: Array<{ x: number, y: number }>, exportPFData: Array<{ x: number, y: number }> }>()
+  const [currentAndTHDChartData, setCurrentAndTHDChartData] = useState<{
+    maxCurrentL1: Array<{ x: number, y: number }>,
+    maxCurrentL2: Array<{ x: number, y: number }>,
+    maxCurrentL3: Array<{ x: number, y: number }>,
+    avgCurrentL1: Array<{ x: number, y: number }>,
+    avgCurrentL2: Array<{ x: number, y: number }>,
+    avgCurrentL3: Array<{ x: number, y: number }>,
+    thdiL1: Array<{ x: number, y: number }>,
+    thdiL2: Array<{ x: number, y: number }>,
+    thdiL3: Array<{ x: number, y: number }>,
+    thduL1: Array<{ x: number, y: number }>,
+    thduL2: Array<{ x: number, y: number }>,
+    thduL3: Array<{ x: number, y: number }>
+  }>()
+  const [directOutfeeds, setDirectOutfeeds] = useState<Array<{ assetID: string, assetName: string }>>()
+  const [directOutfeeds1MinData, setDirectOutfeeds1MinData] = useState<Array<{ assetID: string, assetName: string, data: Array<ITransformerAggregatedValues> }>>()
+  const [directOutfeedsTHDChartDataL1, setDirectOutfeedsTHDChartDataL1] = useState<Array<{
+    outfeedName: string, data: Array<{
+      x: number,
+      y: number
+    }>
+  }>>()
+  const [directOutfeedsTHDChartDataL2, setDirectOutfeedsTHDChartDataL2] = useState<Array<{
+    outfeedName: string, data: Array<{
+      x: number,
+      y: number
+    }>
+  }>>()
+  const [directOutfeedsTHDChartDataL3, setDirectOutfeedsTHDChartDataL3] = useState<Array<{
+    outfeedName: string, data: Array<{
+      x: number,
+      y: number
+    }>
+  }>>()
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
 
-  useEffect(() => {
+  useEffect(() => { //GATHER TRANSFORMERS AVAILABLE
     const transformers: any = []
     overview.diagrams.forEach(diagram => {
       diagram.sections.forEach(section => {
@@ -88,15 +140,17 @@ export const InfeedParametersTab = () => {
     }
   }, [overview.diagrams, setAvailableTransformers])
 
-  useEffect(() => {
+  useEffect(() => { // FETCH AGGREGATED PSU DATA
     if (transformer !== '') {
+      dispatch(setBackdropOpen(true))
       fetchTimeseriesAggregates(transformer, 'DATA_1_MIN', 'month', 1, dateFrom, dateTo).then(res => {
+        dispatch(setBackdropOpen(false))
         setTransformerAggregatedData(res)
-      })
+      }).catch(err=>dispatch(setBackdropOpen(false)))
     }
-  }, [transformer, dateFrom, dateTo, setTransformerAggregatedData])
+  }, [transformer, dateFrom, dateTo, setTransformerAggregatedData, dispatch])
 
-  useEffect(() => {
+  useEffect(() => { //VOLTAGE AND CURRENT TABLES INITIALIZATION
     if (transformerAggregatedData) {
       const columnsVoltageTable = [t('reportsPage.genericParameterTitle'), t('reportsPage.averageValue'), t('reportsPage.maxValue'), t('reportsPage.minValue')]
       const rowsVoltageTable = [
@@ -185,6 +239,242 @@ export const InfeedParametersTab = () => {
     }
   }, [transformerAggregatedData, t, classes.smallerFont, setTransformerVoltageTableData])
 
+  useEffect(() => { //FETCH MONTHLY DATA_15_MIN AGGREGATED BY 1 DAY FOR CHARTS
+    if (transformer !== '') {
+      dispatch(setBackdropOpen(true))
+      fetchTimeseriesAggregates(transformer, 'DATA_15_MIN', 'day', 1, dateFrom, dateTo).then(res => {
+        dispatch(setBackdropOpen(false))
+        if (res.data && res.data.length > 0) {
+          setMonthly15minData(res.data)
+        }
+      }).catch(err=>dispatch(setBackdropOpen(false)))
+    }
+  }, [dateFrom, dateTo, transformer, dispatch])
+
+  useEffect(() => { //SET POWER FACTOR CHART DATA
+    if (monthly15minData) {
+      const importPowerFactorData = monthly15minData.map(dailyValue => {
+        if (dailyValue.Active_Power_Import && dailyValue.Reactive_Power_Import) {
+          return {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: powerFactorCalculator(dailyValue.Active_Power_Import.average, dailyValue.Reactive_Power_Import.average)
+          }
+        }
+        else {
+          return {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: 0
+          }
+        }
+      })
+      const exportPowerFactorData = monthly15minData.map(dailyValue => {
+        if (dailyValue.Active_Power_Export && dailyValue.Reactive_Power_Export) {
+          return {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: powerFactorCalculator(dailyValue.Active_Power_Export.average, dailyValue.Reactive_Power_Export.average)
+          }
+        }
+        else {
+          return {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: 0
+          }
+        }
+      })
+      setPowerFactorChartData({ importPFData: importPowerFactorData, exportPFData: exportPowerFactorData })
+    }
+  }, [monthly15minData])
+
+  useEffect(() => { //FETCH MONTHLY DATA_1_MIN AGGREGATED BY 1 CHART DATA
+    if (transformer !== '') {
+      dispatch(setBackdropOpen(true))
+      fetchTimeseriesAggregates(transformer, 'DATA_1_MIN', 'day', 1, dateFrom, dateTo).then(res => {
+        dispatch(setBackdropOpen(false))
+        if (res.data && res.data.length > 0) {
+          setMonthly1minData(res.data)
+        }
+      }).catch(err=>dispatch(setBackdropOpen(false)))
+    }
+  }, [dateFrom, dateTo, transformer, dispatch])
+
+  useEffect(() => { //SET CURRENT && THD CHARTS DATA
+    if (monthly1minData && monthly1minData.length > 0) {
+      const datasets = monthly1minData.map(dailyValue => {
+        return {
+          maxCurrentL1Data: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.maxvalue).toFixed(3)) : 0
+          },
+          maxCurrentL2Data: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.maxvalue).toFixed(3)) : 0
+          },
+          maxCurrentL3Data: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.maxvalue).toFixed(3)) : 0
+          },
+          avgCurrentL1Data: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.average).toFixed(3)) : 0
+          },
+          avgCurrentL2Data: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.average).toFixed(3)) : 0
+          },
+          avgCurrentL3Data: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.average).toFixed(3)) : 0
+          },
+          thdiL1: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.THD_I_L1 ? parseFloat((dailyValue.THD_I_L1.average).toFixed(3)) : 0
+          },
+          thdiL2: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.THD_I_L2 ? parseFloat((dailyValue.THD_I_L2.average).toFixed(3)) : 0
+          },
+          thdiL3: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.THD_I_L3 ? parseFloat((dailyValue.THD_I_L3.average).toFixed(3)) : 0
+          },
+          thduL1: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.THD_U_L1 ? parseFloat((dailyValue.THD_U_L1.average).toFixed(3)) : 0
+          },
+          thduL2: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.THD_U_L2 ? parseFloat((dailyValue.THD_U_L2.average).toFixed(3)) : 0
+          },
+          thduL3: {
+            x: new Date(dailyValue.starttime).valueOf(),
+            y: dailyValue.THD_U_L3 ? parseFloat((dailyValue.THD_U_L3.average).toFixed(3)) : 0
+          },
+        }
+      })
+      setCurrentAndTHDChartData({
+        maxCurrentL1: datasets.map(el => el.maxCurrentL1Data),
+        maxCurrentL2: datasets.map(el => el.maxCurrentL2Data),
+        maxCurrentL3: datasets.map(el => el.maxCurrentL3Data),
+        avgCurrentL1: datasets.map(el => el.avgCurrentL1Data),
+        avgCurrentL2: datasets.map(el => el.avgCurrentL2Data),
+        avgCurrentL3: datasets.map(el => el.avgCurrentL3Data),
+        thdiL1: datasets.map(el => el.thdiL1),
+        thdiL2: datasets.map(el => el.thdiL2),
+        thdiL3: datasets.map(el => el.thdiL3),
+        thduL1: datasets.map(el => el.thduL1),
+        thduL2: datasets.map(el => el.thduL2),
+        thduL3: datasets.map(el => el.thduL3),
+      })
+    }
+  }, [monthly1minData, setCurrentAndTHDChartData])
+
+  useEffect(() => { // GATHER DIRECT OUTFEEDS BELONGING TO SELECTED INFEED
+    if (transformer !== '') {
+      let trDiagramIndex = null
+      let trSectionIndex = null
+      let trInfeedIndex = null
+      overview.diagrams.forEach((diagram, diagramIndex: number) => {
+        diagram.sections.forEach((section, sectionIndex: number) => {
+          if (section.infeeds) {
+            section.infeeds.forEach((infeed, infeedIndex: number) => {
+              if (infeed.breaker.assetID === transformer) {
+                trDiagramIndex = diagramIndex;
+                trSectionIndex = sectionIndex;
+                trInfeedIndex = infeedIndex;
+              }
+            })
+          }
+        })
+      })
+      if (trDiagramIndex !== null && trSectionIndex !== null && trInfeedIndex !== null) {
+        const infeedDirectOutfeeds: Array<{ assetID: string, assetName: string }> = []
+        overview.diagrams[trDiagramIndex].sections.forEach(section => {
+          if (section.breakers) {
+            section.breakers.forEach(breaker => {
+              infeedDirectOutfeeds.push({
+                assetID: breaker.assetID,
+                assetName: breaker.tableName
+              })
+            })
+          }
+        })
+        setDirectOutfeeds(infeedDirectOutfeeds)
+      }
+    }
+  }, [transformer, overview.diagrams, assetsNames, setDirectOutfeeds])
+
+  useEffect(() => { //  FETCH DIRECT OUTFEEDS 1 MIN DATA FOR THD CHARTS
+    if (directOutfeeds && directOutfeeds.length > 0) {
+      const promises = directOutfeeds.map(outfeed => {
+        return fetchTimeseriesAggregates(outfeed.assetID, 'DATA_1_MIN', 'day', 1, dateFrom, dateTo)
+      })
+      Promise.all(promises).then(res => {
+        const withNames = res.map((asset, index: number) => {
+          return {
+            ...asset,
+            assetName: directOutfeeds[index].assetName
+          }
+        })
+        setDirectOutfeeds1MinData(withNames)
+      }).catch(err=>dispatch(setBackdropOpen(false)))
+    }
+  }, [directOutfeeds, dateFrom, dateTo, setDirectOutfeeds1MinData, dispatch])
+
+  useEffect(() => {
+    if (directOutfeeds1MinData && directOutfeeds1MinData.length > 0) {
+      const datasetsL1: Array<{
+        outfeedName: string, data: Array<{
+          x: number,
+          y: number
+        }>
+      }> = []
+      const datasetsL2: Array<{
+        outfeedName: string, data: Array<{
+          x: number,
+          y: number
+        }>
+      }> = []
+      const datasetsL3: Array<{
+        outfeedName: string, data: Array<{
+          x: number,
+          y: number
+        }>
+      }> = []
+      directOutfeeds1MinData.forEach(outfeed => {
+        datasetsL1.push({
+          outfeedName: outfeed.assetName,
+          data: outfeed.data.map(outfeedData => {
+            return {
+              x: new Date(outfeedData.starttime).valueOf(),
+              y: outfeedData.THD_I_L1 ? parseFloat((outfeedData.THD_I_L1.average).toFixed(3)) : 0
+            }
+          })
+        })
+        datasetsL2.push({
+          outfeedName: outfeed.assetName,
+          data: outfeed.data.map(outfeedData => {
+            return {
+              x: new Date(outfeedData.starttime).valueOf(),
+              y: outfeedData.THD_I_L2 ? parseFloat((outfeedData.THD_I_L2.average).toFixed(3)) : 0
+            }
+          })
+        })
+        datasetsL3.push({
+          outfeedName: outfeed.assetName,
+          data: outfeed.data.map(outfeedData => {
+            return {
+              x: new Date(outfeedData.starttime).valueOf(),
+              y: outfeedData.THD_I_L3 ? parseFloat((outfeedData.THD_I_L3.average).toFixed(3)) : 0
+            }
+          })
+        })
+      })
+      setDirectOutfeedsTHDChartDataL1(datasetsL1)
+      setDirectOutfeedsTHDChartDataL2(datasetsL2)
+      setDirectOutfeedsTHDChartDataL3(datasetsL3)
+    }
+  }, [directOutfeeds1MinData, setDirectOutfeedsTHDChartDataL1, setDirectOutfeedsTHDChartDataL2, setDirectOutfeedsTHDChartDataL3])
+
   const setPrecision = (value: number) => {
     return parseFloat(value.toFixed(3))
   }
@@ -224,7 +514,7 @@ export const InfeedParametersTab = () => {
                 onChange={handleTransformerChange}
               >
                 {availableTransformers.map(transformer => {
-                  return <MenuItem value={transformer.breaker.assetID}>{transformer.tableName}</MenuItem>
+                  return <MenuItem key={transformer.breaker.assetID} value={transformer.breaker.assetID}>{transformer.tableName}</MenuItem>
                 })}
               </Select>
             </FormControl>
@@ -271,6 +561,267 @@ export const InfeedParametersTab = () => {
               rows={transformerCurrentTableData.rows}
             />
           </Grid>
+          : null}
+        {powerFactorChartData ?
+          <React.Fragment>
+            <Grid item xs={12} className={classes.sectionMargin}>
+              <Typography gutterBottom variant="h5">{t('reportsPage.powerFactorChartTitle')}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <LineChart
+                data={{
+                  datasets: [{
+                    label: t('reportsPage.reactiveImportPowerFactor'),
+                    backgroundColor: decideDataColor(0),
+                    borderColor: decideDataColor(0),
+                    fill: false,
+                    lineTension: 0,
+                    data: powerFactorChartData.importPFData,
+                    pointRadius: 0
+                  },
+                  {
+                    label: t('reportsPage.reactiveExportPowerFactor'),
+                    backgroundColor: decideDataColor(1),
+                    borderColor: decideDataColor(1),
+                    fill: false,
+                    lineTension: 0,
+                    data: powerFactorChartData.exportPFData,
+                    pointRadius: 0
+                  }]
+                }}
+                xAxisTitle={t('chart.timeAxisLabel')}
+                yAxisTitle={t('chart.valueAxisLabel')}
+                timeInterval='day'
+                tooltipFormat='PP'
+                yAxisUnit=''
+              />
+            </Grid>
+          </React.Fragment>
+          : null}
+        {currentAndTHDChartData ?
+          <React.Fragment>
+            <Grid item xs={12} className={classes.sectionMargin}>
+              <Typography gutterBottom variant="h5">{t('reportsPage.currentFlows')}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <LineChart
+                data={{
+                  datasets: [{
+                    label: `${t('reportsPage.maxCurrent')} L1`,
+                    backgroundColor: decideDataColor(0),
+                    borderColor: decideDataColor(0),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.maxCurrentL1,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.maxCurrent')} L2`,
+                    backgroundColor: decideDataColor(1),
+                    borderColor: decideDataColor(1),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.maxCurrentL2,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.maxCurrent')} L3`,
+                    backgroundColor: decideDataColor(2),
+                    borderColor: decideDataColor(2),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.maxCurrentL3,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.avgCurrent')} L1`,
+                    backgroundColor: decideDataColor(3),
+                    borderColor: decideDataColor(3),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.avgCurrentL1,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.avgCurrent')} L2`,
+                    backgroundColor: decideDataColor(4),
+                    borderColor: decideDataColor(4),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.avgCurrentL2,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.avgCurrent')} L3`,
+                    backgroundColor: decideDataColor(5),
+                    borderColor: decideDataColor(5),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.avgCurrentL3,
+                    pointRadius: 0
+                  }]
+                }}
+                xAxisTitle={t('chart.timeAxisLabel')}
+                yAxisTitle={t('chart.valueAxisLabel')}
+                timeInterval='day'
+                tooltipFormat='PP'
+                yAxisUnit='A'
+              />
+            </Grid>
+            <Grid item xs={12} className={classes.sectionMargin}>
+              <Typography gutterBottom variant="h5">{t('reportsPage.totalTHD')}</Typography>
+            </Grid>
+            <LineChart
+              data={{
+                datasets: [{
+                  label: `THDI L1`,
+                  backgroundColor: decideDataColor(0),
+                  borderColor: decideDataColor(0),
+                  fill: false,
+                  lineTension: 0,
+                  data: currentAndTHDChartData.thdiL1,
+                  pointRadius: 0
+                },
+                {
+                  label: `THDI L2`,
+                  backgroundColor: decideDataColor(1),
+                  borderColor: decideDataColor(1),
+                  fill: false,
+                  lineTension: 0,
+                  data: currentAndTHDChartData.thdiL2,
+                  pointRadius: 0
+                },
+                {
+                  label: `THDI L3`,
+                  backgroundColor: decideDataColor(2),
+                  borderColor: decideDataColor(2),
+                  fill: false,
+                  lineTension: 0,
+                  data: currentAndTHDChartData.thdiL3,
+                  pointRadius: 0
+                },
+                {
+                  label: `THDU L1`,
+                  backgroundColor: decideDataColor(3),
+                  borderColor: decideDataColor(3),
+                  fill: false,
+                  lineTension: 0,
+                  data: currentAndTHDChartData.thduL1,
+                  pointRadius: 0
+                },
+                {
+                  label: `THDU L2`,
+                  backgroundColor: decideDataColor(4),
+                  borderColor: decideDataColor(4),
+                  fill: false,
+                  lineTension: 0,
+                  data: currentAndTHDChartData.thduL2,
+                  pointRadius: 0
+                },
+                {
+                  label: `THDU L3`,
+                  backgroundColor: decideDataColor(5),
+                  borderColor: decideDataColor(5),
+                  fill: false,
+                  lineTension: 0,
+                  data: currentAndTHDChartData.thduL3,
+                  pointRadius: 0
+                }]
+              }}
+              xAxisTitle={t('chart.timeAxisLabel')}
+              yAxisTitle={t('chart.valueAxisLabel')}
+              timeInterval='day'
+              tooltipFormat='PP'
+              yAxisUnit='%'
+            />
+          </React.Fragment>
+          : null}
+        {directOutfeedsTHDChartDataL1 ?
+          <React.Fragment>
+            <Grid item xs={12} className={classes.sectionMargin}>
+              <Typography gutterBottom variant="h5">{`${t('reportsPage.currentTHDInPhase')} L1`}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <LineChart
+                data={{
+                  datasets: directOutfeedsTHDChartDataL1.map((dataset, index:number)=>{
+                      return {
+                        label: dataset.outfeedName,
+                        backgroundColor: decideDataColor(index),
+                        borderColor: decideDataColor(index),
+                        fill: false,
+                        lineTension: 0,
+                        data: dataset.data,
+                        pointRadius: 0
+                      }
+                })
+              }}
+                xAxisTitle={t('chart.timeAxisLabel')}
+                yAxisTitle={t('chart.valueAxisLabel')}
+                timeInterval='day'
+                tooltipFormat='PP'
+                yAxisUnit='%'
+              />
+            </Grid>
+          </React.Fragment>
+          : null}
+          {directOutfeedsTHDChartDataL2 ?
+          <React.Fragment>
+            <Grid item xs={12} className={classes.sectionMargin}>
+              <Typography gutterBottom variant="h5">{`${t('reportsPage.currentTHDInPhase')} L2`}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <LineChart
+                data={{
+                  datasets: directOutfeedsTHDChartDataL2.map((dataset, index:number)=>{
+                      return {
+                        label: dataset.outfeedName,
+                        backgroundColor: decideDataColor(index),
+                        borderColor: decideDataColor(index),
+                        fill: false,
+                        lineTension: 0,
+                        data: dataset.data,
+                        pointRadius: 0
+                      }
+                })
+              }}
+                xAxisTitle={t('chart.timeAxisLabel')}
+                yAxisTitle={t('chart.valueAxisLabel')}
+                timeInterval='day'
+                tooltipFormat='PP'
+                yAxisUnit='%'
+              />
+            </Grid>
+          </React.Fragment>
+          : null}
+          {directOutfeedsTHDChartDataL3 ?
+          <React.Fragment>
+            <Grid item xs={12} className={classes.sectionMargin}>
+              <Typography gutterBottom variant="h5">{`${t('reportsPage.currentTHDInPhase')} L3`}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <LineChart
+                data={{
+                  datasets: directOutfeedsTHDChartDataL3.map((dataset, index:number)=>{
+                      return {
+                        label: dataset.outfeedName,
+                        backgroundColor: decideDataColor(index),
+                        borderColor: decideDataColor(index),
+                        fill: false,
+                        lineTension: 0,
+                        data: dataset.data,
+                        pointRadius: 0
+                      }
+                })
+              }}
+                xAxisTitle={t('chart.timeAxisLabel')}
+                yAxisTitle={t('chart.valueAxisLabel')}
+                timeInterval='day'
+                tooltipFormat='PP'
+                yAxisUnit='%'
+              />
+            </Grid>
+          </React.Fragment>
           : null}
       </Grid>
     </React.Fragment >

@@ -43,6 +43,7 @@ export const EnergyUsageProfile = () => {
     xAxisLabels: Array<string> | null, //[...days of month]
     datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }> | null
   }>()
+  const [referenceToCurrentChartForScrolling, setReferenceToCurrentChartForScrolling] = useState<any>()
   const [assetsData, setAssetsData] = useState<{ [key: string]: any }>()
   const [energyType, setEnergyType] = useState('activeEnergyImport');
   const [level2DataSource, setLevel2DataSource] = useState<any>()
@@ -73,7 +74,6 @@ export const EnergyUsageProfile = () => {
     if (assetsDataRef.current) {
       const calculatedEnergy: Array<Array<any>> = assetIDs.map(assetID => {
         const values: Array<any> = Object.values(assetsDataRef.current[assetID])
-        values.pop()
         return values.map((dailyValues: any) => {
           if (dailyValues.Active_Energy_Import !== undefined) {
             switch (valueType) {
@@ -130,7 +130,7 @@ export const EnergyUsageProfile = () => {
     }
     return array
   }, [])
-  
+
   useEffect(() => {
     if (assetsNames && Object.keys(assetsNames).length > 0) {
       const promises = Object.keys(assetsNames).map(asset => fetchTimeseriesAggregates(asset, 'DATA_1_MIN', 'day', 1, dateFrom, dateTo))
@@ -145,7 +145,7 @@ export const EnergyUsageProfile = () => {
         })
         setAssetsData(params)
         dispatch(setBackdropOpen(false))
-      })
+      }).catch(err => dispatch(setBackdropOpen(false)))
     }
   }, [assetsNames, setAssetsData, dispatch, dateFrom, dateTo])
 
@@ -224,6 +224,12 @@ export const EnergyUsageProfile = () => {
       })
     }
   }, [assetsData, chooseByLanguage, getGroupOfGroupsAssetIDs, reports.groups, energyType, calculateAggregatedValue])
+
+  useEffect(()=> {
+    if(referenceToCurrentChartForScrolling) {
+      referenceToCurrentChartForScrolling.scrollIntoView({ behavior: 'smooth' })
+    }
+  },[referenceToCurrentChartForScrolling])
 
   const createSubgroupsChart = useCallback((group: IGroupStructure | undefined, groupIndex: number, level: number) => {
     if (group?.subgroups) {
@@ -305,8 +311,8 @@ export const EnergyUsageProfile = () => {
 
   const createChart = (title: string, xAxisLabels: Array<string>, datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }>, originLevel: number) => {
     return (
-      <React.Fragment>
-        <Grid item xs={12} className={classes.sectionMargin}>
+      <React.Fragment key={title}>
+        <Grid item xs={12} className={classes.sectionMargin} ref={setReferenceToCurrentChartForScrolling}>
           <Typography gutterBottom variant="h5">{title}</Typography>
         </Grid>
         <Grid item xs={12}>

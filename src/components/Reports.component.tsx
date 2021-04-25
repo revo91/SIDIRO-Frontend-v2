@@ -10,6 +10,7 @@ import { RootState } from '../reducers/Root.reducer';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { PowerDemandTab } from './Reports/PowerDemandTab.component';
 import { InfeedParametersTab } from './Reports/InfeedParametersTab.component';
+import { OutfeedParametersTab } from './Reports/OutfeedParametersTab.component';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,11 +76,11 @@ export const Reports = () => {
           },
           {
             label: t('reportsPage.infeedParameters'),
-            content: <InfeedParametersTab/>
+            content: <InfeedParametersTab />
           },
           {
             label: t('reportsPage.outgoingFeederParameters'),
-            content: <p></p>
+            content: <OutfeedParametersTab />
           }
         ]}
       />

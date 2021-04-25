@@ -37,6 +37,7 @@ export const EnergyConsumptionTab = () => {
     labels: Array<string> | null
     values: Array<number> | null
   }>()
+  const [referenceToCurrentChartForScrolling, setReferenceToCurrentChartForScrolling] = useState<any>()
   const [level2DataSource, setLevel2DataSource] = useState<any>()
   const assetsNames = useSelector((state: RootState) => state.commonReports.assets);
   const dateFrom = useSelector((state: RootState) => state.commonReports.dateFrom);
@@ -69,7 +70,7 @@ export const EnergyConsumptionTab = () => {
         })
         setAssetsData(params)
         dispatch(setBackdropOpen(false))
-      })
+      }).catch(err => dispatch(setBackdropOpen(false)))
     }
   }, [assetsNames, setAssetsData, dispatch, dateFrom, dateTo])
 
@@ -204,12 +205,18 @@ export const EnergyConsumptionTab = () => {
     }
   }, [assetsData, calculateAggregatedActiveEnergyImport, getGroupOfGroupsAssetIDs, reports.groups, t, chooseByLanguage])
 
+  useEffect(()=> {
+    if(referenceToCurrentChartForScrolling) {
+      referenceToCurrentChartForScrolling.scrollIntoView({ behavior: 'smooth' })
+    }
+  },[referenceToCurrentChartForScrolling])
+
   const createChart = (title: string, labels: Array<string>, values: Array<number>, originLevel: number) => {
     const tableLabels = labels.concat(t('reportsPage.totalValue'))
     const tableValues = values.concat(values.reduce((a, b) => parseFloat((a + b).toFixed(3))))
     return (
-      <React.Fragment>
-        <Grid item xs={12} className={classes.sectionMargin}>
+      <React.Fragment key={title}>
+        <Grid item xs={12} className={classes.sectionMargin} ref={setReferenceToCurrentChartForScrolling}>
           <Typography gutterBottom variant="h5">{title}</Typography>
         </Grid>
         <Grid item xs={12} md={5}>

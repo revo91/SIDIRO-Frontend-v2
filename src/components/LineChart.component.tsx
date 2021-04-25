@@ -28,10 +28,11 @@ interface LineChartProps {
   chartTitle?: string,
   xAxisTitle?: string,
   yAxisTitle?: string,
-  yAxisUnit?: string
+  yAxisUnit?: string,
+  tooltipFormat?: string
 }
 
-export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTitle, yAxisTitle, timeInterval, yAxisUnit }) => {
+export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTitle, yAxisTitle, timeInterval, yAxisUnit, tooltipFormat }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<any>(null);
   const theme = useTheme();
@@ -99,8 +100,8 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
                 minute: 'HH:mm',
                 hour: 'HH',
               },
-              tooltipFormat: 'PPpp',
-              unit: timeInterval? timeInterval : false
+              tooltipFormat: tooltipFormat ? tooltipFormat : 'PPpp',
+              unit: timeInterval ? timeInterval : false
             },
             adapters: {
               date: {
@@ -120,7 +121,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
         },
       },
     }
-  }, [data, chartTitle, theme.palette.text.primary, i18n.language, xAxisTitle, yAxisTitle, yAxisUnit, timeInterval]);
+  }, [data, chartTitle, theme.palette.text.primary, i18n.language, xAxisTitle, yAxisTitle, yAxisUnit, timeInterval, tooltipFormat]);
 
 
 
