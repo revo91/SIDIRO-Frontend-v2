@@ -127,7 +127,7 @@ export const OutfeedParametersTab = () => {
   }, [outfeedAssetID, outfeedAssetName, dateFrom, dateTo, dispatch])
 
   useEffect(() => { // CURRENT AND THDI TABLES INITIALIZATION
-    if (outfeedMonthlyAggregatedData) {
+    if (outfeedMonthlyAggregatedData  && outfeedMonthlyAggregatedData.Current_L1) {
       const columnsCurrentTable = [t('reportsPage.genericParameterTitle'), t('reportsPage.averageValue'), t('reportsPage.maxValue'), t('reportsPage.minValue')]
       const rowsCurrentTable = [
         [`${t('deviceDataDialog.current')} L1`,
@@ -167,6 +167,10 @@ export const OutfeedParametersTab = () => {
       setOutfeedMonthlyAggregatedDataCurrentTable({ rows: rowsCurrentTable, columns: columnsCurrentTable })
       setOutfeedMonthlyAggregatedDataTHDITable({ rows: rowsTHDITable, columns: columnsTHDITable })
     }
+    else {
+      setOutfeedMonthlyAggregatedDataCurrentTable(undefined)
+      setOutfeedMonthlyAggregatedDataTHDITable(undefined)
+    }
   }, [outfeedMonthlyAggregatedData, classes.smallerFont, t])
 
   useEffect(() => { //FETCH MONTHLY DATA_1_MIN AGGREGATED BY 1 DAY CHART DATA
@@ -175,7 +179,6 @@ export const OutfeedParametersTab = () => {
       fetchTimeseriesAggregates(outfeedAssetID, 'DATA_1_MIN', 'day', 1, dateFrom, dateTo).then(res => {
         dispatch(setBackdropOpen(false))
         if (res.data && res.data.length > 0) {
-          console.log(res.data)
           setMonthly1minData(res.data)
         }
       }).catch(err=>dispatch(setBackdropOpen(false)))

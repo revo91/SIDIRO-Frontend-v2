@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { LineChart } from '../LineChart.component';
-import { SiemensAccentTeal, SiemensAccentGreen, SiemensAccentRed } from '../../utilities/SiemensColors.utility';
 import { DatePicker } from "@material-ui/pickers";
 import { useTranslation } from 'react-i18next';
 import { fetchTimeseriesInterval } from '../../services/FetchTimeseriesAPI.service';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
+import { decideDataColor } from '../../utilities/SiemensColors.utility';
 
 interface ITHDI {
   THD_I_L1: number
@@ -73,8 +73,8 @@ export const THDITab = () => {
               datasets: [
                 {
                   label: `THD I L1 [%]`,
-                  backgroundColor: SiemensAccentRed.dark6,
-                  borderColor: SiemensAccentRed.dark6,
+                  backgroundColor: decideDataColor(0),
+                  borderColor: decideDataColor(0),
                   fill: false,
                   lineTension: 0,
                   data: l1,
@@ -82,8 +82,8 @@ export const THDITab = () => {
                 },
                 {
                   label: `THD I L2 [%]`,
-                  backgroundColor: SiemensAccentGreen.dark6,
-                  borderColor: SiemensAccentGreen.dark6,
+                  backgroundColor: decideDataColor(1),
+                  borderColor: decideDataColor(1),
                   fill: false,
                   lineTension: 0,
                   data: l2,
@@ -91,8 +91,8 @@ export const THDITab = () => {
                 },
                 {
                   label: `THD I L3 [%]`,
-                  backgroundColor: SiemensAccentTeal.dark6,
-                  borderColor: SiemensAccentTeal.dark6,
+                  backgroundColor: decideDataColor(2),
+                  borderColor: decideDataColor(2),
                   fill: false,
                   lineTension: 0,
                   data: l3,

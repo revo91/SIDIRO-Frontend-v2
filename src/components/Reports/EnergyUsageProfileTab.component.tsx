@@ -349,7 +349,7 @@ export const EnergyUsageProfile = () => {
             format="MM/yyyy"
           />
         </Grid>
-        <Grid item xs={12} md={3} lg={3}>
+        <Grid item xs={12} md={4} lg={4}>
           <FormControl className={classes.select}>
             <InputLabel id="energy-select-label">{t('reportsPage.energyChoice')}</InputLabel>
             <Select
@@ -365,7 +365,7 @@ export const EnergyUsageProfile = () => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={2} lg={2}>
+        <Grid item xs={12} md={3} lg={3}>
           <Button
             fullWidth
             variant="contained"
@@ -373,15 +373,6 @@ export const EnergyUsageProfile = () => {
             onClick={() => exportPDF()}
           >
             {t('reportsPage.exportToPDF')}
-          </Button>
-        </Grid>
-        <Grid item xs={12} md={2} lg={2}>
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            {t('reportsPage.exportToCSV')}
           </Button>
         </Grid>
         {level1 && level1.xAxisLabels && level1.datasets ?

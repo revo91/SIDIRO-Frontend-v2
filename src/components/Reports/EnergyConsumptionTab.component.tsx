@@ -250,7 +250,7 @@ export const EnergyConsumptionTab = () => {
 
   return (
     <Grid container spacing={2} >
-      <Grid item xs={12} md={8} lg={8} xl={10}>
+      <Grid item xs={12} md={9} lg={9}>
         <DatePicker
           cancelLabel={t('datePicker.cancelButton')}
           autoOk
@@ -262,7 +262,7 @@ export const EnergyConsumptionTab = () => {
           format="MM/yyyy"
         />
       </Grid>
-      <Grid item xs={12} md={2} lg={2} xl={1}>
+      <Grid item xs={12} md={3} lg={3}>
         <Button
           fullWidth
           variant="contained"
@@ -270,15 +270,6 @@ export const EnergyConsumptionTab = () => {
           onClick={() => exportPDF()}
         >
           {t('reportsPage.exportToPDF')}
-        </Button>
-      </Grid>
-      <Grid item xs={12} md={2} lg={2} xl={1}>
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-        >
-          {t('reportsPage.exportToCSV')}
         </Button>
       </Grid>
       {level1 && level1.title && level1.labels && level1.values ?

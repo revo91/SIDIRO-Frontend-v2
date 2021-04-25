@@ -191,7 +191,7 @@ export const PowerDemandTab = () => {
 
   return (
     <Grid container spacing={2} >
-      <Grid item xs={12} md={8} lg={8} xl={10}>
+      <Grid item xs={12} md={8} lg={9}>
         <DatePicker
           cancelLabel={t('datePicker.cancelButton')}
           autoOk
@@ -203,7 +203,7 @@ export const PowerDemandTab = () => {
           format="MM/yyyy"
         />
       </Grid>
-      <Grid item xs={12} md={2} lg={2} xl={1}>
+      <Grid item xs={12} md={4} lg={3}>
         <Button
           fullWidth
           variant="contained"
@@ -211,15 +211,6 @@ export const PowerDemandTab = () => {
           onClick={() => exportPDF()}
         >
           {t('reportsPage.exportToPDF')}
-        </Button>
-      </Grid>
-      <Grid item xs={12} md={2} lg={2} xl={1}>
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-        >
-          {t('reportsPage.exportToCSV')}
         </Button>
       </Grid>
       {infeedPowerDemandChartData && warningLine && alarmLine ?

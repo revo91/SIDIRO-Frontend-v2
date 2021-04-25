@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { LineChart } from '../LineChart.component';
-import { SiemensAccentTeal, SiemensAccentGreen, SiemensAccentRed, SiemensAccentBlue } from '../../utilities/SiemensColors.utility';
 import { DatePicker } from "@material-ui/pickers";
 import { useTranslation } from 'react-i18next';
 import { fetchTimeseriesInterval } from '../../services/FetchTimeseriesAPI.service';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
+import { decideDataColor } from '../../utilities/SiemensColors.utility';
 
 interface IPower {
   Active_Power_Export: number
@@ -84,8 +84,8 @@ export const PowerTab = () => {
               datasets: [
                 {
                   label: `${t('deviceDataDialog.activePowerExport')} [kW]`,
-                  backgroundColor: SiemensAccentRed.dark6,
-                  borderColor: SiemensAccentRed.dark6,
+                  backgroundColor: decideDataColor(0),
+                  borderColor: decideDataColor(0),
                   fill: false,
                   lineTension: 0,
                   data: activePowerExport,
@@ -93,8 +93,8 @@ export const PowerTab = () => {
                 },
                 {
                   label: `${t('deviceDataDialog.activePowerImport')} [kW]`,
-                  backgroundColor: SiemensAccentGreen.dark6,
-                  borderColor: SiemensAccentGreen.dark6,
+                  backgroundColor: decideDataColor(1),
+                  borderColor: decideDataColor(1),
                   fill: false,
                   lineTension: 0,
                   data: activePowerImport,
@@ -102,8 +102,8 @@ export const PowerTab = () => {
                 },
                 {
                   label: `${t('deviceDataDialog.reactivePowerExport')} [kvar]`,
-                  backgroundColor: SiemensAccentTeal.dark6,
-                  borderColor: SiemensAccentTeal.dark6,
+                  backgroundColor: decideDataColor(2),
+                  borderColor: decideDataColor(2),
                   fill: false,
                   lineTension: 0,
                   data: reactivePowerExport,
@@ -111,8 +111,8 @@ export const PowerTab = () => {
                 },
                 {
                   label: `${t('deviceDataDialog.reactivePowerImport')} [kvar]`,
-                  backgroundColor: SiemensAccentBlue.light3,
-                  borderColor: SiemensAccentBlue.light3,
+                  backgroundColor: decideDataColor(3),
+                  borderColor: decideDataColor(3),
                   fill: false,
                   lineTension: 0,
                   data: reactivePowerImport,
