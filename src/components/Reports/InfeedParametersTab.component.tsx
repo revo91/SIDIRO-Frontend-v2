@@ -204,43 +204,75 @@ export const InfeedParametersTab = () => {
         ],
         [t('deviceDataDialog.voltageL2N'),
         setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_N.average), 'V'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_N.maxvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_N.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_N.maxtime, 1)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_N.minvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_N.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_N.mintime, 1)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_N.maxvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_N.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_N.maxtime, 1)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_N.minvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_N.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_N.mintime, 1)}
+        </React.Fragment>
         ],
         [t('deviceDataDialog.voltageL3N'),
         setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_N.average), 'V'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_N.maxvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_N.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_N.maxtime, 1)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_N.minvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_N.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_N.mintime, 1)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_N.maxvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_N.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_N.maxtime, 1)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_N.minvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_N.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_N.mintime, 1)}
+        </React.Fragment>
         ],
         [t('deviceDataDialog.voltageL1L2'),
         setValueUnit(setPrecision(transformerAggregatedData.Voltage_L1_L2.average), 'V'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L1_L2.maxvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L1_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L1_L2.maxtime, 2)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L1_L2.minvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L1_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L1_L2.mintime, 2)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L1_L2.maxvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L1_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L1_L2.maxtime, 2)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L1_L2.minvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L1_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L1_L2.mintime, 2)}
+        </React.Fragment>
         ],
         [t('deviceDataDialog.voltageL1L2'),
         setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_L3.average), 'V'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_L3.maxvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_L3.maxtime, 2)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_L3.minvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_L3.mintime, 2)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_L3.maxvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_L3.maxtime, 2)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L2_L3.minvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L2_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L2_L3.mintime, 2)}
+        </React.Fragment>
         ],
         [t('deviceDataDialog.voltageL3L1'),
         setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_L1.average), 'V'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_L1.maxvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_L1.maxtime, 2)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_L1.minvalue), 'V')}</p>{renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_L1.mintime, 2)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_L1.maxvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_L1.maxtime, 2)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Voltage_L3_L1.minvalue), 'V')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Voltage_L3_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Voltage_L3_L1.mintime, 2)}
+        </React.Fragment>
         ],
         ['THDU L1',
           setValueUnit(setPrecision(transformerAggregatedData.THD_U_L1.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L1.maxvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_U_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L1.maxtime, 5)}</React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L1.minvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_U_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L1.mintime, 5)}</React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L1.maxvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_U_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L1.maxtime, 5)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L1.minvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_U_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L1.mintime, 5)}
+          </React.Fragment>
         ],
         ['THDU L2',
           setValueUnit(setPrecision(transformerAggregatedData.THD_U_L2.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L2.maxvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_U_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L2.maxtime, 5)}</React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L2.minvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_U_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L2.mintime, 5)}</React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L2.maxvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_U_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L2.maxtime, 5)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L2.minvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_U_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L2.mintime, 5)}
+          </React.Fragment>
         ],
         ['THDU L3',
           setValueUnit(setPrecision(transformerAggregatedData.THD_U_L3.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L3.maxvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_U_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L3.maxtime, 5)}</React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L3.minvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_U_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L3.mintime, 5)}</React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L3.maxvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_U_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L3.maxtime, 5)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_U_L3.minvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_U_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_U_L3.mintime, 5)}
+          </React.Fragment>
         ]
       ]
 
@@ -248,33 +280,57 @@ export const InfeedParametersTab = () => {
       const rowsCurrentTable = [
         [`${t('deviceDataDialog.current')} L1`,
         setValueUnit(setPrecision(transformerAggregatedData.Current_L1.average), 'A'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L1.maxvalue), 'A')}</p>{renderButton(format(parseISO(transformerAggregatedData.Current_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L1.maxtime, 3)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L1.minvalue), 'A')}</p>{renderButton(format(parseISO(transformerAggregatedData.Current_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L1.mintime, 3)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L1.maxvalue), 'A')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Current_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L1.maxtime, 3)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L1.minvalue), 'A')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Current_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L1.mintime, 3)}
+        </React.Fragment>
         ],
         [`${t('deviceDataDialog.current')} L2`,
         setValueUnit(setPrecision(transformerAggregatedData.Current_L2.average), 'A'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L2.maxvalue), 'A')}</p>{renderButton(format(parseISO(transformerAggregatedData.Current_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L2.maxtime, 3)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L2.minvalue), 'A')}</p>{renderButton(format(parseISO(transformerAggregatedData.Current_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L2.mintime, 3)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L2.maxvalue), 'A')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Current_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L2.maxtime, 3)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L2.minvalue), 'A')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Current_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L2.mintime, 3)}
+        </React.Fragment>
         ],
         [`${t('deviceDataDialog.current')} L3`,
         setValueUnit(setPrecision(transformerAggregatedData.Current_L3.average), 'A'),
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L3.maxvalue), 'A')}</p>{renderButton(format(parseISO(transformerAggregatedData.Current_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L3.maxtime, 3)}</React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L3.minvalue), 'A')}</p>{renderButton(format(parseISO(transformerAggregatedData.Current_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L3.mintime, 3)}</React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L3.maxvalue), 'A')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Current_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L3.maxtime, 3)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.Current_L3.minvalue), 'A')}</p>
+          {renderButton(format(parseISO(transformerAggregatedData.Current_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.Current_L3.mintime, 3)}
+        </React.Fragment>
         ],
         ['THDI L1',
           setValueUnit(setPrecision(transformerAggregatedData.THD_I_L1.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L1.maxvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_I_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L1.maxtime, 6)}</React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L1.minvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_I_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L1.mintime, 6)}</React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L1.maxvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_I_L1.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L1.maxtime, 6)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L1.minvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_I_L1.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L1.mintime, 6)}
+          </React.Fragment>
         ],
         ['THDI L2',
           setValueUnit(setPrecision(transformerAggregatedData.THD_I_L2.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L2.maxvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_I_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L2.maxtime, 6)}</React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L2.minvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_I_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L2.mintime, 6)}</React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L2.maxvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_I_L2.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L2.maxtime, 6)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L2.minvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_I_L2.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L2.mintime, 6)}
+          </React.Fragment>
         ],
         ['THDI L3',
           setValueUnit(setPrecision(transformerAggregatedData.THD_I_L3.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L3.maxvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_I_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L3.maxtime, 6)}</React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L3.minvalue), '%')}</p>{renderButton(format(parseISO(transformerAggregatedData.THD_I_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L3.mintime, 6)}</React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L3.maxvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_I_L3.maxtime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L3.maxtime, 6)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(transformerAggregatedData.THD_I_L3.minvalue), '%')}</p>
+            {renderButton(format(parseISO(transformerAggregatedData.THD_I_L3.mintime), 'dd/MM/yyyy, HH:mm'), transformerAggregatedData.THD_I_L3.mintime, 6)}
+          </React.Fragment>
         ]
       ]
       setTransformerCurrentTableData({ rows: rowsCurrentTable, columns: columnsCurrentTable })
