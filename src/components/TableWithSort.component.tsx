@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -61,7 +61,7 @@ const EnhancedTableHead = (props: IEnhancedTableProps) => {
             align='left'
             padding={'default'}
             sortDirection={orderBy === headCell ? order : false}
-            style={{width: `${100/columns.length}%`}}
+            style={{ width: `${100 / columns.length}%` }}
           >
             <TableSortLabel
               active={orderBy === headCell}
@@ -114,6 +114,12 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense, 
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    if (page * rowsPerPage > rows.length) {
+      setPage(0)
+    }
+  }, [rows, setPage, page, rowsPerPage])
+
   /**
   * [Type guard]
   * @return boolean
@@ -128,13 +134,13 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense, 
   const isNumber = (element: unknown): element is number => {
     return (element as number).toExponential !== undefined;
   }
-   /**
-   * [Type guard]
-   * @return boolean
-   */
-    const isString = (element: unknown): element is string => {
-      return (element as string).toUpperCase !== undefined;
-    }
+  /**
+  * [Type guard]
+  * @return boolean
+  */
+  const isString = (element: unknown): element is string => {
+    return (element as string).toUpperCase !== undefined;
+  }
   //
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: string, columnIndex: number) => {
@@ -172,7 +178,7 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense, 
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
-            
+
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
             aria-label="enhanced table"
@@ -215,7 +221,7 @@ export const TableWithSort: React.FC<ITableWithSort> = ({ columns, rows, dense, 
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
-          page={page}
+          page={page * rowsPerPage > rows.length ? 0 : page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
           labelRowsPerPage={t('tableWithSort.labelRowsPerPage')}
