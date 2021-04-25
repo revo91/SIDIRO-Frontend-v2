@@ -35,6 +35,6 @@ self.addEventListener("message", message => {
     Promise.all(promises15min).then(res => {
       postMessage(res)
     })
-  }, 3000000) // 15 minutes
+  }, 900000) // 15 minutes
 });
 

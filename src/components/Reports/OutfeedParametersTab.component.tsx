@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { DatePicker } from "@material-ui/pickers";
 import InputLabel from '@material-ui/core/InputLabel';
@@ -20,6 +20,9 @@ import { parseISO, format } from 'date-fns';
 import { UniversalTable } from '../UniversalTable.component';
 import { LineChart } from '../LineChart.component';
 import { decideDataColor } from '../../utilities/SiemensColors.utility';
+import { setDeviceDataDialogOpen } from '../../actions/DeviceDataDialog.action';
+import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
+import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
 
 interface IAggregatedParameterValues {
   maxtime: string
@@ -62,6 +65,15 @@ export const OutfeedParametersTab = () => {
     name: string,
     assetID: string
   }>>()
+  const [dialogData, setDialogData] = useState<{
+    deviceName: string,
+    deviceType: string,
+    breakerName: string,
+    breakerType: string,
+    sectionName: string,
+    assetID: string,
+    switchboardAssetID: string
+  }>()
   const [outfeedAssetID, setOutfeedAssetID] = useState<string>();
   const [outfeedAssetName, setOutfeedAssetName] = useState<string>();
   const [outfeedMonthlyAggregatedData, setOutfeedMonthlyAggregatedData] = useState<IOutfeedAggregatedValues>()
@@ -82,6 +94,32 @@ export const OutfeedParametersTab = () => {
     avgThdiL2: Array<{ x: number, y: number }>,
     avgThdiL3: Array<{ x: number, y: number }>
   }>()
+
+  const buttonOnClickOpenDialog = useCallback((date: string, tabIndex: number) => {
+    if (dialogData) {
+      dispatch(setDeviceDataDialogDateFrom(new Date(date)))
+      dispatch(setUniversalTabsNameIndex('BreakerDeviceDetails', tabIndex)) // (name, value)
+      dispatch(setDeviceDataDialogOpen({
+        open: true,
+        deviceName: dialogData.deviceName,
+        deviceType: dialogData.deviceType,
+        breakerName: dialogData.breakerName,
+        sectionName: dialogData.sectionName,
+        assetID: dialogData.assetID,
+        switchboardAssetID: dialogData.switchboardAssetID
+      }))
+    }
+  }, [dispatch, dialogData])
+
+  const renderButton = useCallback((innerHTML: string, date: string, tabIndex: number) => {
+    return (
+      <Button
+        onClick={() => buttonOnClickOpenDialog(date, tabIndex)}
+        className={classes.smallerFont}>
+        {innerHTML}
+      </Button>
+    )
+  }, [classes.smallerFont, buttonOnClickOpenDialog])
 
   useEffect(() => { //GATHER SWITCHBOARDS AVAILABLE
     const switchboards = overview.diagrams.map(diagram => diagram.name)
@@ -122,46 +160,70 @@ export const OutfeedParametersTab = () => {
       fetchTimeseriesAggregates(outfeedAssetID, 'DATA_1_MIN', 'month', 1, dateFrom, dateTo).then(res => {
         dispatch(setBackdropOpen(false))
         setOutfeedMonthlyAggregatedData(res)
-      }).catch(err=>dispatch(setBackdropOpen(false)))
+      }).catch(err => dispatch(setBackdropOpen(false)))
     }
   }, [outfeedAssetID, outfeedAssetName, dateFrom, dateTo, dispatch])
 
   useEffect(() => { // CURRENT AND THDI TABLES INITIALIZATION
-    if (outfeedMonthlyAggregatedData  && outfeedMonthlyAggregatedData.Current_L1) {
+    if (outfeedMonthlyAggregatedData && outfeedMonthlyAggregatedData.Current_L1) {
       const columnsCurrentTable = [t('reportsPage.genericParameterTitle'), t('reportsPage.averageValue'), t('reportsPage.maxValue'), t('reportsPage.minValue')]
       const rowsCurrentTable = [
         [`${t('deviceDataDialog.current')} L1`,
         setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L1.average), 'A'),
-        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L1.maxvalue), 'A')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.Current_L1.maxtime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L1.minvalue), 'A')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.Current_L1.mintime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L1.maxvalue), 'A')}</p>
+          {renderButton(format(parseISO(outfeedMonthlyAggregatedData.Current_L1.maxtime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.Current_L1.maxtime, 1)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L1.minvalue), 'A')}
+        </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.Current_L1.mintime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.Current_L1.mintime, 1)}
+        </React.Fragment>
         ],
         [`${t('deviceDataDialog.current')} L2`,
         setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L2.average), 'A'),
-        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L2.maxvalue), 'A')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.Current_L2.maxtime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L2.minvalue), 'A')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.Current_L2.mintime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L2.maxvalue), 'A')}
+        </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.Current_L2.maxtime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.Current_L2.maxtime, 1)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L2.minvalue), 'A')}
+        </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.Current_L2.mintime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.Current_L2.mintime, 1)}
+        </React.Fragment>
         ],
         [`${t('deviceDataDialog.current')} L3`,
         setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L3.average), 'A'),
-        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L3.maxvalue), 'A')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.Current_L3.maxtime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>,
-        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L3.minvalue), 'A')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.Current_L3.mintime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>
+        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L3.maxvalue), 'A')}
+        </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.Current_L3.maxtime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.Current_L3.maxtime, 1)}
+        </React.Fragment>,
+        <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.Current_L3.minvalue), 'A')}
+        </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.Current_L3.mintime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.Current_L3.mintime, 1)}
+        </React.Fragment>
         ]
       ]
       const columnsTHDITable = columnsCurrentTable
       const rowsTHDITable = [
         ['THDI L1',
           setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L1.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L1.maxvalue), '%')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.THD_I_L1.maxtime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L1.minvalue), '%')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.THD_I_L1.mintime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L1.maxvalue), '%')}
+          </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.THD_I_L1.maxtime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.THD_I_L1.maxtime, 3)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L1.minvalue), '%')}
+          </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.THD_I_L1.mintime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.THD_I_L1.mintime, 3)}
+          </React.Fragment>
         ],
         ['THDI L2',
           setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L2.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L2.maxvalue), '%')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.THD_I_L2.maxtime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L2.minvalue), '%')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.THD_I_L2.mintime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L2.maxvalue), '%')}
+          </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.THD_I_L2.maxtime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.THD_I_L2.maxtime, 3)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L2.minvalue), '%')}
+          </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.THD_I_L2.mintime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.THD_I_L2.mintime, 3)}
+          </React.Fragment>
         ],
         ['THDI L3',
           setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L3.average), '%'),
-          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L3.maxvalue), '%')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.THD_I_L3.maxtime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>,
-          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L3.minvalue), '%')}</p><p className={classes.smallerFont}>{format(parseISO(outfeedMonthlyAggregatedData.THD_I_L3.mintime), 'dd/MM/yyyy, HH:mm')}</p></React.Fragment>
+          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L3.maxvalue), '%')}
+          </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.THD_I_L3.maxtime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.THD_I_L3.maxtime, 3)}
+          </React.Fragment>,
+          <React.Fragment><p>{setValueUnit(setPrecision(outfeedMonthlyAggregatedData.THD_I_L3.minvalue), '%')}
+          </p>{renderButton(format(parseISO(outfeedMonthlyAggregatedData.THD_I_L3.mintime), 'dd/MM/yyyy, HH:mm'), outfeedMonthlyAggregatedData.THD_I_L3.mintime, 3)}
+          </React.Fragment>
         ]
       ]
       setOutfeedMonthlyAggregatedDataCurrentTable({ rows: rowsCurrentTable, columns: columnsCurrentTable })
@@ -171,7 +233,7 @@ export const OutfeedParametersTab = () => {
       setOutfeedMonthlyAggregatedDataCurrentTable(undefined)
       setOutfeedMonthlyAggregatedDataTHDITable(undefined)
     }
-  }, [outfeedMonthlyAggregatedData, classes.smallerFont, t])
+  }, [outfeedMonthlyAggregatedData, classes.smallerFont, t, renderButton])
 
   useEffect(() => { //FETCH MONTHLY DATA_1_MIN AGGREGATED BY 1 DAY CHART DATA
     if (outfeedAssetName && outfeedAssetID) {
@@ -181,7 +243,7 @@ export const OutfeedParametersTab = () => {
         if (res.data && res.data.length > 0) {
           setMonthly1minData(res.data)
         }
-      }).catch(err=>dispatch(setBackdropOpen(false)))
+      }).catch(err => dispatch(setBackdropOpen(false)))
     }
   }, [dateFrom, dateTo, outfeedAssetName, outfeedAssetID, dispatch])
 
@@ -255,6 +317,37 @@ export const OutfeedParametersTab = () => {
       })
     }
   }, [monthly1minData, setCurrentAndTHDChartData])
+
+  useEffect(() => { // SET SELECTED OUTFEED DIALOG DATA
+    if (outfeedAssetID && outfeedAssetName && switchboard) {
+      const switchboardContent = overview.diagrams.find(diagram => diagram.name === switchboard)
+      let outfeedSectionIndex = null;
+      let outfeedBreakerIndex = null
+      if (switchboardContent) {
+        switchboardContent.sections.forEach((section, sectionIndex: number) => {
+          if (section.breakers) {
+            section.breakers.forEach((breaker, breakerIndex: number) => {
+              if (breaker.assetID === outfeedAssetID) {
+                outfeedSectionIndex = sectionIndex;
+                outfeedBreakerIndex = breakerIndex
+              }
+            })
+          }
+        })
+      }
+      if (outfeedSectionIndex !== null && outfeedBreakerIndex !== null && switchboardContent) {
+        setDialogData({
+          deviceName: switchboardContent.sections[outfeedSectionIndex]?.breakers?.[outfeedBreakerIndex].tableName || '',
+          deviceType: switchboardContent.sections[outfeedSectionIndex]?.breakers?.[outfeedBreakerIndex].type || '',
+          breakerName: switchboardContent.sections[outfeedSectionIndex]?.breakers?.[outfeedBreakerIndex].name || '',
+          breakerType: switchboardContent.sections[outfeedSectionIndex]?.breakers?.[outfeedBreakerIndex].type || '',
+          sectionName: `${switchboardContent.name} ${t('deviceDataDialog.section')} ${switchboardContent.sections[outfeedSectionIndex].name}`,
+          assetID: switchboardContent.sections[outfeedSectionIndex]?.breakers?.[outfeedBreakerIndex].assetID || '',
+          switchboardAssetID: switchboardContent.assetID || ''
+        })
+      }
+    }
+  }, [outfeedAssetID, switchboard, outfeedAssetName, overview.diagrams, t])
 
   const setPrecision = (value: number) => {
     return parseFloat(value.toFixed(3))
@@ -357,7 +450,7 @@ export const OutfeedParametersTab = () => {
             </Grid>
           </React.Fragment>
           : null}
-          {currentAndTHDChartData ?
+        {currentAndTHDChartData ?
           <React.Fragment>
             <Grid item xs={12} className={classes.sectionMargin}>
               <Typography gutterBottom variant="h5">{t('reportsPage.currentFlows')}</Typography>
