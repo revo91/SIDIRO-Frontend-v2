@@ -62,7 +62,6 @@ export const Events = () => {
             dispatch(setEvents(diagram.assetID, []))
           }
         }).catch(err => {
-          console.log(err)
           dispatch(setBackdropOpen(false))
         })
       }
@@ -160,7 +159,7 @@ export const Events = () => {
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
-          <Typography variant="h5">{t('eventsPage.startDate')}</Typography>
+          <Typography gutterBottom variant="h5">{t('eventsPage.startDate')}</Typography>
           <DatePicker
             cancelLabel={t('datePicker.cancelButton')}
             autoOk
@@ -173,7 +172,7 @@ export const Events = () => {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="h5">{t('eventsPage.endDate')}</Typography>
+          <Typography gutterBottom variant="h5">{t('eventsPage.endDate')}</Typography>
           <DatePicker
             cancelLabel={t('datePicker.cancelButton')}
             autoOk
