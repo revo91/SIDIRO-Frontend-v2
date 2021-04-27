@@ -35,11 +35,10 @@ export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClic
             labels: {
               // This more specific font property overrides the global property
               font: {
-                fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
                 size: 14
               }
             }
-          }
+          },
         },
         legend: {
           labels: {

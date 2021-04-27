@@ -56,12 +56,14 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
             display: chartTitle ? true : false,
             text: chartTitle ? chartTitle : '',
             fontColor: theme.palette.text.primary,
-            fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
             color: Chart.defaults.color
           },
           legend: {
             labels: {
-              color: Chart.defaults.color
+              color: Chart.defaults.color,
+              font: {
+                size: 14
+              }
             }
           },
           tooltip: {
@@ -87,7 +89,11 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
             type: 'time',
             title: {
               display: true,
-              text: xAxisTitle ? xAxisTitle : ''
+              text: xAxisTitle ? xAxisTitle : '',
+              font: {
+                size: 18,
+                weight: 400
+              },
             },
             ticks: {
               color: Chart.defaults.color,
@@ -112,7 +118,11 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
           y: {
             title: {
               display: true,
-              text: yAxisTitle ? yAxisTitle : ''
+              text: yAxisTitle ? yAxisTitle : '',
+              font: {
+                size: 18,
+                weight: 400
+              },
             },
             ticks: {
               color: Chart.defaults.color

@@ -130,7 +130,9 @@ export const PowerDemandTab = () => {
         return fetchTimeseriesAggregates(infeed, 'DATA_15_MIN', 'minute', 15, getUTCDate(outfeedsDate).startOfDay, getUTCDate(outfeedsDate).endOfDay)
       })
       const promises = promisesOutfeeds.concat(promisesInfeeds)
+      dispatch(setBackdropOpen(true))
       Promise.all(promises).then(res => {
+        dispatch(setBackdropOpen(false))
         if (res.length > 0) {
           const infeedsPart = res.slice(-promisesInfeeds.length)
           res.length = res.length - infeedsPart.length
@@ -183,7 +185,7 @@ export const PowerDemandTab = () => {
         }
       })
     }
-  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds, infeedPowerDemandChartData, powerDemandAssets.infeeds, t])
+  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds, infeedPowerDemandChartData, powerDemandAssets.infeeds, t, dispatch])
 
   const handleDateChange = (date: Date) => {
     dispatch(setReportsDate(getUTCDate(date).startOfMonth, getUTCDate(date).endOfMonth))
@@ -281,7 +283,8 @@ export const PowerDemandTab = () => {
           </Grid>
           <Grid item xs={12}>
             <StackedBarChart
-              yAxisName={t('chart.valueAxisLabel')}
+              yAxisTitle={t('chart.valueAxisLabel')}
+              xAxisTitle={t('chart.timeAxisLabel')}
               yAxisUnit='kW'
               chartTitle=""
               data={{

@@ -31,7 +31,27 @@ export const resources = {
         endDate: "End date"
       },
       powermonitorPage: {
-        title: "Power monitor"
+        loadMonitoringTab: "Load monitoring",
+        settingsTab: "Settings",
+        energyUsage: "Energy consumption [kWh]",
+        warningThreshold: "Warning threshold",
+        alarmThreshold: "Alarm threshold",
+        transformersLosses: "Transformers power loss",
+        loadMonitorActive: "Load monitoring enabled",
+        sendEventsActive: "Sending events enabled",
+        sendEmailsActive: "Sending emails enabled",
+        notificationsActive: "Notifications enabled",
+        saveButton: "Save",
+        resetButton: "Reset",
+        predictedPower: "Predicted power",
+        current15minInterval: "Current 15-min interval",
+        tableValueColumn: "Value",
+        tableTimeColumn: "Time",
+        mailList: "Mail list",
+        addAddressButton: "Add address",
+        notifications: "Notifications",
+        notificationsRegister: "Zarejestruj",
+        notificationsDeregister: "Wyrejestruj"
       },
       overviewPage: {
         switchboard: "Switchboard"
@@ -41,15 +61,15 @@ export const resources = {
       },
       reportsPage: {
         title: "Reports",
-        monthlyEnergyUsage: "Monthly Energy usage",
-        energyUsageProfile: "Energy usage profile",
+        monthlyEnergyUsage: "Monthly Energy consumption",
+        energyUsageProfile: "Energy consumption profile",
         powers15min: "Power demand",
         infeedParameters: "Infeed parameters",
         outgoingFeederParameters: "Outfeed parameters",
         chooseMonth: "Choose month",
         exportToPDF: "PDF Export",
         exportToCSV: "CSV Export",
-        activeEnergyUsage: "Active Energy usage",
+        activeEnergyUsage: "Active Energy consumption",
         groupName: "Group name",
         totalValue: "Total",
         activeEnergyImport: "Active energy",
@@ -68,7 +88,7 @@ export const resources = {
         tableColumnAlarmWarning: "Alarm/warning",
         alarm: "Alarm",
         warning: "Warning",
-        outfeedAverageActivePower: "Outgoing feeder average active power 15-min",
+        outfeedAverageActivePower: "Outfeed average active power 15-min",
         othersDataTitle: "Other",
         transformerChoice: "Choose transformer",
         energyChoice: "Energy",
@@ -185,7 +205,27 @@ export const resources = {
         endDate: "Data końcowa"
       },
       powermonitorPage: {
-        title: "Strażnik mocy"
+        loadMonitoringTab: "Strażnik mocy",
+        settingsTab: "Ustawienia",
+        energyUsage: "Zużycie energii [kWh]",
+        warningThreshold: "Próg ostrzeżenia",
+        alarmThreshold: "Prób alarmowy",
+        transformersLosses: "Straty mocy na transformatorach",
+        loadMonitorActive: "Strażnik mocy włączony",
+        sendEventsActive: "Wysyłanie zdarzeń włączone",
+        sendEmailsActive: "Wysyłanie emaili włączone",
+        notificationsActive: "Powiadomienia włączone",
+        saveButton: "Zapisz",
+        resetButton: "Resetuj",
+        predictedPower: "Przewidywana moc",
+        current15minInterval: "Aktualny okres 15-min",
+        tableValueColumn: "Wartość",
+        tableTimeColumn: "Czas",
+        mailList: "Lista mailowa",
+        addAddressButton: "Dodaj adres",
+        notifications: "Powiadomienia",
+        notificationsRegister: "Zarejestruj",
+        notificationsDeregister: "Wyrejestruj"
       },
       overviewPage: {
         switchboard: "Rozdzielnica"

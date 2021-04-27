@@ -249,7 +249,7 @@ export const EnergyConsumptionTab = () => {
   }
 
   return (
-    <Grid container spacing={2} >
+    <Grid container spacing={2}>
       <Grid item xs={12} md={9} lg={9}>
         <DatePicker
           cancelLabel={t('datePicker.cancelButton')}

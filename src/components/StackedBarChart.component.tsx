@@ -11,16 +11,17 @@ interface BarChartProps {
   },
   chartTitle?: string,
   yAxisUnit?: string,
-  yAxisName?: string,
+  yAxisTitle?: string,
+  xAxisTitle?: string
   onDataClick?(dataIndex: number): void
 }
 
-export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAxisUnit, yAxisName, onDataClick }) => {
+export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAxisUnit, yAxisTitle, xAxisTitle, onDataClick }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
   useUpdateChartFontColor(chartInstance, '#fff');
-  useUpdateStackedChartDatasets(chartInstance, data, yAxisName)
+  useUpdateStackedChartDatasets(chartInstance, data, yAxisTitle)
 
   const chartConfig = useMemo(() => {
     const handleClickDataPortion = (dataSliceIndex: number) => {
@@ -42,7 +43,6 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAx
           legend: {
             labels: {
               font: {
-                fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
                 size: 14
               }
             }
@@ -84,19 +84,31 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data, chartTitle, yAx
         scales: {
           x: {
             stacked: true,
+            title: {
+              display: true,
+              text: xAxisTitle ? xAxisTitle : '',
+              font: {
+                size: 18,
+                weight: 400
+              },
+            },
           },
           y: {
             stacked: true,
             title: {
-              text: yAxisName ? yAxisName : '',
-              display: yAxisName ? true : false,
-              color: theme.palette.text.primary
+              text: yAxisTitle ? yAxisTitle : '',
+              display: yAxisTitle ? true : false,
+              color: theme.palette.text.primary,
+              font: {
+                size: 18,
+                weight: 400
+              },
             }
           }
         }
       }
     }
-  }, [data, chartTitle, theme.palette.text.primary, yAxisName, onDataClick, yAxisUnit]);
+  }, [data, chartTitle, theme.palette.text.primary, yAxisTitle, onDataClick, yAxisUnit, xAxisTitle]);
 
   useEffect(() => {
     if (chartInstance === null) {

@@ -318,7 +318,7 @@ export const EnergyUsageProfile = () => {
         <Grid item xs={12}>
           <StackedBarChart
             onDataClick={(dataIndex) => createNextLevelChart(dataIndex, originLevel)}
-            yAxisName={setChartComponentsBasedOnSelectedEnergyType().title}
+            yAxisTitle={setChartComponentsBasedOnSelectedEnergyType().title}
             yAxisUnit={setChartComponentsBasedOnSelectedEnergyType().yAxisUnit}
             chartTitle=""
             data={{

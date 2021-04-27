@@ -1,23 +1,27 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
-import Grid from '@material-ui/core/Grid';
+import { UniversalTabs } from './UniversalTabs.component';
+import { LoadMonitoringTab } from '../components/Powermonitor/LoadMonitoringTab.component';
+import { PowermonitorSettingsTab } from '../components/Powermonitor/SettingsTab.component';
 
 export const Powermonitor = () => {
   const { t } = useTranslation();
 
   return (
     <React.Fragment>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Typography variant='h2' gutterBottom>{t('powermonitorPage.title')}</Typography>
-        </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          
-        </Grid>
-      </Grid>
+      <UniversalTabs
+        name='Powermonitor'
+        tabs={[
+          {
+            label: t('powermonitorPage.loadMonitoringTab'),
+            content: <LoadMonitoringTab />
+          },
+          {
+            label: t('powermonitorPage.settingsTab'),
+            content: <PowermonitorSettingsTab />
+          },
+        ]}
+      />
     </React.Fragment>
   )
 }
