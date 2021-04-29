@@ -50,8 +50,16 @@ export const resources = {
         mailList: "Mail list",
         addAddressButton: "Add address",
         notifications: "Notifications",
-        notificationsRegister: "Zarejestruj",
-        notificationsDeregister: "Wyrejestruj"
+        notificationsRegister: "Subscribe",
+        notificationsDeregister: "Unsubscribe",
+        energyUsageLabel: "Energy consumption",
+        predictedUsageLabel: "Predicted consumption",
+        emailAddress: "Email address",
+        language: "Language",
+        addEmailLabel: "Add email address",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        powermonitorInactive: "Powermonitor is inactive"
       },
       overviewPage: {
         switchboard: "Switchboard"
@@ -111,7 +119,7 @@ export const resources = {
         outfeedChoice: "Choose outfeed",
         singleOutfeedParameters: "Parameters of",
         maximum: "Max",
-        average: "Average"
+        average: "Average",
       },
       datePicker: {
         cancelButton: "Cancel",
@@ -209,7 +217,7 @@ export const resources = {
         settingsTab: "Ustawienia",
         energyUsage: "Zużycie energii [kWh]",
         warningThreshold: "Próg ostrzeżenia",
-        alarmThreshold: "Prób alarmowy",
+        alarmThreshold: "Próg alarmowy",
         transformersLosses: "Straty mocy na transformatorach",
         loadMonitorActive: "Strażnik mocy włączony",
         sendEventsActive: "Wysyłanie zdarzeń włączone",
@@ -224,8 +232,16 @@ export const resources = {
         mailList: "Lista mailowa",
         addAddressButton: "Dodaj adres",
         notifications: "Powiadomienia",
-        notificationsRegister: "Zarejestruj",
-        notificationsDeregister: "Wyrejestruj"
+        notificationsRegister: "Subskrybuj",
+        notificationsDeregister: "Wyrejestruj",
+        energyUsageLabel: "Zużycie energii",
+        predictedUsageLabel: "Przewidywane zużycie",
+        emailAddress: "Adres email",
+        language: "Język",
+        addEmailLabel: "Dodaj adres email",
+        confirm: "Potwierdź",
+        cancel: "Anuluj",
+        powermonitorInactive: "Strażnik mocy nieaktywny"
       },
       overviewPage: {
         switchboard: "Rozdzielnica"

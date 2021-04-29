@@ -33,6 +33,11 @@ import createWorker from "workerize-loader!../workers/TimeseriesData.worker"; //
 import * as Worker from "../workers/TimeseriesData.worker";
 import { setAssetData } from '../actions/SystemTopologyData.action';
 import { setDeviceDataDialog } from '../actions/deviceDataDialogElevationDataSource.action';
+import { fetchMe } from '../services/CustomAPI.service';
+import { setCircuitDiagram } from '../actions/Overview.action';
+import { setElevation } from '../actions/Elevation.action';
+import { setReports, setReportsPowerDemand } from '../actions/Reports.action';
+import { setUserData } from '../actions/Userdata.action';
 
 const drawerWidth = 240;
 
@@ -130,6 +135,35 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
   }, [location])
 
   useEffect(() => {
+    //initialize frontend structure from backend
+    fetchMe().then((res: {
+      appData: object,
+      plantsData: {
+        [key: string]: {
+          data: object,
+          config: {
+            overview: Array<object>,
+            elevation: Array<object>,
+            reports: Array<object>,
+            reportsPowerDemand: object
+          },
+          appId: string
+        }
+      },
+      userData: {
+        appId: string,
+        userId: string
+      }
+    }) => {
+      dispatch(setCircuitDiagram(Object.values(res.plantsData)[0].config.overview))
+      dispatch(setElevation(Object.values(res.plantsData)[0].config.elevation))
+      dispatch(setReports(Object.values(res.plantsData)[0].config.reports))
+      dispatch(setReportsPowerDemand(Object.values(res.plantsData)[0].config.reportsPowerDemand))
+      dispatch(setUserData(res.userData.appId, res.userData.userId, Object.keys(res.plantsData)[0]))
+    })
+  }, [dispatch])
+
+  useEffect(() => {
     const handleSetAssetData = (message: MessageEvent) => {
       if (message.data.length > 0) {
         message.data.forEach((device: any) => {
@@ -166,7 +200,7 @@ export const MiniDrawer: React.FC<IDrawer> = ({ onThemeChange }) => {
               })
           }
         })
-        section.breakers?.forEach((breaker: any) => {
+        section.breakers?.forEach((breaker) => {
           deviceData.push(
             {
               assetID: breaker.assetID,

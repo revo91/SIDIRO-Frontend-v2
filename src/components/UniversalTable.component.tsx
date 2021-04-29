@@ -21,7 +21,10 @@ export const UniversalTable: React.FC<IUniversalTableProps> = ({ rows, columns, 
       <Table aria-label="simple table" size={small ? "small" : "medium"}>
         <TableHead>
           <TableRow>
-            {columns.map((col, index) => <TableCell align={index > 0 ? "right" : "left"} style={{ width: `${100 / columns.length}%` }} key={index}>{col}</TableCell>
+            {columns.map((col, index) => <TableCell 
+            align={index > 0 ? "right" : "left"} 
+            //style={{ width: `${100 / columns.length}%` }}
+             key={index}>{col}</TableCell>
             )}
           </TableRow>
         </TableHead>

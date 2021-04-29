@@ -38,3 +38,9 @@ self.addEventListener("message", message => {
   }, 900000) // 15 minutes
 });
 
+self.addEventListener('push', function (event) {
+  console.log(event)
+  event.waitUntil(self.registration.showNotification('ServiceWorker Cookbook3', {
+    body: 'Push Notification Subscription Management'
+  }));
+})

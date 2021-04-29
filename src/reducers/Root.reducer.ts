@@ -11,6 +11,8 @@ import { EventsReducer } from './Events.reducer';
 import { ReportsReducer } from './Reports.reducer';
 import { CommonReportsReducer } from './Reports/CommonReports.reducer';
 import { PowerDemandTabReducer } from './Reports/PowerDemandTab.reducer';
+import { UserdataReducer } from './Userdata.reducer';
+import { PowermonitorReducer } from './Powermonitor.reducer';
 
 export const rootReducer = combineReducers({
   universalTabs: UniversalTabsReducer,
@@ -24,7 +26,9 @@ export const rootReducer = combineReducers({
   events: EventsReducer,
   reports: ReportsReducer,
   commonReports: CommonReportsReducer,
-  powerDemandTab: PowerDemandTabReducer
+  powerDemandTab: PowerDemandTabReducer,
+  userData: UserdataReducer,
+  powermonitor: PowermonitorReducer
 })
 
 export type RootState = ReturnType<typeof rootReducer>
