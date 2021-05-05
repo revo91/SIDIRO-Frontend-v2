@@ -11,12 +11,14 @@ import { TransitionProps } from '@material-ui/core/transitions';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../reducers/Root.reducer';
 import { setDeviceDataDialogOpen } from '../actions/DeviceDataDialog.action';
-import { BreakerDevice } from './DeviceDataDialog/BreakerDevice.component';
 import { TransformerDevice } from './DeviceDataDialog/TransformerDevice.component';
 import { DeviceTypes } from '../utilities/DeviceTypes.utility';
 import { useTranslation } from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import { exportPDF } from '../utilities/ExportPDF.utility';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,6 +48,8 @@ export const DeviceDataDialog: React.FC = () => {
   const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
   const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
   const switchboardAssetID = useSelector((state: RootState) => state.deviceDataDialog.switchboardAssetID);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(anchorEl);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -54,7 +58,7 @@ export const DeviceDataDialog: React.FC = () => {
       case DeviceTypes.circuitBreaker:
       case DeviceTypes.infeedBreaker:
       case DeviceTypes.couplingBreaker:
-        return <BreakerDevice />
+        return <TransformerDevice />
       case DeviceTypes.generator:
       case DeviceTypes.transformer:
         return <TransformerDevice />
@@ -62,6 +66,15 @@ export const DeviceDataDialog: React.FC = () => {
         return null
     }
   }
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  
 
   return (
     <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen({
@@ -91,11 +104,15 @@ export const DeviceDataDialog: React.FC = () => {
               `${t('deviceDataDialog.circuitBreaker')} ${breakerName}`
               : deviceName}
           </Typography>
-          <Button
-            color="inherit"
+          <IconButton
+            aria-label="export to file"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
             onClick={() => exportPDF()}
+            color="inherit"
           >
-            {t('deviceDataDialog.exportTitle')}</Button>
+            <PictureAsPdfIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       {showTabsAccordingToDeviceType()}

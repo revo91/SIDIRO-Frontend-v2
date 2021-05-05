@@ -3,6 +3,7 @@ import { lineLength, useStyles } from '../Overview.component';
 import { ParametersTableSVG } from './ParametersTableSVG.component';
 import { useDispatch } from 'react-redux';
 import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
+import { useTranslation } from 'react-i18next';
 
 interface ICircuitBreakerSVG {
   x: number,
@@ -28,7 +29,8 @@ interface ICircuitBreakerSVG {
   drawOut?: boolean,
   voltageAbove?: boolean,
   voltageBelow?: boolean,
-  switchboardAssetID: string
+  switchboardAssetID: string,
+  connectionState: number
 }
 
 export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
@@ -51,11 +53,13 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
     drawOut,
     voltageAbove,
     voltageBelow,
-    switchboardAssetID
+    switchboardAssetID,
+    connectionState
   }
 ) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { t } = useTranslation()
 
   return (
     <React.Fragment>
@@ -180,6 +184,18 @@ export const CircuitBreakerSVG: React.FC<ICircuitBreakerSVG> = (
         y2={y + 3 * lineLength}
         className={voltageBelow ? classes.lineStyleVoltageApplied : classes.lineStyle}
       />
+      {/* connection state text if connectionState !== 0 */}
+      {connectionState !== 1 ?
+        <text
+          x={x}
+          y={y + 1.4 * lineLength}
+          className={classes.noConnectionAlarmVertical}
+          transform={`rotate(90, ${x}, ${y + 1.5 * lineLength})`}
+        >
+          &nbsp;{`${t('svgCompartment.noConnection')}`}
+        </text>
+        : null
+      }
       {/* params table */}
       {
         !noTable && tableName ? <ParametersTableSVG

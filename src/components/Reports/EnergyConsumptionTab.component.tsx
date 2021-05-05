@@ -223,6 +223,7 @@ export const EnergyConsumptionTab = () => {
           <PieChart
             onDataClick={(dataIndex) => createNextLevelChart(dataIndex, originLevel)}
             chartTitle=""
+            unit={'kWh'}
             data={{
               labels: labels,
               datasets: [

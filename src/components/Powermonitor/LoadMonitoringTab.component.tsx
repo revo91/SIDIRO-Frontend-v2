@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 
 interface ILoadMonitoringTab {
@@ -150,7 +150,7 @@ export const LoadMonitoringTab: React.FC<ILoadMonitoringTab> = ({ chartData }) =
             <Typography gutterBottom variant='h5'>{t('powermonitorPage.current15minInterval')}</Typography>
           </Grid>
           {timetable ?
-            <Grid item xs={12} lg={6} xl={5}>
+            <Grid item xs={12} lg={5} xl={5}>
               <UniversalTable
                 columns={[t('powermonitorPage.tableTimeColumn'), t('powermonitorPage.tableValueColumn')]}
                 rows={timetable}
@@ -163,7 +163,7 @@ export const LoadMonitoringTab: React.FC<ILoadMonitoringTab> = ({ chartData }) =
             </Grid>
             : null}
           {datasets ?
-            <Grid item xs={12} lg={6} xl={7}>
+            <Grid item xs={12} lg={7} xl={7}>
               <LineChart
                 data={{
                   datasets: datasets

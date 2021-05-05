@@ -320,6 +320,7 @@ export const EnergyUsageProfile = () => {
             onDataClick={(dataIndex) => createNextLevelChart(dataIndex, originLevel)}
             yAxisTitle={setChartComponentsBasedOnSelectedEnergyType().title}
             yAxisUnit={setChartComponentsBasedOnSelectedEnergyType().yAxisUnit}
+            xAxisTitle={t('chart.timeAxisLabel')}
             chartTitle=""
             data={{
               labels: xAxisLabels,

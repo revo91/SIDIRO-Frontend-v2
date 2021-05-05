@@ -120,6 +120,8 @@ export const PowerTab = () => {
                 }
               ]
             }}
+            xAxisTitle={t('chart.timeAxisLabel')}
+            yAxisTitle={t('chart.valueAxisLabel')}
           />
         </Grid>
       </Grid>

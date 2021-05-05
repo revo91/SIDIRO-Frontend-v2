@@ -72,7 +72,7 @@ export const THDITab = () => {
             data={{
               datasets: [
                 {
-                  label: `THD I L1 [%]`,
+                  label: `THD I L1`,
                   backgroundColor: decideDataColor(0),
                   borderColor: decideDataColor(0),
                   fill: false,
@@ -81,7 +81,7 @@ export const THDITab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `THD I L2 [%]`,
+                  label: `THD I L2`,
                   backgroundColor: decideDataColor(1),
                   borderColor: decideDataColor(1),
                   fill: false,
@@ -90,7 +90,7 @@ export const THDITab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `THD I L3 [%]`,
+                  label: `THD I L3`,
                   backgroundColor: decideDataColor(2),
                   borderColor: decideDataColor(2),
                   fill: false,
@@ -100,6 +100,9 @@ export const THDITab = () => {
                 }
               ]
             }}
+            yAxisUnit={'%'}
+            xAxisTitle={t('chart.timeAxisLabel')}
+            yAxisTitle={t('chart.valueAxisLabel')}
           />
         </Grid>
       </Grid>

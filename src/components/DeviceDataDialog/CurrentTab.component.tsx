@@ -72,7 +72,7 @@ export const CurrentTab = () => {
             data={{
               datasets: [
                 {
-                  label: `${t('deviceDataDialog.current')} L1 [A]`,
+                  label: `${t('deviceDataDialog.current')} L1`,
                   backgroundColor: decideDataColor(0),
                   borderColor: decideDataColor(0),
                   fill: false,
@@ -81,7 +81,7 @@ export const CurrentTab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `${t('deviceDataDialog.current')} L2 [A]`,
+                  label: `${t('deviceDataDialog.current')} L2`,
                   backgroundColor: decideDataColor(1),
                   borderColor: decideDataColor(1),
                   fill: false,
@@ -90,7 +90,7 @@ export const CurrentTab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `${t('deviceDataDialog.current')} L3 [A]`,
+                  label: `${t('deviceDataDialog.current')} L3`,
                   backgroundColor: decideDataColor(2),
                   borderColor: decideDataColor(2),
                   fill: false,
@@ -100,6 +100,9 @@ export const CurrentTab = () => {
                 }
               ]
             }}
+            yAxisUnit={'A'}
+            xAxisTitle={t('chart.timeAxisLabel')}
+            yAxisTitle={t('chart.valueAxisLabel')}
           />
         </Grid>
       </Grid>

@@ -73,7 +73,7 @@ export const VoltageLNTab = () => {
             data={{
               datasets: [
                 {
-                  label: `${t('deviceDataDialog.voltageL1N')} [V]`,
+                  label: `${t('deviceDataDialog.voltageL1N')}`,
                   backgroundColor: decideDataColor(0),
                   borderColor: decideDataColor(0),
                   fill: false,
@@ -82,7 +82,7 @@ export const VoltageLNTab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `${t('deviceDataDialog.voltageL2N')} [V]`,
+                  label: `${t('deviceDataDialog.voltageL2N')}`,
                   backgroundColor: decideDataColor(1),
                   borderColor: decideDataColor(1),
                   fill: false,
@@ -91,7 +91,7 @@ export const VoltageLNTab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `${t('deviceDataDialog.voltageL3N')} [V]`,
+                  label: `${t('deviceDataDialog.voltageL3N')}`,
                   backgroundColor: decideDataColor(2),
                   borderColor: decideDataColor(2),
                   fill: false,
@@ -101,6 +101,9 @@ export const VoltageLNTab = () => {
                 }
               ]
             }}
+            yAxisUnit={'V'}
+            xAxisTitle={t('chart.timeAxisLabel')}
+            yAxisTitle={t('chart.valueAxisLabel')}
           />
         </Grid>
       </Grid>

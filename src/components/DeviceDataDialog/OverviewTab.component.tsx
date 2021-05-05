@@ -92,6 +92,10 @@ export const OverviewTab = () => {
   }
 
   useEffect(() => {
+    console.log(systemTopologyData[assetID])
+  }, [systemTopologyData, assetID])
+
+  useEffect(() => {
     if (!events[switchboardAssetID]) {
       //no data - need to refresh events
       dispatch(setBackdropOpen(true))
@@ -117,7 +121,7 @@ export const OverviewTab = () => {
         defaultOrderColumnIndex={2}
         columns={[t('eventsPage.severity'), t('eventsPage.event'), t('eventsPage.time')]}
         //rows={deviceEvents.map((ev)=> [ev.severity, ev.description, ev.timestamp])}
-        rows={events[switchboardAssetID]? events[switchboardAssetID].filter((el) => el.source === assetID).map(ev => [setSeverityIcon(ev.severity),
+        rows={events[switchboardAssetID] ? events[switchboardAssetID].filter((el) => el.source === assetID).map(ev => [setSeverityIcon(ev.severity),
         i18n.language === 'pl' ? JSON.parse(ev.description).pl : JSON.parse(ev.description).en, new Date(Date.parse(ev.timestamp))]) : [[]]}
       />
     </div>
@@ -150,8 +154,8 @@ export const OverviewTab = () => {
         rows={[[t('deviceDataDialog.activePowerImport'), `${systemTopologyData[assetID]?.Active_Power_Import || 0} kW`],
         [t('deviceDataDialog.activePowerExport'), `${systemTopologyData[assetID]?.Active_Power_Export || 0} kW`],
         [t('deviceDataDialog.reactivePowerImport'), `${systemTopologyData[assetID]?.Reactive_Power_Import || 0} kvar`],
-        [t('deviceDataDialog.reactivePowerExport'), `${systemTopologyData[assetID]?.Reactive_Power_Import || 0} kvar`],
-        [t('deviceDataDialog.powerFactor'), `${systemTopologyData[assetID] ? powerFactorCalculator(systemTopologyData[assetID].Active_Power_Import, systemTopologyData[assetID].Reactive_Power_Import) : 0} PF`]]}
+        [t('deviceDataDialog.reactivePowerExport'), `${systemTopologyData[assetID]?.Reactive_Power_Export || 0} kvar`],
+        [t('deviceDataDialog.powerFactor'), `${systemTopologyData[assetID] ? powerFactorCalculator(systemTopologyData[assetID].Active_Power_Import, Math.max(systemTopologyData[assetID].Reactive_Power_Import, systemTopologyData[assetID].Reactive_Power_Export)) : 0} PF`]]}
         small />
     </div>
   )
@@ -371,9 +375,9 @@ export const OverviewTab = () => {
             {currentTable}
             {powerTable}
             {thdiTable}
-            {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? thduTable : null}
-            {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? voltageLLTable : null}
-            {deviceType === DeviceTypes.transformer || deviceType === DeviceTypes.generator ? voltageLNTable : null}
+            {thduTable}
+            {voltageLLTable}
+            {voltageLNTable}
           </div>
         </Grid>
       </Grid>

@@ -166,7 +166,8 @@ export const resources = {
         activePowerImport: "Active power import",
         reactivePowerExport: "Reactive power export",
         reactivePowerImport: "Reactive power import",
-        exportTitle: "Export"
+        exportPDFTitle: "Export to PDF",
+        exportCSVTitle: "Export to CSV"
       },
       tableWithSort: {
         labelRowsPerPage: "Rows per page",
@@ -348,7 +349,8 @@ export const resources = {
         activePowerImport: "Moc czynna pobrana z sieci",
         reactivePowerExport: "Moc bierna pojemnościowa",
         reactivePowerImport: "Moc bierna indukcyjna",
-        exportTitle: "Eksportuj"
+        exportPDFTitle: "Eksportuj do PDF",
+        exportCSVTitle: "Eksportuj do CSV"
       },
       tableWithSort: {
         labelRowsPerPage: "Wierszy na stronę",

@@ -271,7 +271,6 @@ export const PowerDemandTab = () => {
                   defaultOrderColumnIndex={0}
                 />
               </Grid>
-
             </React.Fragment>
             : null}
         </React.Fragment>
@@ -291,6 +290,7 @@ export const PowerDemandTab = () => {
                 labels: outfeedChartData.xAxisLabels,
                 datasets: outfeedChartData.datasets
               }}
+              fixedAspectRatio={1.5}
             />
           </Grid>
           <Grid item xs={12} md={6}>

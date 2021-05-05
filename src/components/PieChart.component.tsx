@@ -12,9 +12,10 @@ export interface PieChartProps {
   },
   chartTitle?: string,
   onDataClick(dataIndex: number): void
+  unit?: string
 }
 
-export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClick }) => {
+export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClick, unit }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
@@ -31,6 +32,23 @@ export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClic
       data,
       options: {
         plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context: any) {
+                let label = context.label || '';
+                if (label) {
+                  label += ': ';
+                }
+                if (context.parsed.y !== null) {
+                  label += context.parsed
+                }
+                if (label && unit) {
+                  label += ` ${unit}`;
+                }
+                return label;
+              }
+            }
+          },
           legend: {
             labels: {
               // This more specific font property overrides the global property
@@ -59,7 +77,7 @@ export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClic
         aspectRatio: 1
       }
     }
-  }, [data, chartTitle, theme.palette.type, theme.palette.text.primary, onDataClick]);
+  }, [data, chartTitle, theme.palette.type, theme.palette.text.primary, onDataClick, unit]);
 
   useEffect(() => {
     if (chartInstance === null) {
