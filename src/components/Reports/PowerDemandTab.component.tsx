@@ -290,7 +290,6 @@ export const PowerDemandTab = () => {
                 labels: outfeedChartData.xAxisLabels,
                 datasets: outfeedChartData.datasets
               }}
-              fixedAspectRatio={1.5}
             />
           </Grid>
           <Grid item xs={12} md={6}>

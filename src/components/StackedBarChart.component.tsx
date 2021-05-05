@@ -13,8 +13,7 @@ interface BarChartProps {
   yAxisUnit?: string,
   yAxisTitle?: string,
   xAxisTitle?: string,
-  onDataClick?(dataIndex: number): void,
-  fixedAspectRatio?: number
+  onDataClick?(dataIndex: number): void
 }
 
 export const StackedBarChart: React.FC<BarChartProps> = ({ data,
@@ -22,8 +21,7 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data,
   yAxisUnit,
   yAxisTitle,
   xAxisTitle,
-  onDataClick,
-  fixedAspectRatio }) => {
+  onDataClick }) => {
   const chartContainer = useRef() as React.MutableRefObject<HTMLCanvasElement>;
   const [chartInstance, setChartInstance] = useState<Chart | null>(null);
   const theme = useTheme();
@@ -41,7 +39,6 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data,
       type: 'bar',
       data,
       options: {
-        aspectRatio: fixedAspectRatio || 2.5,
         interaction: {
           intersect: false,
           mode: 'point',
@@ -115,7 +112,7 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data,
         }
       }
     }
-  }, [data, chartTitle, theme.palette.text.primary, yAxisTitle, onDataClick, yAxisUnit, xAxisTitle, fixedAspectRatio]);
+  }, [data, chartTitle, theme.palette.text.primary, yAxisTitle, onDataClick, yAxisUnit, xAxisTitle]);
 
   useEffect(() => {
     if (chartInstance === null) {

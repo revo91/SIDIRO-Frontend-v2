@@ -3,6 +3,8 @@ import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 import { pl, enUS } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 
 export const useUpdateChartDatasets = (chartInstance: Chart | null,
   data: {
@@ -13,6 +15,8 @@ export const useUpdateChartDatasets = (chartInstance: Chart | null,
   yAxisTitle?: string,
   xAxisTitle?: string) => {
   const { i18n } = useTranslation();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
 
   useEffect(() => {
     //update in case of datasets change
@@ -36,7 +40,13 @@ export const useUpdateChartDatasets = (chartInstance: Chart | null,
       if (chartInstance?.options?.scales?.y?.title && yAxisTitle) {
         chartInstance.options.scales.y.title.text = yAxisTitle
       }
+      if(matches && chartInstance.config._config.type === 'line') {
+        chartInstance.options.aspectRatio = 2.5
+      }
+      else {
+        chartInstance.options.aspectRatio = 1
+      }
       chartInstance.update()
     }
-  }, [chartInstance, data, i18n.language, locale, yAxisTitle, xAxisTitle])
+  }, [chartInstance, data, i18n.language, locale, yAxisTitle, xAxisTitle, matches])
 }

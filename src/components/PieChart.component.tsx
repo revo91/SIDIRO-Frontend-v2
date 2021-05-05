@@ -74,7 +74,7 @@ export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClic
           fontColor: theme.palette.type === 'dark' ? SiemensAccentYellow.light6 : '#666',
           fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
         },
-        aspectRatio: 1
+        
       }
     }
   }, [data, chartTitle, theme.palette.type, theme.palette.text.primary, onDataClick, unit]);

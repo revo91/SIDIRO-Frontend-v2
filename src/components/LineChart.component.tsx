@@ -8,6 +8,7 @@ import 'chartjs-adapter-date-fns';
 import { useTranslation } from 'react-i18next';
 import { pl, enUS } from 'date-fns/locale';
 
+
 interface LineChartProps {
   data: {
     datasets: Array<{
@@ -39,7 +40,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
   const { i18n } = useTranslation();
   useUpdateChartFontColor(chartInstance, '#fff');
   useUpdateChartDatasets(chartInstance, data, i18n.language, yAxisTitle, xAxisTitle)
-
+  
   const chartType: ChartType = 'line'
   const chartConfig = useMemo(() => {
     return {
@@ -47,6 +48,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
       data,
       options: {
         responsive: true,
+        aspectRatio: 3,
         interaction: {
           intersect: false,
           mode: 'index',

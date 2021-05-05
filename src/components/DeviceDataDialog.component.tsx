@@ -14,10 +14,7 @@ import { setDeviceDataDialogOpen } from '../actions/DeviceDataDialog.action';
 import { TransformerDevice } from './DeviceDataDialog/TransformerDevice.component';
 import { DeviceTypes } from '../utilities/DeviceTypes.utility';
 import { useTranslation } from 'react-i18next';
-import Button from '@material-ui/core/Button';
 import { exportPDF } from '../utilities/ExportPDF.utility';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
 import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,8 +45,6 @@ export const DeviceDataDialog: React.FC = () => {
   const sectionName = useSelector((state: RootState) => state.deviceDataDialog.sectionName);
   const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
   const switchboardAssetID = useSelector((state: RootState) => state.deviceDataDialog.switchboardAssetID);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const menuOpen = Boolean(anchorEl);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -65,16 +60,7 @@ export const DeviceDataDialog: React.FC = () => {
       default:
         return null
     }
-  }
-
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  
+  }  
 
   return (
     <Dialog fullScreen open={open} onClose={() => dispatch(setDeviceDataDialogOpen({

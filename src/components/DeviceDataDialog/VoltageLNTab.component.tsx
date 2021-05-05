@@ -9,6 +9,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
 import { decideDataColor } from '../../utilities/SiemensColors.utility';
+import Fab from '@material-ui/core/Fab';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 interface IVoltageLN {
   Voltage_L1_N: number
@@ -23,7 +25,13 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(2),
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
-    }
+    },
+    extendedIcon: {
+      marginRight: theme.spacing(1),
+    },
+    margin: {
+      margin: theme.spacing(1),
+    },
   }),
 );
 
@@ -106,8 +114,17 @@ export const VoltageLNTab = () => {
             yAxisTitle={t('chart.valueAxisLabel')}
           />
         </Grid>
-      </Grid>
-      <Grid container spacing={2} className={classes.timePickersContainer}>
+        <Grid item xs={12}>
+          <Fab
+            variant="extended"
+            color="secondary"
+            aria-label="export-to-csv"
+            className={classes.margin}
+          >
+            <GetAppIcon className={classes.extendedIcon} />
+          {t('deviceDataDialog.exportCSVTitle')}
+        </Fab>
+        </Grid>
         <Grid item xs={12} md={6}>
           <DatePicker
             variant='static'
@@ -118,8 +135,11 @@ export const VoltageLNTab = () => {
             fullWidth
             disableFuture
           />
+
         </Grid>
       </Grid>
+
+
     </React.Fragment>
   )
 }

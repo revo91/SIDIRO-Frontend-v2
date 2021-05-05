@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import Chart from 'chart.js/auto';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 
 export const useUpdateStackedChartDatasets = (chartInstance: Chart | null,
   data: {
@@ -17,6 +19,8 @@ export const useUpdateStackedChartDatasets = (chartInstance: Chart | null,
       numberOfPops--
     }
   }
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
 
   useEffect(() => {
     //update in case of datasets change
@@ -26,8 +30,6 @@ export const useUpdateStackedChartDatasets = (chartInstance: Chart | null,
       }
       chartInstance.data.labels = data.labels
       //replace datasets data one by one
-      //chartInstance.data.datasets = data.datasets
-
       data.datasets.forEach((dataset, i) => {
         if (chartInstance.data.datasets[i]) {
           chartInstance.data.datasets[i].data = dataset.data
@@ -45,14 +47,18 @@ export const useUpdateStackedChartDatasets = (chartInstance: Chart | null,
       if (chartInstance.data.datasets.length > data.datasets.length) {
         removeExcessiveDatasets(chartInstance.data.datasets, chartInstance.data.datasets.length - data.datasets.length)
       }
-      //chartInstance.data.datasets.length = data.datasets.length
       if (data.labels) {
         data.labels.forEach((label, i) => {
           chartInstance.data.labels[i] = label
         })
       }
-      //chartInstance.data.labels = data.labels;
+      if(matches && chartInstance.config._config.type === 'bar') {
+        chartInstance.options.aspectRatio = 2.5
+      }
+      else {
+        chartInstance.options.aspectRatio = 1
+      }
       chartInstance.update()
     }
-  }, [chartInstance, data, yAxisTitle])
+  }, [chartInstance, data, yAxisTitle, matches])
 }
