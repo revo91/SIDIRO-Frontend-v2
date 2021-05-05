@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { LineChart } from '../LineChart.component';
 import { DatePicker } from "@material-ui/pickers";
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
 import { decideDataColor } from '../../utilities/SiemensColors.utility';
+import { ExportCSVButton } from '../ExportCSVButton.component';
+import { parseISO, format } from 'date-fns';
 
 interface ITHDU {
   THD_U_L1: number
@@ -17,22 +18,12 @@ interface ITHDU {
   _time: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    timePickersContainer: {
-      marginTop: theme.spacing(2),
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-    }
-  }),
-);
-
 export const THDUTab = () => {
-  const classes = useStyles();
   const { t } = useTranslation();
-  const [l1, setL1] = React.useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
-  const [l2, setL2] = React.useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
-  const [l3, setL3] = React.useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [l1, setL1] = useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [l2, setL2] = useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [l3, setL3] = useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [csvData, setCSVData] = useState<Array<Array<any>>>()
   const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
   const dateFrom = useSelector((state: RootState) => state.deviceDataDialog.dateFrom);
   const dispatch = useDispatch();
@@ -43,6 +34,7 @@ export const THDUTab = () => {
         const pointsL1: Array<{ x: number, y: number }> = []
         const pointsL2: Array<{ x: number, y: number }> = []
         const pointsL3: Array<{ x: number, y: number }> = []
+        const csvArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), 'THD U L1 [%]', 'THD U L2 [%]', 'THD U L3 [%]']]
         res.forEach((point: ITHDU) => {
           pointsL1.push({
             x: new Date(point._time).valueOf(),
@@ -56,13 +48,15 @@ export const THDUTab = () => {
             x: new Date(point._time).valueOf(),
             y: point.THD_U_L3
           })
+          csvArray.push([format(parseISO(point._time), 'dd.MM.yyyy HH:mm:ss'), point.THD_U_L1, point.THD_U_L2, point.THD_U_L3])
         })
+        setCSVData(csvArray)
         setL1(pointsL1)
         setL2(pointsL2)
         setL3(pointsL3)
       })
     }
-  }, [dateFrom, assetID])
+  }, [dateFrom, assetID, t])
 
   return (
     <React.Fragment>
@@ -105,8 +99,9 @@ export const THDUTab = () => {
             yAxisTitle={t('chart.valueAxisLabel')}
           />
         </Grid>
-      </Grid>
-      <Grid container spacing={2} className={classes.timePickersContainer}>
+        <Grid item xs={12}>
+          <ExportCSVButton data={csvData || [[]]} />
+        </Grid>
         <Grid item xs={12} md={6}>
           <DatePicker
             variant='static'

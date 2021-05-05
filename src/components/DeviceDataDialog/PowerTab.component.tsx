@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { LineChart } from '../LineChart.component';
 import { DatePicker } from "@material-ui/pickers";
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
 import { decideDataColor } from '../../utilities/SiemensColors.utility';
+import { ExportCSVButton } from '../ExportCSVButton.component';
+import { parseISO, format } from 'date-fns';
 
 interface IPower {
   Active_Power_Export: number
@@ -18,62 +19,55 @@ interface IPower {
   _time: string
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    timePickersContainer: {
-      marginTop: theme.spacing(2),
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-    }
-  }),
-);
-
 export const PowerTab = () => {
-  const classes = useStyles();
   const { t } = useTranslation();
-  const [activePowerExport, setActivePowerExport] = React.useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
-  const [reactivePowerExport, setReactivePowerExport] = React.useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
-  const [activePowerImport, setActivePowerImport] = React.useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
-  const [reactivePowerImport, setRectivePowerImport] = React.useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [activePowerExport, setActivePowerExport] = useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [reactivePowerExport, setReactivePowerExport] = useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [activePowerImport, setActivePowerImport] = useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [reactivePowerImport, setRectivePowerImport] = useState<Array<{ x: number | Date, y: number }>>([{ x: 0, y: 0 }])
+  const [csvData, setCSVData] = useState<Array<Array<any>>>()
   const assetID = useSelector((state: RootState) => state.deviceDataDialog.assetID);
   const dateFrom = useSelector((state: RootState) => state.deviceDataDialog.dateFrom);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (dateFrom) {
-      fetchTimeseriesInterval(assetID, 15, 
-        new Date(new Date(dateFrom.setHours(0, 0, 0, 0))).toISOString(), 
-        new Date(new Date(dateFrom.setHours(23, 59, 59, 999))).toISOString(), 
+      fetchTimeseriesInterval(assetID, 15,
+        new Date(new Date(dateFrom.setHours(0, 0, 0, 0))).toISOString(),
+        new Date(new Date(dateFrom.setHours(23, 59, 59, 999))).toISOString(),
         'Active_Power_Export,Active_Power_Import,Reactive_Power_Export,Reactive_Power_Import').then(res => {
-        const activePowerExportPoints: Array<{ x: number, y: number }> = []
-        const reactivePowerExportPoints: Array<{ x: number, y: number }> = []
-        const activePowerImportPoints: Array<{ x: number, y: number }> = []
-        const reactivePowerImportPoints: Array<{ x: number, y: number }> = []
-        res.forEach((point: IPower) => {
-          activePowerExportPoints.push({
-            x: new Date(point._time).valueOf(),
-            y: point.Active_Power_Export
+          const activePowerExportPoints: Array<{ x: number, y: number }> = []
+          const reactivePowerExportPoints: Array<{ x: number, y: number }> = []
+          const activePowerImportPoints: Array<{ x: number, y: number }> = []
+          const reactivePowerImportPoints: Array<{ x: number, y: number }> = []
+          const csvArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), `${t('deviceDataDialog.activePowerExport')} [kW]`, `${t('deviceDataDialog.reactivePowerExport')} [kvar]`, `${t('deviceDataDialog.activePowerImport')} [kW]`, `${t('deviceDataDialog.reactivePowerImport')} [kvar]`]]
+          res.forEach((point: IPower) => {
+            activePowerExportPoints.push({
+              x: new Date(point._time).valueOf(),
+              y: point.Active_Power_Export
+            })
+            reactivePowerExportPoints.push({
+              x: new Date(point._time).valueOf(),
+              y: point.Reactive_Power_Export
+            })
+            activePowerImportPoints.push({
+              x: new Date(point._time).valueOf(),
+              y: point.Active_Power_Import
+            })
+            reactivePowerImportPoints.push({
+              x: new Date(point._time).valueOf(),
+              y: point.Reactive_Power_Import
+            })
+            csvArray.push([format(parseISO(point._time), 'dd.MM.yyyy HH:mm:ss'), point.Active_Power_Export, point.Reactive_Power_Export, point.Active_Power_Import, point.Reactive_Power_Import])
           })
-          reactivePowerExportPoints.push({
-            x: new Date(point._time).valueOf(),
-            y: point.Reactive_Power_Export
-          })
-          activePowerImportPoints.push({
-            x: new Date(point._time).valueOf(),
-            y: point.Active_Power_Import
-          })
-          reactivePowerImportPoints.push({
-            x: new Date(point._time).valueOf(),
-            y: point.Reactive_Power_Import
-          })
+          setCSVData(csvArray)
+          setActivePowerExport(activePowerExportPoints)
+          setReactivePowerExport(reactivePowerExportPoints)
+          setActivePowerImport(activePowerImportPoints)
+          setRectivePowerImport(reactivePowerImportPoints)
         })
-        setActivePowerExport(activePowerExportPoints)
-        setReactivePowerExport(reactivePowerExportPoints)
-        setActivePowerImport(activePowerImportPoints)
-        setRectivePowerImport(reactivePowerImportPoints)
-      })
     }
-  }, [dateFrom, assetID])
+  }, [dateFrom, assetID, t])
 
   return (
     <React.Fragment>
@@ -124,8 +118,9 @@ export const PowerTab = () => {
             yAxisTitle={t('chart.valueAxisLabel')}
           />
         </Grid>
-      </Grid>
-      <Grid container spacing={2} className={classes.timePickersContainer}>
+        <Grid item xs={12}>
+          <ExportCSVButton data={csvData || [[]]} />
+        </Grid>
         <Grid item xs={12} md={6}>
           <DatePicker
             variant='static'

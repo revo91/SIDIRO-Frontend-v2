@@ -21,6 +21,7 @@ import { parseISO, format } from 'date-fns';
 import { useStyles } from '../Reports.component';
 import Divider from '@material-ui/core/Divider';
 import { exportPDF } from '../../utilities/ExportPDF.utility';
+import { ExportCSVButton } from '../ExportCSVButton.component';
 
 export const EnergyUsageProfile = () => {
   const { t, i18n } = useTranslation();
@@ -35,14 +36,17 @@ export const EnergyUsageProfile = () => {
   const [level2, setLevel2] = useState<{
     title: string | null,
     xAxisLabels: Array<string> | null, //[...days of month]
-    datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }> | null,
+    datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }>,
     groupIndex?: number
   }>()
   const [level3, setLevel3] = useState<{
     title: string | null,
     xAxisLabels: Array<string> | null, //[...days of month]
-    datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }> | null
+    datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }>
   }>()
+  const [csvDataLevel1, setCSVDataLevel1] = useState<Array<Array<any>>>()
+  const [csvDataLevel2, setCSVDataLevel2] = useState<Array<Array<any>>>()
+  const [csvDataLevel3, setCSVDataLevel3] = useState<Array<Array<any>>>()
   const [referenceToCurrentChartForScrolling, setReferenceToCurrentChartForScrolling] = useState<any>()
   const [assetsData, setAssetsData] = useState<{ [key: string]: any }>()
   const [energyType, setEnergyType] = useState('activeEnergyImport');
@@ -204,32 +208,57 @@ export const EnergyUsageProfile = () => {
     return []
   }, [])
 
+  const transpose = useCallback((m: Array<any>) => m[0].map((x: any, i: number) => m.map(x => x[i])), [])
+
+  const prepareCSVData = useCallback((values: Array<any>, labels: Array<any>) => {
+    const csvDateLabels: Array<any> = []
+    const csvData: Array<Array<any>> = []
+    const transposedMatrix = transpose(values)
+    Object.values(assetsDataRef.current).map((assetDailyData: any) => {
+      return Object.values(assetDailyData).map((asset: any) => asset.starttime)
+    })[0].filter((element: any) => element !== undefined).forEach(date => {
+      csvDateLabels.push(date)
+    })
+    transposedMatrix.forEach((row: any, index: number) => {
+      row.unshift(format(parseISO(csvDateLabels[index]), 'dd.MM.yyyy HH:mm:ss'))
+      csvData.push(row)
+    })
+    //add time to first row first column
+    csvData.unshift([t('chart.timeAxisLabel'), ...labels])
+    return csvData
+  }, [t, transpose])
+
   useEffect(() => {
     if (assetsDataRef.current && assetsNamesRef.current) {
       //instantiate first chart 
       const values = reports.groups.map(group => calculateAggregatedValue(energyType, getGroupOfGroupsAssetIDs(group)))
       const xLabels = Object.values(assetsDataRef.current).map((assetDailyData: any) => {
         return Object.values(assetDailyData).map((asset: any) => asset.starttime)
-      })[0].filter(element => element !== undefined).map(date => `${format(parseISO(date), 'dd/MM/yyyy')}`)
+      })[0].filter(element => element !== undefined).map(date => {
+        return `${format(parseISO(date), 'dd/MM/yyyy')}`
+      })
+      const csvLabels:Array<any> = []
       const datasets = reports.groups.map(group => chooseByLanguage(group.enName, group.plName)).map((group: string, index: number) => {
+        csvLabels.push(group)
         return {
           label: group,
           data: values[index],
           backgroundColor: decideDataColor(index)
         }
       })
+      setCSVDataLevel1(prepareCSVData(values, csvLabels))
       setLevel1({
         xAxisLabels: xLabels,
         datasets: datasets
       })
     }
-  }, [assetsData, chooseByLanguage, getGroupOfGroupsAssetIDs, reports.groups, energyType, calculateAggregatedValue])
+  }, [assetsData, chooseByLanguage, getGroupOfGroupsAssetIDs, reports.groups, energyType, calculateAggregatedValue, setCSVDataLevel1, prepareCSVData])
 
-  useEffect(()=> {
-    if(referenceToCurrentChartForScrolling) {
+  useEffect(() => {
+    if (referenceToCurrentChartForScrolling) {
       referenceToCurrentChartForScrolling.scrollIntoView({ behavior: 'smooth' })
     }
-  },[referenceToCurrentChartForScrolling])
+  }, [referenceToCurrentChartForScrolling])
 
   const createSubgroupsChart = useCallback((group: IGroupStructure | undefined, groupIndex: number, level: number) => {
     if (group?.subgroups) {
@@ -238,7 +267,9 @@ export const EnergyUsageProfile = () => {
       const xLabels = Object.values(assetsDataRef.current).map((assetDailyData: any) => {
         return Object.values(assetDailyData).map((asset: any) => asset.starttime)
       })[0].filter(element => element !== undefined).map(date => `${format(parseISO(date), 'dd/MM/yyyy')}`)
+      const csvLabels:Array<any> = []
       const datasets = group.subgroups.map(subgroup => chooseByLanguage(subgroup.enName, subgroup.plName)).map((group: string, index: number) => {
+        csvLabels.push(group)
         return {
           label: group,
           data: values[index],
@@ -247,17 +278,20 @@ export const EnergyUsageProfile = () => {
       }) // main groups
       switch (level) {
         case 2:
+          setCSVDataLevel2(prepareCSVData(values, csvLabels))
           setLevel2({ title: title, xAxisLabels: xLabels, datasets: datasets, groupIndex: groupIndex })
+          setCSVDataLevel3(undefined)
           setLevel3(undefined)
           break;
         case 3:
+          setCSVDataLevel3(prepareCSVData(values, csvLabels))
           setLevel3({ title: title, xAxisLabels: xLabels, datasets: datasets })
           break;
         default:
           return null;
       }
     }
-  }, [calculateAggregatedValue, chooseByLanguage, getGroupOfGroupsAssetIDs, energyType])
+  }, [calculateAggregatedValue, chooseByLanguage, getGroupOfGroupsAssetIDs, energyType, prepareCSVData])
 
   const createEndAssetsChart = useCallback((group: IGroupStructure | undefined, level: number) => {
     if (group?.assets) {
@@ -266,7 +300,9 @@ export const EnergyUsageProfile = () => {
       const xLabels = Object.values(assetsDataRef.current).map((assetDailyData: any) => {
         return Object.values(assetDailyData).map((asset: any) => asset.starttime)
       })[0].filter(element => element !== undefined).map(date => `${format(parseISO(date), 'dd/MM/yyyy')}`)
+      const csvLabels:Array<any> = []
       const datasets = group.assets.map((asset, index) => {
+        csvLabels.push(asset.feederDescription)
         return {
           label: asset.feederDescription,
           data: values[index],
@@ -275,17 +311,20 @@ export const EnergyUsageProfile = () => {
       })
       switch (level) {
         case 2:
+          setCSVDataLevel2(prepareCSVData(values, csvLabels))
           setLevel2({ title: title, xAxisLabels: xLabels, datasets: datasets, groupIndex: undefined })
+          setCSVDataLevel3(undefined)
           setLevel3(undefined)
           break;
         case 3:
+          setCSVDataLevel3(prepareCSVData(values, csvLabels))
           setLevel3({ title: title, xAxisLabels: xLabels, datasets: datasets })
           break;
         default:
           return null;
       }
     }
-  }, [calculateActiveEnergyImportSingleAsset, chooseByLanguage, energyType])
+  }, [calculateActiveEnergyImportSingleAsset, chooseByLanguage, energyType, prepareCSVData])
 
   const createNextLevelChart = useCallback((dataIndex: number, originLevel: number) => {
     if (originLevel === 1) {
@@ -327,6 +366,9 @@ export const EnergyUsageProfile = () => {
               datasets: datasets
             }}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <ExportCSVButton data={(originLevel === 1 ? csvDataLevel1 : originLevel === 2 ? csvDataLevel2 : originLevel === 3 ? csvDataLevel3 : [[]]) || [[]]} />
         </Grid>
         <Grid item xs={12}>
           <Divider />
