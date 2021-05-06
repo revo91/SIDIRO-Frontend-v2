@@ -92,10 +92,6 @@ export const OverviewTab = () => {
   }
 
   useEffect(() => {
-    console.log(systemTopologyData[assetID])
-  }, [systemTopologyData, assetID])
-
-  useEffect(() => {
     if (!events[switchboardAssetID]) {
       //no data - need to refresh events
       dispatch(setBackdropOpen(true))
@@ -109,7 +105,6 @@ export const OverviewTab = () => {
           dispatch(setBackdropOpen(false))
         }
       }).catch(err => {
-        console.log(err)
         dispatch(setBackdropOpen(false))
       })
     }

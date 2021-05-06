@@ -24,6 +24,7 @@ import { setBackdropOpen } from '../../actions/Backdrop.action';
 import { setDeviceDataDialogOpen } from '../../actions/DeviceDataDialog.action';
 import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
 import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
+import { ExportCSVButton } from '../ExportCSVButton.component';
 
 interface IAggregatedParameterValues {
   maxtime: string
@@ -128,9 +129,17 @@ export const InfeedParametersTab = () => {
       y: number
     }>
   }>>()
+  const [csvPFData, setCSVPFData] = useState<Array<Array<any>>>()
+  const [csvCurrentData, setCSVCurrentData] = useState<Array<Array<any>>>()
+  const [csvTHDData, setCSVTHDData] = useState<Array<Array<any>>>()
+  const [csvOutfeedTHDL1Data, setCsvOutfeedTHDL1Data] = useState<Array<Array<any>>>()
+  const [csvOutfeedTHDL2Data, setCsvOutfeedTHDL2Data] = useState<Array<Array<any>>>()
+  const [csvOutfeedTHDL3Data, setCsvOutfeedTHDL3Data] = useState<Array<Array<any>>>()
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const transpose = useCallback((m: Array<any>) => m[0].map((x: any, i: number) => m.map(x => x[i])), [])
 
   const buttonOnClickOpenDialog = useCallback((date: string, tabIndex: number) => {
     if (dialogData) {
@@ -356,11 +365,15 @@ export const InfeedParametersTab = () => {
 
   useEffect(() => { //SET POWER FACTOR CHART DATA
     if (monthly15minData) {
+      const csvArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), t('reportsPage.reactiveImportPowerFactor'), t('reportsPage.reactiveExportPowerFactor')]]
       const importPowerFactorData = monthly15minData.map(dailyValue => {
+        const time = new Date(dailyValue.starttime).valueOf()
+        csvArray.push([format(parseISO(dailyValue.starttime), 'HH:mm:ss dd.MM.yyyy'), powerFactorCalculator(dailyValue?.Active_Power_Import?.average || 0, Math.max(dailyValue?.Reactive_Power_Export?.average || 0, dailyValue?.Reactive_Power_Import?.average || 0)),
+        powerFactorCalculator(dailyValue?.Active_Power_Export?.average || 0, Math.max(dailyValue?.Reactive_Power_Export?.average || 0, dailyValue?.Reactive_Power_Import?.average || 0))])
         if (dailyValue.Active_Power_Import && dailyValue.Reactive_Power_Import) {
           return {
-            x: new Date(dailyValue.starttime).valueOf(),
-            y: powerFactorCalculator(dailyValue.Active_Power_Import.average, dailyValue.Reactive_Power_Import.average)
+            x: time,
+            y: powerFactorCalculator(dailyValue.Active_Power_Import.average, Math.max(dailyValue.Reactive_Power_Export.average, dailyValue.Reactive_Power_Import.average))
           }
         }
         else {
@@ -372,9 +385,10 @@ export const InfeedParametersTab = () => {
       })
       const exportPowerFactorData = monthly15minData.map(dailyValue => {
         if (dailyValue.Active_Power_Export && dailyValue.Reactive_Power_Export) {
+
           return {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: powerFactorCalculator(dailyValue.Active_Power_Export.average, dailyValue.Reactive_Power_Export.average)
+            y: powerFactorCalculator(dailyValue.Active_Power_Export.average, Math.max(dailyValue.Reactive_Power_Export.average, dailyValue.Reactive_Power_Import.average))
           }
         }
         else {
@@ -384,9 +398,10 @@ export const InfeedParametersTab = () => {
           }
         }
       })
+      setCSVPFData(csvArray)
       setPowerFactorChartData({ importPFData: importPowerFactorData, exportPFData: exportPowerFactorData })
     }
-  }, [monthly15minData])
+  }, [monthly15minData, t])
 
   useEffect(() => { //FETCH MONTHLY DATA_1_MIN AGGREGATED BY 1 CHART DATA
     if (transformer !== '') {
@@ -402,58 +417,77 @@ export const InfeedParametersTab = () => {
 
   useEffect(() => { //SET CURRENT && THD CHARTS DATA
     if (monthly1minData && monthly1minData.length > 0) {
+      const csvCurrentArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), `${t('reportsPage.maxCurrent')} L1`, `${t('reportsPage.maxCurrent')} L2`, `${t('reportsPage.maxCurrent')} L3`,
+      `${t('reportsPage.avgCurrent')} L1`, `${t('reportsPage.avgCurrent')} L2`, `${t('reportsPage.avgCurrent')} L3`]]
+      const csvTHDArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), 'THDI L1', 'THDI L2', 'THDI L3', 'THDU L1', 'THDU L2', 'THDU L3']]
       const datasets = monthly1minData.map(dailyValue => {
+        const maxCurrentL1 = dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.maxvalue).toFixed(3)) : 0;
+        const maxCurrentL2 = dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.maxvalue).toFixed(3)) : 0;
+        const maxCurrentL3 = dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.maxvalue).toFixed(3)) : 0;
+        const avgCurrentL1 = dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.average).toFixed(3)) : 0;
+        const avgCurrentL2 = dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.average).toFixed(3)) : 0;
+        const avgCurrentL3 = dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.average).toFixed(3)) : 0;
+        const avgTHDIL1 = dailyValue.THD_I_L1 ? parseFloat((dailyValue.THD_I_L1.average).toFixed(3)) : 0;
+        const avgTHDIL2 = dailyValue.THD_I_L2 ? parseFloat((dailyValue.THD_I_L2.average).toFixed(3)) : 0;
+        const avgTHDIL3 = dailyValue.THD_I_L3 ? parseFloat((dailyValue.THD_I_L3.average).toFixed(3)) : 0;
+        const avgTHDUL1 = dailyValue.THD_U_L1 ? parseFloat((dailyValue.THD_U_L1.average).toFixed(3)) : 0;
+        const avgTHDUL2 = dailyValue.THD_U_L2 ? parseFloat((dailyValue.THD_U_L2.average).toFixed(3)) : 0;
+        const avgTHDUL3 = dailyValue.THD_U_L3 ? parseFloat((dailyValue.THD_U_L3.average).toFixed(3)) : 0;
+        csvCurrentArray.push([format(parseISO(dailyValue.starttime), 'HH:mm:ss dd.MM.yyyy'), maxCurrentL1, maxCurrentL2, maxCurrentL3, avgCurrentL1, avgCurrentL2, avgCurrentL3])
+        csvTHDArray.push([format(parseISO(dailyValue.starttime), 'HH:mm:ss dd.MM.yyyy'), avgTHDIL1, avgTHDIL2, avgTHDIL3, avgTHDUL1, avgTHDUL2, avgTHDUL3])
         return {
           maxCurrentL1Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.maxvalue).toFixed(3)) : 0
+            y: maxCurrentL1
           },
           maxCurrentL2Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.maxvalue).toFixed(3)) : 0
+            y: maxCurrentL2
           },
           maxCurrentL3Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.maxvalue).toFixed(3)) : 0
+            y: maxCurrentL3
           },
           avgCurrentL1Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.average).toFixed(3)) : 0
+            y: avgCurrentL1
           },
           avgCurrentL2Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.average).toFixed(3)) : 0
+            y: avgCurrentL2
           },
           avgCurrentL3Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.average).toFixed(3)) : 0
+            y: avgCurrentL3
           },
           thdiL1: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_I_L1 ? parseFloat((dailyValue.THD_I_L1.average).toFixed(3)) : 0
+            y: avgTHDIL1
           },
           thdiL2: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_I_L2 ? parseFloat((dailyValue.THD_I_L2.average).toFixed(3)) : 0
+            y: avgTHDIL2
           },
           thdiL3: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_I_L3 ? parseFloat((dailyValue.THD_I_L3.average).toFixed(3)) : 0
+            y: avgTHDIL3
           },
           thduL1: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_U_L1 ? parseFloat((dailyValue.THD_U_L1.average).toFixed(3)) : 0
+            y: avgTHDUL1
           },
           thduL2: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_U_L2 ? parseFloat((dailyValue.THD_U_L2.average).toFixed(3)) : 0
+            y: avgTHDUL2
           },
           thduL3: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_U_L3 ? parseFloat((dailyValue.THD_U_L3.average).toFixed(3)) : 0
+            y: avgTHDUL3
           },
         }
       })
+      setCSVCurrentData(csvCurrentArray)
+      setCSVTHDData(csvTHDArray)
       setCurrentAndTHDChartData({
         maxCurrentL1: datasets.map(el => el.maxCurrentL1Data),
         maxCurrentL2: datasets.map(el => el.maxCurrentL2Data),
@@ -469,7 +503,7 @@ export const InfeedParametersTab = () => {
         thduL3: datasets.map(el => el.thduL3),
       })
     }
-  }, [monthly1minData, setCurrentAndTHDChartData])
+  }, [monthly1minData, setCurrentAndTHDChartData, setCSVCurrentData, setCSVTHDData, t])
 
   useEffect(() => { // GATHER DIRECT OUTFEEDS BELONGING TO SELECTED INFEED
     if (transformer !== '') {
@@ -555,8 +589,9 @@ export const InfeedParametersTab = () => {
     }
   }, [directOutfeeds, dateFrom, dateTo, setDirectOutfeeds1MinData, dispatch])
 
-  useEffect(() => {
+  useEffect(() => { // SET THD CHARTS
     if (directOutfeeds1MinData && directOutfeeds1MinData.length > 0) {
+      const csvOutfeedTHD: Array<Array<any>> = [[t('chart.timeAxisLabel'), ...directOutfeeds1MinData.map(asset => asset.assetName)]]
       const datasetsL1: Array<{
         outfeedName: string, data: Array<{
           x: number,
@@ -604,11 +639,50 @@ export const InfeedParametersTab = () => {
           })
         })
       })
+      
+      const L1DataOnly:Array<any> = datasetsL1.map(dataset => {
+        return dataset.data.map(data=>{
+          return data.y
+        })
+      })
+      const L2DataOnly:Array<any> = datasetsL2.map(dataset => {
+        return dataset.data.map(data=>{
+          return data.y
+        })
+      })
+      const L3DataOnly:Array<any> = datasetsL3.map(dataset => {
+        return dataset.data.map(data=>{
+          return data.y
+        })
+      })
+      const timestamps = datasetsL1[0].data.map(data=>{
+          return format(data.x, 'HH:mm:ss dd.MM.yyyy')
+        })
+      const transposedL1:Array<any> = transpose(L1DataOnly).map((el:Array<any>,index:number)=> {
+        el.unshift(timestamps[index])
+        return el
+      })
+      const transposedL2:Array<any> = transpose(L2DataOnly).map((el:Array<any>,index:number)=> {
+        el.unshift(timestamps[index])
+        return el
+      })
+      const transposedL3:Array<any> = transpose(L3DataOnly).map((el:Array<any>,index:number)=> {
+        el.unshift(timestamps[index])
+        return el
+      })
+      transposedL1.unshift(...csvOutfeedTHD)
+      transposedL2.unshift(...csvOutfeedTHD)
+      transposedL3.unshift(...csvOutfeedTHD)
+      
+      setCsvOutfeedTHDL1Data(transposedL1)
+      setCsvOutfeedTHDL2Data(transposedL2)
+      setCsvOutfeedTHDL3Data(transposedL3)
+      
       setDirectOutfeedsTHDChartDataL1(datasetsL1)
       setDirectOutfeedsTHDChartDataL2(datasetsL2)
       setDirectOutfeedsTHDChartDataL3(datasetsL3)
     }
-  }, [directOutfeeds1MinData, setDirectOutfeedsTHDChartDataL1, setDirectOutfeedsTHDChartDataL2, setDirectOutfeedsTHDChartDataL3])
+  }, [directOutfeeds1MinData, setDirectOutfeedsTHDChartDataL1, setDirectOutfeedsTHDChartDataL2, setDirectOutfeedsTHDChartDataL3, t, transpose])
 
   const setPrecision = (value: number) => {
     return parseFloat(value.toFixed(3))
@@ -720,6 +794,9 @@ export const InfeedParametersTab = () => {
                 yAxisUnit=''
               />
             </Grid>
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvPFData || [[]]} />
+            </Grid>
           </React.Fragment>
           : null}
         {currentAndTHDChartData ?
@@ -792,6 +869,9 @@ export const InfeedParametersTab = () => {
                 yAxisUnit='A'
               />
             </Grid>
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvCurrentData || [[]]} />
+            </Grid>
             <Grid item xs={12} className={classes.sectionMargin}>
               <Typography gutterBottom variant="h5">{t('reportsPage.totalTHD')}</Typography>
             </Grid>
@@ -858,6 +938,9 @@ export const InfeedParametersTab = () => {
               tooltipFormat='PP'
               yAxisUnit='%'
             />
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvTHDData || [[]]} />
+            </Grid>
           </React.Fragment>
           : null}
         {directOutfeedsTHDChartDataL1 ?
@@ -886,6 +969,9 @@ export const InfeedParametersTab = () => {
                 tooltipFormat='PP'
                 yAxisUnit='%'
               />
+            </Grid>
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvOutfeedTHDL1Data || [[]]} />
             </Grid>
           </React.Fragment>
           : null}
@@ -916,6 +1002,9 @@ export const InfeedParametersTab = () => {
                 yAxisUnit='%'
               />
             </Grid>
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvOutfeedTHDL2Data || [[]]} />
+            </Grid>
           </React.Fragment>
           : null}
         {directOutfeedsTHDChartDataL3 ?
@@ -944,6 +1033,9 @@ export const InfeedParametersTab = () => {
                 tooltipFormat='PP'
                 yAxisUnit='%'
               />
+            </Grid>
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvOutfeedTHDL3Data || [[]]} />
             </Grid>
           </React.Fragment>
           : null}

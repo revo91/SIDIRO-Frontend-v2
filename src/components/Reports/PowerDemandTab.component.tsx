@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import Grid from '@material-ui/core/Grid';
@@ -18,6 +18,7 @@ import { setBackdropOpen } from '../../actions/Backdrop.action';
 import { StackedBarChart } from '../StackedBarChart.component';
 import { parseISO, format } from 'date-fns';
 import { fetchTimeseriesAggregates } from '../../services/FetchTimeseriesAggregatesAPI.service';
+import { ExportCSVButton } from '../ExportCSVButton.component';
 
 interface IActivePowerImport {
   Active_Power_Import: number
@@ -40,11 +41,12 @@ export const PowerDemandTab = () => {
   const [infeedPowerDemandExceedings, setInfeedPowerDemandExceedings] = useState<Array<Array<number | string | Date>>>()
   const [warningLine, setWarningLine] = useState<Array<{ x: number, y: number }>>()
   const [alarmLine, setAlarmLine] = useState<Array<{ x: number, y: number }>>()
-  // const [outfeedChartElements, setOutfeedChartElements] = useState<{infeedValues: }>
   const [outfeedChartData, setOutfeedChartData] = useState<{
     xAxisLabels: Array<string> | null, //[...every 15min intervals of a day]
     datasets: Array<{ label: string, data: Array<number>, backgroundColor: string }>
   }>()
+  const [transformersCSVData, setTransformersCSVData] = useState<Array<Array<any>>>()
+  const [outfeedsCSVData, setOutfeedsCSVData] = useState<Array<Array<any>>>()
   const powerDemandAssets = useSelector((state: RootState) => state.powerDemandTab);
   const dateFrom = useSelector((state: RootState) => state.commonReports.dateFrom);
   const dateTo = useSelector((state: RootState) => state.commonReports.dateTo);
@@ -52,6 +54,8 @@ export const PowerDemandTab = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const assetsNames = useSelector((state: RootState) => state.commonReports.assets);
+
+  const transpose = useCallback((m: Array<any>) => m[0].map((x: any, i: number) => m.map(x => x[i])), [])
 
   useEffect(() => {
     if (powerDemandAssets.infeeds && powerDemandAssets.warningThreshold && powerDemandAssets.alarmThreshold) {
@@ -93,13 +97,18 @@ export const PowerDemandTab = () => {
               y: powerDemandAssets.alarmThreshold ? powerDemandAssets.alarmThreshold : 0
             }
           })
+          const trCSVData: Array<Array<any>> = activePowerValuesSum.map(val => {
+            return [format(val.x, 'HH:mm:ss dd.MM.yyyy'), val.y]
+          })
+          trCSVData.unshift([t('chart.timeAxisLabel'), t('reportsPage.averageActivePower15Min')])
+          setTransformersCSVData(trCSVData)
           setAlarmLine(alarmLine)
           setWarningLine(warningLine)
           setInfeedPowerDemandChartData(activePowerValuesSum)
         }
       })
     }
-  }, [dateFrom, dateTo, powerDemandAssets, setInfeedPowerDemandChartData, dispatch])
+  }, [dateFrom, dateTo, powerDemandAssets, setInfeedPowerDemandChartData, dispatch, setTransformersCSVData, t])
 
   useEffect(() => {
     //generate warning/alarm table
@@ -138,13 +147,15 @@ export const PowerDemandTab = () => {
           res.length = res.length - infeedsPart.length
           const outfeedsPart = res;
 
-          let xAxisLabels: Array<string> = []
-          let respectiveDatasetsActivePowers: Array<Array<number>> = []
+          const xAxisLabels: Array<string> = []
+          const csvDateLabels: Array<string> = []
+          const respectiveDatasetsActivePowers: Array<Array<number>> = []
           const datasetsOutfeeds = outfeedsPart.map((outfeeds: IActivePowerImportAggregate, outfeedGroupIndex: number) => {
             const data = outfeeds.data.map((outfeed) => {
               const formattedDate = `${format(parseISO(outfeed.starttime), 'HH:mm')}`
               if (xAxisLabels.indexOf(formattedDate) === -1) {
                 xAxisLabels.push(formattedDate)
+                csvDateLabels.push(outfeed.starttime)
               }
               if (outfeed.Active_Power_Import) {
                 return outfeed.Active_Power_Import.lastvalue / 1000
@@ -172,6 +183,7 @@ export const PowerDemandTab = () => {
             const outfeedsSum = respectiveDatasetsActivePowers.reduce((r, a) => a.map((b, i) => {
               return ((r[i] || 0)) + b
             }), [])
+
             const restPower = data.map((singleVal, index) => parseFloat((singleVal - outfeedsSum[index]).toFixed(3)))
             return {
               label: t('reportsPage.othersDataTitle'),
@@ -181,11 +193,20 @@ export const PowerDemandTab = () => {
           })
 
           const datasets = datasetsOutfeeds.concat(datasetsInfeeds)
+          const onlyData: Array<Array<any>> = datasets.map((dataset) => {
+            return dataset.data
+          })
+          const transposed = transpose(onlyData)
+          transposed.forEach((dataset: any, index: number) => {
+            dataset.unshift(format(new Date(csvDateLabels[index]), 'HH:mm:ss dd.MM.yyyy'))
+          })
+          transposed.unshift([t('chart.timeAxisLabel'), ...datasets.map(dataset => dataset.label)])
+          setOutfeedsCSVData(transposed)
           setOutfeedChartData({ xAxisLabels, datasets })
         }
       })
     }
-  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds, infeedPowerDemandChartData, powerDemandAssets.infeeds, t, dispatch])
+  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds, infeedPowerDemandChartData, powerDemandAssets.infeeds, t, dispatch, transpose])
 
   const handleDateChange = (date: Date) => {
     dispatch(setReportsDate(getUTCDate(date).startOfMonth, getUTCDate(date).endOfMonth))
@@ -259,6 +280,9 @@ export const PowerDemandTab = () => {
               yAxisUnit='kW'
             />
           </Grid>
+          <Grid item xs={12}>
+            <ExportCSVButton data={transformersCSVData || [[]]} />
+          </Grid>
           {infeedPowerDemandExceedings ?
             <React.Fragment>
               <Grid item xs={12} className={classes.sectionMargin}>
@@ -291,6 +315,9 @@ export const PowerDemandTab = () => {
                 datasets: outfeedChartData.datasets
               }}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <ExportCSVButton data={outfeedsCSVData || [[]]} />
           </Grid>
           <Grid item xs={12} md={6}>
             <DatePicker

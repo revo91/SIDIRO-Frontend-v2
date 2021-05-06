@@ -8,7 +8,6 @@ import 'chartjs-adapter-date-fns';
 import { useTranslation } from 'react-i18next';
 import { pl, enUS } from 'date-fns/locale';
 
-
 interface LineChartProps {
   data: {
     datasets: Array<{
@@ -134,8 +133,6 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
       },
     }
   }, [data, chartTitle, theme.palette.text.primary, i18n.language, xAxisTitle, yAxisTitle, yAxisUnit, timeInterval, tooltipFormat]);
-
-
 
   useEffect(() => {
     //instantiate chart with first given data

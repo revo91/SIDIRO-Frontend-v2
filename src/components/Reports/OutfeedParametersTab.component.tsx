@@ -23,6 +23,7 @@ import { decideDataColor } from '../../utilities/SiemensColors.utility';
 import { setDeviceDataDialogOpen } from '../../actions/DeviceDataDialog.action';
 import { setDeviceDataDialogDateFrom } from '../../actions/DeviceDataDialog.action';
 import { setUniversalTabsNameIndex } from '../../actions/UniversalTabs.action';
+import { ExportCSVButton } from '../ExportCSVButton.component';
 
 interface IAggregatedParameterValues {
   maxtime: string
@@ -94,6 +95,8 @@ export const OutfeedParametersTab = () => {
     avgThdiL2: Array<{ x: number, y: number }>,
     avgThdiL3: Array<{ x: number, y: number }>
   }>()
+  const [csvTHDIData, setCsvTHDIData] = useState<Array<Array<any>>>()
+  const [csvCurrentData, setCSVCurrentData] = useState<Array<Array<any>>>()
 
   const buttonOnClickOpenDialog = useCallback((date: string, tabIndex: number) => {
     if (dialogData) {
@@ -249,58 +252,80 @@ export const OutfeedParametersTab = () => {
 
   useEffect(() => { //SET CURRENT && THD CHARTS DATA
     if (monthly1minData && monthly1minData.length > 0) {
+      const csvCurrentArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), `${t('reportsPage.maxCurrent')} L1`, `${t('reportsPage.maxCurrent')} L2`, `${t('reportsPage.maxCurrent')} L3`,
+      `${t('reportsPage.avgCurrent')} L1`, `${t('reportsPage.avgCurrent')} L2`, `${t('reportsPage.avgCurrent')} L3`]]
+      const csvTHDIArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), `${t('reportsPage.maximum')} THDI L1`, `${t('reportsPage.maximum')} THDI L2`, `${t('reportsPage.maximum')} THDI L3`,
+      `${t('reportsPage.average')} THDI L1`, `${t('reportsPage.average')} THDI L2`, `${t('reportsPage.average')} THDI L3`]]
       const datasets = monthly1minData.map(dailyValue => {
+        const maxCurrentL1 = dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.maxvalue).toFixed(3)) : 0;
+        const maxCurrentL2 = dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.maxvalue).toFixed(3)) : 0;
+        const maxCurrentL3 = dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.maxvalue).toFixed(3)) : 0;
+        const avgCurrentL1 = dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.average).toFixed(3)) : 0;
+        const avgCurrentL2 = dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.average).toFixed(3)) : 0;
+        const avgCurrentL3 = dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.average).toFixed(3)) : 0;
+        const maxTHDIL1 = dailyValue.THD_I_L1 ? parseFloat((dailyValue.THD_I_L1.maxvalue).toFixed(3)) : 0;
+        const maxTHDIL2 = dailyValue.THD_I_L2 ? parseFloat((dailyValue.THD_I_L2.maxvalue).toFixed(3)) : 0;
+        const maxTHDIL3 = dailyValue.THD_I_L3 ? parseFloat((dailyValue.THD_I_L3.maxvalue).toFixed(3)) : 0;
+        const avgTHDIL1 = dailyValue.THD_I_L1 ? parseFloat((dailyValue.THD_I_L1.average).toFixed(3)) : 0;
+        const avgTHDIL2 = dailyValue.THD_I_L2 ? parseFloat((dailyValue.THD_I_L2.average).toFixed(3)) : 0;
+        const avgTHDIL3 = dailyValue.THD_I_L3 ? parseFloat((dailyValue.THD_I_L3.average).toFixed(3)) : 0;
+
+        csvCurrentArray.push([format(parseISO(dailyValue.starttime), 'HH:mm:ss dd.MM.yyyy'), maxCurrentL1, maxCurrentL2, maxCurrentL3, avgCurrentL1, avgCurrentL2, avgCurrentL3])
+        csvTHDIArray.push([format(parseISO(dailyValue.starttime), 'HH:mm:ss dd.MM.yyyy'), maxTHDIL1, maxTHDIL2, maxTHDIL3, avgTHDIL1, avgTHDIL2, avgTHDIL3])
+
         return {
           maxCurrentL1Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.maxvalue).toFixed(3)) : 0
+            y: maxCurrentL1
           },
           maxCurrentL2Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.maxvalue).toFixed(3)) : 0
+            y: maxCurrentL2
           },
           maxCurrentL3Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.maxvalue).toFixed(3)) : 0
+            y: maxCurrentL3
           },
           avgCurrentL1Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L1 ? parseFloat((dailyValue.Current_L1.average).toFixed(3)) : 0
+            y: avgCurrentL1
           },
           avgCurrentL2Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L2 ? parseFloat((dailyValue.Current_L2.average).toFixed(3)) : 0
+            y: avgCurrentL2
           },
           avgCurrentL3Data: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.Current_L3 ? parseFloat((dailyValue.Current_L3.average).toFixed(3)) : 0
+            y: avgCurrentL3
           },
           maxThdiL1: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_I_L1 ? parseFloat((dailyValue.THD_I_L1.maxvalue).toFixed(3)) : 0
+            y: maxTHDIL1
           },
           maxThdiL2: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_I_L2 ? parseFloat((dailyValue.THD_I_L2.maxvalue).toFixed(3)) : 0
+            y: maxTHDIL2
           },
           maxThdiL3: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_I_L3 ? parseFloat((dailyValue.THD_I_L3.maxvalue).toFixed(3)) : 0
+            y: maxTHDIL3
           },
           avgThdiL1: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_U_L1 ? parseFloat((dailyValue.THD_I_L1.average).toFixed(3)) : 0
+            y: avgTHDIL1
           },
           avgThdiL2: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_U_L2 ? parseFloat((dailyValue.THD_I_L2.average).toFixed(3)) : 0
+            y: avgTHDIL2
           },
           avgThdiL3: {
             x: new Date(dailyValue.starttime).valueOf(),
-            y: dailyValue.THD_U_L3 ? parseFloat((dailyValue.THD_I_L3.average).toFixed(3)) : 0
+            y: avgTHDIL3
           },
         }
       })
+      setCSVCurrentData(csvCurrentArray)
+      setCsvTHDIData(csvTHDIArray)
       setCurrentAndTHDChartData({
         maxCurrentL1: datasets.map(el => el.maxCurrentL1Data),
         maxCurrentL2: datasets.map(el => el.maxCurrentL2Data),
@@ -316,7 +341,7 @@ export const OutfeedParametersTab = () => {
         avgThdiL3: datasets.map(el => el.avgThdiL3),
       })
     }
-  }, [monthly1minData, setCurrentAndTHDChartData])
+  }, [monthly1minData, setCurrentAndTHDChartData, t])
 
   useEffect(() => { // SET SELECTED OUTFEED DIALOG DATA
     if (outfeedAssetID && outfeedAssetName && switchboard) {
@@ -435,14 +460,14 @@ export const OutfeedParametersTab = () => {
               <Typography gutterBottom variant="h5">{t('reportsPage.singleOutfeedParameters')} {outfeedAssetName}</Typography>
             </Grid>
             <Grid item xs={12} lg={6}>
-              <Typography gutterBottom variant="body1">{t('reportsPage.voltageParametersTitle')}</Typography>
+              <Typography gutterBottom variant="body1">{t('reportsPage.currentParametersTitle')}</Typography>
               <UniversalTable
                 columns={outfeedMonthlyAggregatedDataCurrentTable.columns}
                 rows={outfeedMonthlyAggregatedDataCurrentTable.rows}
               />
             </Grid>
             <Grid item xs={12} lg={6}>
-              <Typography gutterBottom variant="body1">{t('reportsPage.voltageParametersTitle')}</Typography>
+              <Typography gutterBottom variant="body1">{t('reportsPage.thdParametersTitle')}</Typography>
               <UniversalTable
                 columns={outfeedMonthlyAggregatedDataTHDITable.columns}
                 rows={outfeedMonthlyAggregatedDataTHDITable.rows}
@@ -520,72 +545,80 @@ export const OutfeedParametersTab = () => {
                 yAxisUnit='A'
               />
             </Grid>
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvCurrentData || [[]]} />
+            </Grid>
             <Grid item xs={12} className={classes.sectionMargin}>
               <Typography gutterBottom variant="h5">{t('reportsPage.totalTHD')}</Typography>
             </Grid>
-            <LineChart
-              data={{
-                datasets: [{
-                  label: `${t('reportsPage.maximum')} THDI L1`,
-                  backgroundColor: decideDataColor(0),
-                  borderColor: decideDataColor(0),
-                  fill: false,
-                  lineTension: 0,
-                  data: currentAndTHDChartData.maxThdiL1,
-                  pointRadius: 0
-                },
-                {
-                  label: `${t('reportsPage.maximum')} THDI L2`,
-                  backgroundColor: decideDataColor(1),
-                  borderColor: decideDataColor(1),
-                  fill: false,
-                  lineTension: 0,
-                  data: currentAndTHDChartData.maxThdiL2,
-                  pointRadius: 0
-                },
-                {
-                  label: `${t('reportsPage.maximum')} THDI L3`,
-                  backgroundColor: decideDataColor(2),
-                  borderColor: decideDataColor(2),
-                  fill: false,
-                  lineTension: 0,
-                  data: currentAndTHDChartData.maxThdiL3,
-                  pointRadius: 0
-                },
-                {
-                  label: `${t('reportsPage.average')} THDI L1`,
-                  backgroundColor: decideDataColor(3),
-                  borderColor: decideDataColor(3),
-                  fill: false,
-                  lineTension: 0,
-                  data: currentAndTHDChartData.avgThdiL1,
-                  pointRadius: 0
-                },
-                {
-                  label: `${t('reportsPage.average')} THDI L2`,
-                  backgroundColor: decideDataColor(4),
-                  borderColor: decideDataColor(4),
-                  fill: false,
-                  lineTension: 0,
-                  data: currentAndTHDChartData.avgThdiL2,
-                  pointRadius: 0
-                },
-                {
-                  label: `${t('reportsPage.average')} THDI L3`,
-                  backgroundColor: decideDataColor(5),
-                  borderColor: decideDataColor(5),
-                  fill: false,
-                  lineTension: 0,
-                  data: currentAndTHDChartData.avgThdiL3,
-                  pointRadius: 0
-                }]
-              }}
-              xAxisTitle={t('chart.timeAxisLabel')}
-              yAxisTitle={t('chart.valueAxisLabel')}
-              timeInterval='day'
-              tooltipFormat='PP'
-              yAxisUnit='%'
-            />
+            <Grid item xs={12}>
+              <LineChart
+                data={{
+                  datasets: [{
+                    label: `${t('reportsPage.maximum')} THDI L1`,
+                    backgroundColor: decideDataColor(0),
+                    borderColor: decideDataColor(0),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.maxThdiL1,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.maximum')} THDI L2`,
+                    backgroundColor: decideDataColor(1),
+                    borderColor: decideDataColor(1),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.maxThdiL2,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.maximum')} THDI L3`,
+                    backgroundColor: decideDataColor(2),
+                    borderColor: decideDataColor(2),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.maxThdiL3,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.average')} THDI L1`,
+                    backgroundColor: decideDataColor(3),
+                    borderColor: decideDataColor(3),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.avgThdiL1,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.average')} THDI L2`,
+                    backgroundColor: decideDataColor(4),
+                    borderColor: decideDataColor(4),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.avgThdiL2,
+                    pointRadius: 0
+                  },
+                  {
+                    label: `${t('reportsPage.average')} THDI L3`,
+                    backgroundColor: decideDataColor(5),
+                    borderColor: decideDataColor(5),
+                    fill: false,
+                    lineTension: 0,
+                    data: currentAndTHDChartData.avgThdiL3,
+                    pointRadius: 0
+                  }]
+                }}
+                xAxisTitle={t('chart.timeAxisLabel')}
+                yAxisTitle={t('chart.valueAxisLabel')}
+                timeInterval='day'
+                tooltipFormat='PP'
+                yAxisUnit='%'
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <ExportCSVButton data={csvTHDIData || [[]]} />
+            </Grid>
           </React.Fragment>
           : null}
       </Grid>
