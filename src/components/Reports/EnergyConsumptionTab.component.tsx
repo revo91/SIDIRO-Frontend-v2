@@ -155,7 +155,7 @@ export const EnergyConsumptionTab = () => {
       const title = chooseByLanguage(group.enName, group.plName)
       const values = group.assets?.map(asset => calculateActiveEnergyImportSingleAsset(asset))
 
-      const labels = group.assets?.map(asset => asset.feederName)
+      const labels = group.assets?.map(asset => i18n.language === 'pl'? asset.feederNamePL: asset.feederNameEN)
       switch (level) {
         case 2:
           setLevel2({ title, labels, values, groupIndex: undefined })
@@ -168,7 +168,7 @@ export const EnergyConsumptionTab = () => {
           return null;
       }
     }
-  }, [calculateActiveEnergyImportSingleAsset, chooseByLanguage])
+  }, [calculateActiveEnergyImportSingleAsset, chooseByLanguage, i18n.language])
 
   const createNextLevelChart = useCallback((dataIndex: number, originLevel: number) => {
     if (originLevel === 1) {

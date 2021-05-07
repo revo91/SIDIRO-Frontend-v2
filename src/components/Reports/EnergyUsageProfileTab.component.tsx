@@ -302,9 +302,9 @@ export const EnergyUsageProfile = () => {
       })[0].filter(element => element !== undefined).map(date => `${format(parseISO(date), 'dd/MM/yyyy')}`)
       const csvLabels:Array<any> = []
       const datasets = group.assets.map((asset, index) => {
-        csvLabels.push(asset.feederDescription)
+        csvLabels.push(i18n.language==='pl'? asset.feederDescriptionPL : asset.feederDescriptionEN)
         return {
-          label: asset.feederDescription,
+          label: i18n.language==='pl'? asset.feederDescriptionPL : asset.feederDescriptionEN,
           data: values[index],
           backgroundColor: decideDataColor(index)
         }
@@ -324,7 +324,7 @@ export const EnergyUsageProfile = () => {
           return null;
       }
     }
-  }, [calculateActiveEnergyImportSingleAsset, chooseByLanguage, energyType, prepareCSVData])
+  }, [calculateActiveEnergyImportSingleAsset, chooseByLanguage, energyType, prepareCSVData, i18n.language])
 
   const createNextLevelChart = useCallback((dataIndex: number, originLevel: number) => {
     if (originLevel === 1) {

@@ -18,8 +18,10 @@ export interface IGroupStructure {
 }
 
 export interface IGroupElementStructure {
-  feederName: string,
-  feederDescription: string,
+  feederNameEN: string,
+  feederNamePL: string,
+  feederDescriptionEN: string,
+  feederDescriptionPL: string,
   assetID: string,
 }
 

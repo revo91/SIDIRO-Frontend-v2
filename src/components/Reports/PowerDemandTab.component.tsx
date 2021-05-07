@@ -50,7 +50,7 @@ export const PowerDemandTab = () => {
   const powerDemandAssets = useSelector((state: RootState) => state.powerDemandTab);
   const dateFrom = useSelector((state: RootState) => state.commonReports.dateFrom);
   const dateTo = useSelector((state: RootState) => state.commonReports.dateTo);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const classes = useStyles();
   const assetsNames = useSelector((state: RootState) => state.commonReports.assets);
@@ -166,7 +166,7 @@ export const PowerDemandTab = () => {
             })
             respectiveDatasetsActivePowers.push(data)
             return {
-              label: powerDemandAssets.outfeeds ? assetsNames[powerDemandAssets.outfeeds[outfeedGroupIndex]].feederName : '',
+              label: powerDemandAssets.outfeeds ? i18n.language === 'pl' ? assetsNames[powerDemandAssets.outfeeds[outfeedGroupIndex]].feederNamePL : assetsNames[powerDemandAssets.outfeeds[outfeedGroupIndex]].feederNameEN : '',
               data: data,
               backgroundColor: decideDataColor(outfeedGroupIndex)
             }
@@ -206,7 +206,7 @@ export const PowerDemandTab = () => {
         }
       })
     }
-  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds, infeedPowerDemandChartData, powerDemandAssets.infeeds, t, dispatch, transpose])
+  }, [assetsNames, outfeedsDate, powerDemandAssets.outfeeds, infeedPowerDemandChartData, powerDemandAssets.infeeds, t, dispatch, transpose, i18n.language])
 
   const handleDateChange = (date: Date) => {
     dispatch(setReportsDate(getUTCDate(date).startOfMonth, getUTCDate(date).endOfMonth))

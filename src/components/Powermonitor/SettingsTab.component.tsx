@@ -16,7 +16,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { modifyPowerMonitorConfig, subscribeToNotification, unsubscribeToNotification } from '../../services/CustomAPI.service';
+import { modifyPowerMonitorConfig, subscribeToNotification, unsubscribeToNotification, checkSubscribed } from '../../services/CustomAPI.service';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../reducers/Root.reducer';
 import { setPowermonitorConfig } from '../../actions/Powermonitor.action';
@@ -77,14 +77,27 @@ export const PowermonitorSettingsTab = () => {
       .then(function (registration) {
         return registration.pushManager.getSubscription();
       }).then(function (subscription) {
+        const body = {
+          language: i18n.language,
+          userId: userPlantData.userId,
+          subscriptionData: subscription
+        }
         if (subscription) {
-          setSubscribed(true)
+          checkSubscribed(powermonitorConfig.plantId, powermonitorConfig.id, body).then((res) => {
+            if(res==="true") {
+              setSubscribed(true)
+            }
+          })
           console.log('Already subscribed', subscription.endpoint);
         } else {
-          setSubscribed(false)
+          checkSubscribed(powermonitorConfig.plantId, powermonitorConfig.id, body).then((res) => {
+            if(res==="false") {
+              setSubscribed(false)
+            }
+          })
         }
       });
-  }, [])
+  }, [i18n.language, powermonitorConfig.id, powermonitorConfig.plantId, userPlantData.userId])
 
   const urlBase64ToUint8Array = (base64String: string) => {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -115,7 +128,7 @@ export const PowermonitorSettingsTab = () => {
           userId: userPlantData.userId,
           subscriptionData: subscription
         }
-        subscribeToNotification(powermonitorConfig.plantId, powermonitorConfig.id, body).then(res => {
+        subscribeToNotification(powermonitorConfig.plantId, powermonitorConfig.id, body).then(() => {
           setSubscribed(true)
         })
       });
@@ -135,7 +148,7 @@ export const PowermonitorSettingsTab = () => {
                 userId: userPlantData.userId,
                 subscriptionData: subscription
               }
-              unsubscribeToNotification(powermonitorConfig.plantId, powermonitorConfig.id, body).then(res => {
+              unsubscribeToNotification(powermonitorConfig.plantId, powermonitorConfig.id, body).then(() => {
                 setSubscribed(false)
               })
             });
@@ -302,7 +315,7 @@ export const PowermonitorSettingsTab = () => {
                 <Typography gutterBottom variant='h5'>{t('powermonitorPage.notifications')}</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Button onClick={() => subscribed ? unsubscribe() : subscribe()} fullWidth variant='contained' color={subscribed ? 'secondary' :'primary' }>{subscribed ? t('powermonitorPage.notificationsDeregister') : t('powermonitorPage.notificationsRegister')}</Button>
+                <Button onClick={() => subscribed ? unsubscribe() : subscribe()} fullWidth variant='contained' color={subscribed ? 'secondary' : 'primary'}>{subscribed ? t('powermonitorPage.notificationsDeregister') : t('powermonitorPage.notificationsRegister')}</Button>
               </Grid>
               {/* <Grid item xs={6}>
                 <Button onClick={() => unsubscribe()} fullWidth variant='contained' color='secondary'>{t('powermonitorPage.notificationsDeregister')}</Button>
