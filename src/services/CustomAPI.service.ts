@@ -85,6 +85,6 @@ export const checkSubscribed = async (plantName: string, powermonitorId: string,
     },
     body: JSON.stringify(body)
   })
-    const res = await response.json()
+    const res = await response.text()
     return res
 }

@@ -84,17 +84,13 @@ export const PowermonitorSettingsTab = () => {
         }
         if (subscription) {
           checkSubscribed(powermonitorConfig.plantId, powermonitorConfig.id, body).then((res) => {
-            if(res==="true") {
+            if (res === "true") {
               setSubscribed(true)
             }
           })
           console.log('Already subscribed', subscription.endpoint);
         } else {
-          checkSubscribed(powermonitorConfig.plantId, powermonitorConfig.id, body).then((res) => {
-            if(res==="false") {
-              setSubscribed(false)
-            }
-          })
+          setSubscribed(false)
         }
       });
   }, [i18n.language, powermonitorConfig.id, powermonitorConfig.plantId, userPlantData.userId])
