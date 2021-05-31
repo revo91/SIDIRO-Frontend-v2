@@ -146,10 +146,10 @@ export const OverviewTab = () => {
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
-        rows={[[t('deviceDataDialog.activePowerImport'), `${systemTopologyData[assetID]?.Active_Power_Import || 0} kW`],
-        [t('deviceDataDialog.activePowerExport'), `${systemTopologyData[assetID]?.Active_Power_Export || 0} kW`],
-        [t('deviceDataDialog.reactivePowerImport'), `${systemTopologyData[assetID]?.Reactive_Power_Import || 0} kvar`],
-        [t('deviceDataDialog.reactivePowerExport'), `${systemTopologyData[assetID]?.Reactive_Power_Export || 0} kvar`],
+        rows={[[t('deviceDataDialog.activePowerImport'), `${systemTopologyData[assetID]?.Active_Power_Import || 0} W`],
+        [t('deviceDataDialog.activePowerExport'), `${systemTopologyData[assetID]?.Active_Power_Export || 0} W`],
+        [t('deviceDataDialog.reactivePowerImport'), `${systemTopologyData[assetID]?.Reactive_Power_Import || 0} var`],
+        [t('deviceDataDialog.reactivePowerExport'), `${systemTopologyData[assetID]?.Reactive_Power_Export || 0} var`],
         [t('deviceDataDialog.powerFactor'), `${systemTopologyData[assetID] ? powerFactorCalculator(systemTopologyData[assetID].Active_Power_Import, Math.max(systemTopologyData[assetID].Reactive_Power_Import, systemTopologyData[assetID].Reactive_Power_Export)) : 0} PF`]]}
         small />
     </div>

@@ -40,7 +40,7 @@ export const PowerTab = () => {
           const reactivePowerExportPoints: Array<{ x: number, y: number }> = []
           const activePowerImportPoints: Array<{ x: number, y: number }> = []
           const reactivePowerImportPoints: Array<{ x: number, y: number }> = []
-          const csvArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), `${t('deviceDataDialog.activePowerExport')} [kW]`, `${t('deviceDataDialog.reactivePowerExport')} [kvar]`, `${t('deviceDataDialog.activePowerImport')} [kW]`, `${t('deviceDataDialog.reactivePowerImport')} [kvar]`]]
+          const csvArray: Array<Array<any>> = [[t('chart.timeAxisLabel'), `${t('deviceDataDialog.activePowerExport')} [W]`, `${t('deviceDataDialog.reactivePowerExport')} [var]`, `${t('deviceDataDialog.activePowerImport')} [W]`, `${t('deviceDataDialog.reactivePowerImport')} [var]`]]
           res.forEach((point: IPower) => {
             activePowerExportPoints.push({
               x: new Date(point._time).valueOf(),
@@ -77,7 +77,7 @@ export const PowerTab = () => {
             data={{
               datasets: [
                 {
-                  label: `${t('deviceDataDialog.activePowerExport')} [kW]`,
+                  label: `${t('deviceDataDialog.activePowerExport')} [W]`,
                   backgroundColor: decideDataColor(0),
                   borderColor: decideDataColor(0),
                   fill: false,
@@ -86,7 +86,7 @@ export const PowerTab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `${t('deviceDataDialog.activePowerImport')} [kW]`,
+                  label: `${t('deviceDataDialog.activePowerImport')} [W]`,
                   backgroundColor: decideDataColor(1),
                   borderColor: decideDataColor(1),
                   fill: false,
@@ -95,7 +95,7 @@ export const PowerTab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `${t('deviceDataDialog.reactivePowerExport')} [kvar]`,
+                  label: `${t('deviceDataDialog.reactivePowerExport')} [var]`,
                   backgroundColor: decideDataColor(2),
                   borderColor: decideDataColor(2),
                   fill: false,
@@ -104,7 +104,7 @@ export const PowerTab = () => {
                   pointRadius: 0
                 },
                 {
-                  label: `${t('deviceDataDialog.reactivePowerImport')} [kvar]`,
+                  label: `${t('deviceDataDialog.reactivePowerImport')} [var]`,
                   backgroundColor: decideDataColor(3),
                   borderColor: decideDataColor(3),
                   fill: false,

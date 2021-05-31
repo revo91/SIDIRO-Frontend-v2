@@ -60,7 +60,9 @@ export const Events = () => {
           }
           else if (diagram.assetID) {
             dispatch(setEvents(diagram.assetID, []))
+            dispatch(setBackdropOpen(false))
           }
+          dispatch(setBackdropOpen(false))
         }).catch(err => {
           dispatch(setBackdropOpen(false))
         })

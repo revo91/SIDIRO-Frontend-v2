@@ -1,0 +1,118 @@
+"filename", "language", "CSS", "JSON", "TypeScript", "JavaScript", "TypeScript React", "XML", "Markdown", "HTML", "comment", "blank", "total"
+"e:\Dev\React\sidiro\README.md", "Markdown", 0, 0, 0, 0, 0, 0, 26, 0, 0, 21, 47
+"e:\Dev\React\sidiro\package.json", "JSON", 0, 78, 0, 0, 0, 0, 0, 0, 0, 1, 79
+"e:\Dev\React\sidiro\public\index.html", "HTML", 0, 0, 0, 0, 0, 0, 0, 21, 23, 1, 45
+"e:\Dev\React\sidiro\public\manifest.json", "JSON", 0, 25, 0, 0, 0, 0, 0, 0, 0, 1, 26
+"e:\Dev\React\sidiro\src\App.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"e:\Dev\React\sidiro\src\App.test.tsx", "TypeScript React", 0, 0, 0, 0, 8, 0, 0, 0, 0, 2, 10
+"e:\Dev\React\sidiro\src\App.tsx", "TypeScript React", 0, 0, 0, 0, 87, 0, 0, 0, 0, 8, 95
+"e:\Dev\React\sidiro\src\actions\Backdrop.action.ts", "TypeScript", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2
+"e:\Dev\React\sidiro\src\actions\DeviceDataDialog.action.ts", "TypeScript", 0, 0, 16, 0, 0, 0, 0, 0, 0, 3, 19
+"e:\Dev\React\sidiro\src\actions\Elevation.action.ts", "TypeScript", 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 3
+"e:\Dev\React\sidiro\src\actions\Events.action.ts", "TypeScript", 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 4
+"e:\Dev\React\sidiro\src\actions\LanguageDialog.action.ts", "TypeScript", 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 3
+"e:\Dev\React\sidiro\src\actions\Overview.action.ts", "TypeScript", 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 3
+"e:\Dev\React\sidiro\src\actions\Powermonitor.action.ts", "TypeScript", 0, 0, 3, 0, 0, 0, 0, 0, 0, 1, 4
+"e:\Dev\React\sidiro\src\actions\Reports.action.ts", "TypeScript", 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4
+"e:\Dev\React\sidiro\src\actions\Reports\CommonReports.action.ts", "TypeScript", 0, 0, 4, 0, 0, 0, 0, 0, 0, 1, 5
+"e:\Dev\React\sidiro\src\actions\SystemTopologyData.action.ts", "TypeScript", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2
+"e:\Dev\React\sidiro\src\actions\UniversalTabs.action.ts", "TypeScript", 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 3
+"e:\Dev\React\sidiro\src\actions\Userdata.action.ts", "TypeScript", 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2
+"e:\Dev\React\sidiro\src\actions\deviceDataDialogElevationDataSource.action.ts", "TypeScript", 0, 0, 9, 0, 0, 0, 0, 0, 0, 1, 10
+"e:\Dev\React\sidiro\src\assets\sie-logo-petrol-rgb.svg", "XML", 0, 0, 0, 0, 0, 42, 0, 0, 1, 1, 44
+"e:\Dev\React\sidiro\src\assets\sie-logo-white-rgb.svg", "XML", 0, 0, 0, 0, 0, 42, 0, 0, 1, 1, 44
+"e:\Dev\React\sidiro\src\assets\siemensSivaconLogo.svg", "XML", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"e:\Dev\React\sidiro\src\components\Backdrop.component.tsx", "TypeScript React", 0, 0, 0, 0, 21, 0, 0, 0, 0, 4, 25
+"e:\Dev\React\sidiro\src\components\BarChart.component.tsx", "TypeScript React", 0, 0, 0, 0, 55, 0, 0, 0, 2, 5, 62
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog.component.tsx", "TypeScript React", 0, 0, 0, 0, 102, 0, 0, 0, 0, 5, 107
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\BreakerDevice.component.tsx", "TypeScript React", 0, 0, 0, 0, 28, 0, 0, 0, 0, 2, 30
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\CurrentTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 115, 0, 0, 0, 0, 4, 119
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\OverviewTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 367, 0, 0, 0, 6, 8, 381
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\OverviewTabCircuitBreakerSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 137, 0, 0, 0, 0, 3, 140
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\OverviewTabGeneratorSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 31, 0, 0, 0, 0, 3, 34
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\OverviewTabTransformerSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 44, 0, 0, 0, 5, 3, 52
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\PowerTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 134, 0, 0, 0, 0, 4, 138
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\THDITab.component.tsx", "TypeScript React", 0, 0, 0, 0, 115, 0, 0, 0, 0, 4, 119
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\THDUTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 115, 0, 0, 0, 0, 4, 119
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\TransformerDevice.component.tsx", "TypeScript React", 0, 0, 0, 0, 40, 0, 0, 0, 0, 2, 42
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\VoltageLLTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 115, 0, 0, 0, 0, 4, 119
+"e:\Dev\React\sidiro\src\components\DeviceDataDialog\VoltageLNTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 115, 0, 0, 0, 0, 4, 119
+"e:\Dev\React\sidiro\src\components\Drawer.component.tsx", "TypeScript React", 0, 0, 0, 0, 351, 0, 0, 0, 2, 14, 367
+"e:\Dev\React\sidiro\src\components\Elevation.component.tsx", "TypeScript React", 0, 0, 0, 0, 291, 0, 0, 0, 5, 12, 308
+"e:\Dev\React\sidiro\src\components\Elevation\CircuitBreaker3VAHorizontalSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 17, 0, 0, 0, 0, 1, 18
+"e:\Dev\React\sidiro\src\components\Elevation\CircuitBreaker3VAVerticalSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 43, 0, 0, 0, 0, 1, 44
+"e:\Dev\React\sidiro\src\components\Elevation\CircuitBreaker3WLSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 78, 0, 0, 0, 0, 2, 80
+"e:\Dev\React\sidiro\src\components\Elevation\CompartmentSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 106, 0, 0, 0, 0, 3, 109
+"e:\Dev\React\sidiro\src\components\Elevation\PanelSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 94, 0, 0, 0, 3, 4, 101
+"e:\Dev\React\sidiro\src\components\Elevation\SwitchDisconnector3NJ4SVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 23, 0, 0, 0, 0, 1, 24
+"e:\Dev\React\sidiro\src\components\Elevation\SwitchDisconnector3NJ6SVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 32, 0, 0, 0, 0, 1, 33
+"e:\Dev\React\sidiro\src\components\Elevation\SwitchDisconnector3NP1VerticalSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 29, 0, 0, 0, 0, 1, 30
+"e:\Dev\React\sidiro\src\components\Elevation\TestSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 51, 0, 0, 0, 0, 3, 54
+"e:\Dev\React\sidiro\src\components\Events.component.tsx", "TypeScript React", 0, 0, 0, 0, 180, 0, 0, 0, 1, 10, 191
+"e:\Dev\React\sidiro\src\components\ExportCSVButton.component.tsx", "TypeScript React", 0, 0, 0, 0, 48, 0, 0, 0, 0, 5, 53
+"e:\Dev\React\sidiro\src\components\LanguageDialog.component.tsx", "TypeScript React", 0, 0, 0, 0, 56, 0, 0, 0, 0, 4, 60
+"e:\Dev\React\sidiro\src\components\LineChart.component.tsx", "TypeScript React", 0, 0, 0, 0, 142, 0, 0, 0, 1, 6, 149
+"e:\Dev\React\sidiro\src\components\Overview.component.tsx", "TypeScript React", 0, 0, 0, 0, 441, 0, 0, 0, 4, 18, 463
+"e:\Dev\React\sidiro\src\components\Overview\CircuitBreakerSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 293, 0, 0, 0, 1, 3, 297
+"e:\Dev\React\sidiro\src\components\Overview\GeneratorSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 72, 0, 0, 0, 0, 2, 74
+"e:\Dev\React\sidiro\src\components\Overview\ParametersTableSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 103, 0, 0, 0, 0, 3, 106
+"e:\Dev\React\sidiro\src\components\Overview\SectionSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 52, 0, 0, 0, 0, 4, 56
+"e:\Dev\React\sidiro\src\components\Overview\TransformerSVG.component.tsx", "TypeScript React", 0, 0, 0, 0, 93, 0, 0, 0, 1, 3, 97
+"e:\Dev\React\sidiro\src\components\PieChart.component.tsx", "TypeScript React", 0, 0, 0, 0, 85, 0, 0, 0, 1, 7, 93
+"e:\Dev\React\sidiro\src\components\Powermonitor.component.tsx", "TypeScript React", 0, 0, 0, 0, 51, 0, 0, 0, 0, 4, 55
+"e:\Dev\React\sidiro\src\components\Powermonitor\LoadMonitoringTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 181, 0, 0, 0, 0, 9, 190
+"e:\Dev\React\sidiro\src\components\Powermonitor\SettingsTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 316, 0, 0, 0, 1, 19, 336
+"e:\Dev\React\sidiro\src\components\Reports.component.tsx", "TypeScript React", 0, 0, 0, 0, 84, 0, 0, 0, 1, 4, 89
+"e:\Dev\React\sidiro\src\components\Reports\EnergyConsumptionTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 267, 0, 0, 0, 4, 17, 288
+"e:\Dev\React\sidiro\src\components\Reports\EnergyUsageProfileTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 410, 0, 0, 0, 5, 18, 433
+"e:\Dev\React\sidiro\src\components\Reports\InfeedParametersTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 1018, 0, 0, 0, 0, 27, 1045
+"e:\Dev\React\sidiro\src\components\Reports\OutfeedParametersTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 608, 0, 0, 0, 0, 19, 627
+"e:\Dev\React\sidiro\src\components\Reports\PowerDemandTab.component.tsx", "TypeScript React", 0, 0, 0, 0, 325, 0, 0, 0, 2, 14, 341
+"e:\Dev\React\sidiro\src\components\StackedBarChart.component.tsx", "TypeScript React", 0, 0, 0, 0, 121, 0, 0, 0, 0, 7, 128
+"e:\Dev\React\sidiro\src\components\TableWithSort.component.tsx", "TypeScript React", 0, 0, 0, 0, 200, 0, 0, 0, 14, 19, 233
+"e:\Dev\React\sidiro\src\components\UniversalTable.component.tsx", "TypeScript React", 0, 0, 0, 0, 41, 0, 0, 0, 1, 3, 45
+"e:\Dev\React\sidiro\src\components\UniversalTabs.component.tsx", "TypeScript React", 0, 0, 0, 0, 80, 0, 0, 0, 3, 9, 92
+"e:\Dev\React\sidiro\src\global.d.ts", "TypeScript", 0, 0, 7, 0, 0, 0, 0, 0, 0, 2, 9
+"e:\Dev\React\sidiro\src\hooks\useUpdateChartDatasets.hook.ts", "TypeScript", 0, 0, 48, 0, 0, 0, 0, 0, 2, 2, 52
+"e:\Dev\React\sidiro\src\hooks\useUpdateChartFontColor.hook.ts", "TypeScript", 0, 0, 45, 0, 0, 0, 0, 0, 1, 5, 51
+"e:\Dev\React\sidiro\src\hooks\useUpdateStackedChartDatasets.hook.ts", "TypeScript", 0, 0, 60, 0, 0, 0, 0, 0, 2, 2, 64
+"e:\Dev\React\sidiro\src\i18n.ts", "TypeScript", 0, 0, 31, 0, 0, 0, 0, 0, 11, 11, 53
+"e:\Dev\React\sidiro\src\index.css", "CSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"e:\Dev\React\sidiro\src\index.tsx", "TypeScript React", 0, 0, 0, 0, 13, 0, 0, 0, 10, 4, 27
+"e:\Dev\React\sidiro\src\logo.svg", "XML", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"e:\Dev\React\sidiro\src\react-app-env.d.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2
+"e:\Dev\React\sidiro\src\reducers\Backdrop.reducer.ts", "TypeScript", 0, 0, 19, 0, 0, 0, 0, 0, 0, 3, 22
+"e:\Dev\React\sidiro\src\reducers\DeviceDataDialog.reducer.ts", "TypeScript", 0, 0, 48, 0, 0, 0, 0, 0, 1, 5, 54
+"e:\Dev\React\sidiro\src\reducers\DeviceDataDialogElevationDataSource.reducer.ts", "TypeScript", 0, 0, 35, 0, 0, 0, 0, 0, 0, 5, 40
+"e:\Dev\React\sidiro\src\reducers\Elevation.reducer.ts", "TypeScript", 0, 0, 52, 0, 0, 0, 0, 0, 0, 4, 56
+"e:\Dev\React\sidiro\src\reducers\Events.reducer.ts", "TypeScript", 0, 0, 29, 0, 0, 0, 0, 0, 0, 5, 34
+"e:\Dev\React\sidiro\src\reducers\LanguageDialog.reducer.ts", "TypeScript", 0, 0, 19, 0, 0, 0, 0, 0, 0, 3, 22
+"e:\Dev\React\sidiro\src\reducers\Overview.reducer.ts", "TypeScript", 0, 0, 86, 0, 0, 0, 0, 0, 0, 4, 90
+"e:\Dev\React\sidiro\src\reducers\Powermonitor.reducer.ts", "TypeScript", 0, 0, 66, 0, 0, 0, 0, 0, 0, 4, 70
+"e:\Dev\React\sidiro\src\reducers\Reports.reducer.ts", "TypeScript", 0, 0, 36, 0, 0, 0, 0, 0, 0, 6, 42
+"e:\Dev\React\sidiro\src\reducers\Reports\CommonReports.reducer.ts", "TypeScript", 0, 0, 47, 0, 0, 0, 0, 0, 0, 6, 53
+"e:\Dev\React\sidiro\src\reducers\Reports\PowerDemandTab.reducer.ts", "TypeScript", 0, 0, 32, 0, 0, 0, 0, 0, 0, 4, 36
+"e:\Dev\React\sidiro\src\reducers\Root.reducer.ts", "TypeScript", 0, 0, 32, 0, 0, 0, 0, 0, 0, 2, 34
+"e:\Dev\React\sidiro\src\reducers\SystemTopologyData.reducer.ts", "TypeScript", 0, 0, 86, 0, 0, 0, 0, 0, 0, 7, 93
+"e:\Dev\React\sidiro\src\reducers\UniversalTabs.reducer.ts", "TypeScript", 0, 0, 19, 0, 0, 0, 0, 0, 1, 3, 23
+"e:\Dev\React\sidiro\src\reducers\Userdata.reducer.ts", "TypeScript", 0, 0, 25, 0, 0, 0, 0, 0, 0, 3, 28
+"e:\Dev\React\sidiro\src\reportWebVitals.ts", "TypeScript", 0, 0, 13, 0, 0, 0, 0, 0, 0, 3, 16
+"e:\Dev\React\sidiro\src\routes\Drawer.routes.tsx", "TypeScript React", 0, 0, 0, 0, 18, 0, 0, 0, 0, 1, 19
+"e:\Dev\React\sidiro\src\service-worker.ts", "TypeScript", 0, 0, 30, 0, 0, 0, 0, 0, 47, 12, 89
+"e:\Dev\React\sidiro\src\serviceWorkerRegistration.ts", "TypeScript", 0, 0, 98, 0, 0, 0, 0, 0, 31, 14, 143
+"e:\Dev\React\sidiro\src\services\CustomAPI.service.ts", "TypeScript", 0, 0, 82, 0, 0, 0, 0, 0, 0, 8, 90
+"e:\Dev\React\sidiro\src\services\FetchEventsAPI.service.ts", "TypeScript", 0, 0, 9, 0, 0, 0, 0, 0, 0, 1, 10
+"e:\Dev\React\sidiro\src\services\FetchTimeseriesAPI.service.ts", "TypeScript", 0, 0, 14, 0, 0, 0, 0, 0, 0, 3, 17
+"e:\Dev\React\sidiro\src\services\FetchTimeseriesAggregatesAPI.service.ts", "TypeScript", 0, 0, 13, 0, 0, 0, 0, 0, 1, 2, 16
+"e:\Dev\React\sidiro\src\setupTests.ts", "TypeScript", 0, 0, 1, 0, 0, 0, 0, 0, 4, 1, 6
+"e:\Dev\React\sidiro\src\swReg.js", "JavaScript", 0, 0, 0, 12, 0, 0, 0, 0, 2, 0, 14
+"e:\Dev\React\sidiro\src\translations.ts", "TypeScript", 0, 0, 366, 0, 0, 0, 0, 0, 4, 1, 371
+"e:\Dev\React\sidiro\src\utilities\DecodeState.utility.ts", "TypeScript", 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 19
+"e:\Dev\React\sidiro\src\utilities\DeviceTypes.utility.ts", "TypeScript", 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 8
+"e:\Dev\React\sidiro\src\utilities\ExportPDF.utility.ts", "TypeScript", 0, 0, 3, 0, 0, 0, 0, 0, 16, 1, 20
+"e:\Dev\React\sidiro\src\utilities\GetUTCDate.utility.ts", "TypeScript", 0, 0, 13, 0, 0, 0, 0, 0, 0, 1, 14
+"e:\Dev\React\sidiro\src\utilities\PowerFactorCalculator.utility.ts", "TypeScript", 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 9
+"e:\Dev\React\sidiro\src\utilities\SiemensColors.utility.ts", "TypeScript", 0, 0, 138, 0, 0, 0, 0, 0, 0, 7, 145
+"e:\Dev\React\sidiro\src\workers\TimeseriesData.worker.js", "JavaScript", 0, 0, 0, 40, 0, 0, 0, 0, 3, 3, 46
+"e:\Dev\React\sidiro\tsconfig.json", "JSON", 0, 24, 0, 0, 0, 0, 0, 0, 0, 1, 25
+"Total", "-", 0, 127, 1691, 52, 8042, 86, 26, 21, 225, 535, 10805
