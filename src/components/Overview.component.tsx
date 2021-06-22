@@ -237,7 +237,7 @@ export const Overview = () => {
               name={name}
               tableName={tableName}
               assetID={breaker.assetID}
-              activePower={systemTopologyData[breaker.assetID]?.Active_Power_Import || 0}
+              activePower={parseFloat((systemTopologyData[breaker.assetID]?.Active_Power_Import/1000).toFixed(2)) || 0}
               current={sumCurrent(systemTopologyData[breaker.assetID]?.Current_L1, systemTopologyData[breaker.assetID]?.Current_L2, systemTopologyData[breaker.assetID]?.Current_L3)}
               powerFactor={powerFactorCalculator(systemTopologyData[breaker.assetID]?.Active_Power_Import, Math.max(systemTopologyData[breaker.assetID]?.Reactive_Power_Import, systemTopologyData[breaker.assetID]?.Reactive_Power_Export))}
               breakerName={breaker.name}
@@ -344,7 +344,7 @@ export const Overview = () => {
             name={name}
             tableName={tableName}
             assetID={assetID}
-            activePower={systemTopologyData[assetID]?.Active_Power_Import || 0}
+            activePower={parseFloat((systemTopologyData[assetID]?.Active_Power_Import/1000).toFixed(2)) || 0}
             current={sumCurrent(systemTopologyData[assetID]?.Current_L1, systemTopologyData[assetID]?.Current_L2, systemTopologyData[assetID]?.Current_L3)}
             powerFactor={powerFactorCalculator(systemTopologyData[assetID]?.Active_Power_Import, Math.max(systemTopologyData[assetID]?.Reactive_Power_Import, systemTopologyData[assetID]?.Reactive_Power_Export))}
             noTable={tableName === undefined}
@@ -396,7 +396,7 @@ export const Overview = () => {
             state={endCoupling.fixedState !== undefined ? decodeState(endCoupling.fixedState) : decodeState(systemTopologyData[endCoupling.assetID]?.Breaker_State)}
             name={endCoupling.name}
             assetID={endCoupling.assetID}
-            activePower={systemTopologyData[endCoupling.assetID]?.Active_Power_Import || 0}
+            activePower={parseFloat((systemTopologyData[endCoupling.assetID]?.Active_Power_Import/1000).toFixed(2)) || 0}
             current={sumCurrent(systemTopologyData[endCoupling.assetID]?.Current_L1, systemTopologyData[endCoupling.assetID]?.Current_L2, systemTopologyData[endCoupling.assetID]?.Current_L3)}
             powerFactor={powerFactorCalculator(systemTopologyData[endCoupling.assetID]?.Active_Power_Import, Math.max(systemTopologyData[endCoupling.assetID]?.Reactive_Power_Import, systemTopologyData[endCoupling.assetID]?.Reactive_Power_Export))}
             drawOut={endCoupling.type === DeviceTypes.drawOutCircuitBreaker}

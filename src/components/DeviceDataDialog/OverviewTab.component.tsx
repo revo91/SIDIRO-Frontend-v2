@@ -117,7 +117,7 @@ export const OverviewTab = () => {
         columns={[t('eventsPage.severity'), t('eventsPage.event'), t('eventsPage.time')]}
         //rows={deviceEvents.map((ev)=> [ev.severity, ev.description, ev.timestamp])}
         rows={events[switchboardAssetID] ? events[switchboardAssetID].filter((el) => el.source === assetID).map(ev => [setSeverityIcon(ev.severity),
-        i18n.language === 'pl' ? JSON.parse(ev.description).pl : JSON.parse(ev.description).en, new Date(Date.parse(ev.timestamp))]) : [[]]}
+        i18n.language === 'pl' ? JSON.parse(ev.description).en : JSON.parse(ev.description).pl, new Date(Date.parse(ev.timestamp))]) : [[]]} // frontend fix for wrong sidiro iot configuration
       />
     </div>
   )
@@ -146,10 +146,10 @@ export const OverviewTab = () => {
             <TimelineIcon />
           </IconButton>
         </Tooltip>]}
-        rows={[[t('deviceDataDialog.activePowerImport'), `${systemTopologyData[assetID]?.Active_Power_Import || 0} W`],
-        [t('deviceDataDialog.activePowerExport'), `${systemTopologyData[assetID]?.Active_Power_Export || 0} W`],
-        [t('deviceDataDialog.reactivePowerImport'), `${systemTopologyData[assetID]?.Reactive_Power_Import || 0} var`],
-        [t('deviceDataDialog.reactivePowerExport'), `${systemTopologyData[assetID]?.Reactive_Power_Export || 0} var`],
+        rows={[[t('deviceDataDialog.activePowerImport'), `${systemTopologyData[assetID]?.Active_Power_Import/1000 || 0} kW`],
+        [t('deviceDataDialog.activePowerExport'), `${systemTopologyData[assetID]?.Active_Power_Export/1000 || 0} kW`],
+        [t('deviceDataDialog.reactivePowerImport'), `${systemTopologyData[assetID]?.Reactive_Power_Import/1000 || 0} kvar`],
+        [t('deviceDataDialog.reactivePowerExport'), `${systemTopologyData[assetID]?.Reactive_Power_Export/1000 || 0} kvar`],
         [t('deviceDataDialog.powerFactor'), `${systemTopologyData[assetID] ? powerFactorCalculator(systemTopologyData[assetID].Active_Power_Import, Math.max(systemTopologyData[assetID].Reactive_Power_Import, systemTopologyData[assetID].Reactive_Power_Export)) : 0} PF`]]}
         small />
     </div>

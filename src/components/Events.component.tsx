@@ -98,7 +98,7 @@ export const Events = () => {
         const rows: Array<any> = events[diagram.assetID] ? events[diagram.assetID].map(event => {
           const parsedDate = Date.parse(event.timestamp);
           const parsedDescription = JSON.parse(event.description);
-          const description = i18n.language === 'pl' ? parsedDescription.pl : parsedDescription.en
+          const description = i18n.language === 'pl' ? parsedDescription.en : parsedDescription.pl // frontend fix for wrong sidiro iot configuration
           return [setSeverityIcon(event.severity), new Date(parsedDate), description, diagram.name, setBreakerName(event.source, diagram.name)]
         }) : [[]]
         allRows = [...allRows, ...rows]
