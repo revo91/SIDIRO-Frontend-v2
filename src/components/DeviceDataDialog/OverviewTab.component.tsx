@@ -117,7 +117,7 @@ export const OverviewTab = () => {
         columns={[t('eventsPage.severity'), t('eventsPage.event'), t('eventsPage.time')]}
         //rows={deviceEvents.map((ev)=> [ev.severity, ev.description, ev.timestamp])}
         rows={events[switchboardAssetID] ? events[switchboardAssetID].filter((el) => el.source === assetID).map(ev => [setSeverityIcon(ev.severity),
-        i18n.language === 'pl' ? JSON.parse(ev.description).en : JSON.parse(ev.description).pl, new Date(Date.parse(ev.timestamp))]) : [[]]} // frontend fix for wrong sidiro iot configuration
+        i18n.language === 'pl' ? JSON.parse(ev.description).pl : JSON.parse(ev.description).en, new Date(Date.parse(ev.timestamp))]) : [[]]}
       />
     </div>
   )
