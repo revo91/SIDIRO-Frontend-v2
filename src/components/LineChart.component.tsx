@@ -137,7 +137,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data, chartTitle, xAxisTit
   useEffect(() => {
     //instantiate chart with first given data
     if (chartInstance === null) {
-      setChartInstance(new Chart(chartContainer.current, chartConfig))
+      setChartInstance(new Chart(chartContainer.current, chartConfig as any))
     }
   }, [data, chartInstance, chartTitle, chartConfig])
 

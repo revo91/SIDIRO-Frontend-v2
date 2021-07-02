@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
 import { pl, enUS } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-export const useUpdateChartDatasets = (chartInstance: Chart | null,
+export const useUpdateChartDatasets = (chartInstance: any,
   data: {
     labels?: Array<string>,
     datasets: Array<{ label: string, backgroundColor: Array<string> | string, borderColor?: Array<string> | string, borderWidth?: number, data: Array<{ x: number | Date, y: number }> | Array<number> }>

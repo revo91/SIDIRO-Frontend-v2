@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useTheme } from '@material-ui/core/styles';
 
-export const useUpdateChartFontColor = (chartInstance: any | null, color: string) => {
+export const useUpdateChartFontColor = (chartInstance: any, color: string) => {
   const theme = useTheme()
 
   useEffect(() => {

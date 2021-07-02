@@ -81,7 +81,7 @@ export const PieChart: React.FC<PieChartProps> = ({ data, chartTitle, onDataClic
 
   useEffect(() => {
     if (chartInstance === null) {
-      setChartInstance(new Chart(chartContainer.current, chartConfig))
+      setChartInstance(new Chart(chartContainer.current, chartConfig as any))
     }
   }, [data, chartInstance, chartTitle, chartConfig])
 

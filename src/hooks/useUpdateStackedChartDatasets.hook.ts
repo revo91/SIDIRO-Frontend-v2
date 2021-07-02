@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import Chart from 'chart.js/auto';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-export const useUpdateStackedChartDatasets = (chartInstance: Chart | null,
+export const useUpdateStackedChartDatasets = (chartInstance: any,
   data: {
     labels?: Array<string>,
     datasets: Array<{

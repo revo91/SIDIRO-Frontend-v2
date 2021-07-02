@@ -19,7 +19,6 @@ export const Powermonitor = () => {
     if (userPlantData.plantName !== '') {
       fetchPowermonitor(userPlantData.plantName).then(res => {
         if (res.length > 0) {
-          console.log(res)
           setPowermonitorChartData(res[0].data)
           dispatch(setPowermonitorConfig(res[0].config))
         }
@@ -27,7 +26,6 @@ export const Powermonitor = () => {
       interval = setInterval(() => {
         fetchPowermonitor(userPlantData.plantName).then(res => {
           if (res.length > 0) {
-            console.log(res)
             setPowermonitorChartData(res[0].data)
           }
         })

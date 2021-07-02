@@ -116,7 +116,7 @@ export const StackedBarChart: React.FC<BarChartProps> = ({ data,
 
   useEffect(() => {
     if (chartInstance === null) {
-      setChartInstance(new Chart(chartContainer.current, chartConfig))
+      setChartInstance(new Chart(chartContainer.current, chartConfig as any))
     }
   }, [data, chartInstance, chartTitle, chartConfig])
 
